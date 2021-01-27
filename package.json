@@ -1,0 +1,36 @@
+{
+  "name": "event-calendar",
+  "version": "1.0.0",
+  "description": "ciklum intership test task",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch",
+    "build": "webpack --config webpack.prod.config.js",
+    "dev": "webpack serve --config webpack.dev.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Illiachr/intership-test-task.git"
+  },
+  "keywords": [
+    "html",
+    "scss",
+    "js",
+    "test",
+    "task"
+  ],
+  "author": "Illia Cherkasov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Illiachr/intership-test-task/issues"
+  },
+  "homepage": "https://github.com/Illiachr/intership-test-task#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.18.0",
+    "webpack-cli": "^4.4.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
