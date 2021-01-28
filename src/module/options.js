@@ -8,4 +8,5 @@ export const CLASS_LIST = {
     TRIGGER_CLOSE: 'js-modal-close',
     OPEN_MODAL: 'js-modal-open',
     METTING_CELL: 'meeting-cell',
+    SLOT_BISY: 'meeting-cell--bisy',
 };

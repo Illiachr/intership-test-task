@@ -1,9 +1,9 @@
+// TODO: modify styles, add remove dialog
 // TODO: add options by script
-// TODO: add event
-// TODO: edit event
-// TODO: booking time slot
-// TODO: add eslint airbnb
 // TODO: save to localStorage
+// TODO: add eslint airbnb
+// TODO: edit event
+// TODO: drag n drop
 
 import addCells from './module/addCells';
 import listeners from './module/listeners/listeners';

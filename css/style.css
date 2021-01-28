@@ -101,6 +101,14 @@ body {
   display: none;
 }
 
+.meeting-cell--bisy {
+  background-color: #9072d2;
+}
+
+.meeting-cell--bisy:hover {
+  background-color: #ae99de;
+}
+
 .time-cell {
   font-weight: 700;
 }

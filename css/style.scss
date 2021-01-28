@@ -81,6 +81,11 @@ body {
         font-weight: 700;
         display: none;
     }
+
+    &--bisy { background-color: #9072d2; }
+    &--bisy:hover {
+        background-color: lighten(#9072d2, 10%);
+    }
 }
 
 .time-cell {

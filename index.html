@@ -14,6 +14,11 @@
             <h2 class="title">Calendar</h2>
             <select id="filter" class="select">
                 <option value="no">All members</option>
+                <option value="Maria">Maria</option>
+                <option value="Bob">Bob</option>
+                <option value="Alex">Alex</option>
+                <option value="Illia">Illia</option>
+                <option value="Max">Max</option>
             </select>
             <button class="btn js-modal-open" data-modal="modal-event" >New event +</button>            
         </div>
@@ -40,23 +45,33 @@
             </div>
             <form name="event-form" id="event-form">
                 <div class="modal__dialog-body">
-                    <label for="event-name">Event name</label>
+                    <label for="name">Event name</label>
 
-                    <input type="text" name="event-name" id="event-name" class="name__event control-input" placeholder="Enter event">
+                    <input type="text" name="name" id="event-name" class="name__event control-input" placeholder="Enter event">
                     <label for="participants">Participants</label>
-
-                    <select name="participants" id="participants" class="select control-input" >
-                        <option value="no">All members</option>
-                    </select>
+                    <div name="participants" id="participants" class="select control-input">
+                        <input type="checkbox" value="Maria">Maria</input>
+                        <input type="checkbox" value="Bob">Bob</input>
+                        <input type="checkbox" value="Alex">Alex</input>
+                        <input type="checkbox" value="Illia">Illia</input>
+                        <input type="checkbox" value="Max">Max</input>
+                    </div>
                     <label for="day">Day</label>
-
                     <select name="day" id="day" class="select control-input" placeholder="Enter event">
-                        <option value="no"></option>
+                        <option value="1">Mon</option>
+                        <option value="2">Tue</option>
+                        <option value="3">Wen</option>
+                        <option value="4">Thu</option>
+                        <option value="5">Fri</option>
                     </select>
                     <label for="time">Time</label>
-
                     <select name="time" id="time" class="select control-input" placeholder="Enter event">
-                        <option value="no"></option>
+                        <option value="10">10:00</option>
+                        <option value="11">11:00</option>
+                        <option value="12">12:00</option>
+                        <option value="13">13:00</option>
+                        <option value="14">14:00</option>
+                        
                     </select>
                 </div>
                 <div class="modal__dialog-footer">                
