@@ -6,7 +6,7 @@
 // TODO: save to localStorage
 
 import addCells from './module/addCells';
-import listeners from './module/listeners';
+import listeners from './module/listeners/listeners';
 
 addCells();
 listeners();
