@@ -5,15 +5,15 @@ const state = {
     events: []
 };
 
-const render = () => {
-    document.querySelectorAll('.row-meeting').forEach(row => {
-        state.events.forEach(event => {
-            if (event.time === row.dataset.time) {
-                console.log(row);
-            }
-        });
-    });
-};
+// const render = () => {
+//     document.querySelectorAll('.row-meeting').forEach(row => {
+//         state.events.forEach(event => {
+//             if (event.time === row.dataset.time) {
+//                 console.log(row);
+//             }
+//         });
+//     });
+// };
 
 export default (selector = '.app') => {
     const calendar = document.querySelector(selector);

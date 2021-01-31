@@ -307,4 +307,109 @@ body {
 .control-input:hover, .control-input :focus {
   background-color: #cfd4d7;
 }
+
+.select {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  z-index: 100;
+}
+
+.select__backdrop {
+  position: fixed;
+  display: none;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: transparent;
+}
+
+.select__label {
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+
+.select__wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select__input {
+  cursor: pointer;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  height: 36px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.select__dropdown {
+  display: none;
+  position: absolute;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+          box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  top: 36px;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.select__dropdown-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.select__dropdown-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #cccccc;
+  background-color: #ffffff;
+}
+
+.select__dropdown-item:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+  -webkit-transition: .15s background-color ease-in;
+  transition: .15s background-color ease-in;
+}
+
+.select__dropdown-item.selected {
+  color: #ffffff;
+  background-color: #7a64f3;
+}
+
+.select__dropdown-item:last-child {
+  border-bottom: 0;
+}
+
+.select--open .select__dropdown {
+  display: block;
+}
+
+.select--open .select__input {
+  border-bottom: 0;
+}
+
+.select--open .select__backdrop {
+  display: block;
+}
 /*# sourceMappingURL=style.css.map */

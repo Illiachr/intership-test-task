@@ -240,3 +240,99 @@ body {
     }
 }
 
+.select {
+    $height: 36px;
+    $parent: &;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    z-index: 100;
+    
+        &__backdrop {
+            position: fixed;
+            display: none;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background-color: transparent;
+        }
+    
+        &__label {
+            margin-right: 0.5rem;
+            font-weight: 700;
+        }
+    
+        &__wrapper {
+            position: relative;
+            width: 100%;
+        }
+    
+        &__input {
+            cursor: pointer;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            height: $height;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+    
+        &__dropdown {
+            display: none;
+            position: absolute;
+            border: 1px solid #cccccc;
+            box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+            border-radius: 5px;
+            top: $height;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+    
+            &-list {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+    
+            &-item {
+                padding: 0.5rem;
+                border-bottom: 1px solid #cccccc;
+                background-color: #ffffff;
+    
+                &:hover {
+                    background-color: #eeeeee;
+                    cursor: pointer;
+                    transition: .15s background-color ease-in;
+                }
+    
+                &.selected {
+                    color: #ffffff;
+                    background-color: #7a64f3;
+                }
+            }
+    
+            &-item:last-child {
+                border-bottom: 0;
+            }
+        }
+    
+        &--open {
+            #{$parent}__dropdown {
+                display: block;
+            }
+    
+            #{$parent}__input {
+                border-bottom: 0;
+            }
+    
+            #{$parent}__backdrop {
+                display: block;
+            }
+        }
+    }
