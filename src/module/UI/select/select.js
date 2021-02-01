@@ -44,12 +44,15 @@ const getTemplate = props => {
 };
 
 export default class Select {
-    constructor(selector, options) {
+    constructor(selector, options, multi = false) {
         this.elem = document.querySelector(selector);
         this.options = options;
+        this.multi = multi;
         this.selectedId = options.defaultSeleted;
         this.selectedItems = [];
+    }
 
+    init() {
         this.render();
         this.setup();
     }
@@ -87,11 +90,11 @@ export default class Select {
         }
 
         if (type === 'item') {
-            this.select(target.dataset.id);
+            console.log(this.multi);
+            this.multi ? this.multiSelect(target.dataset.id) : this.select(target.dataset.id);
         }
 
         if (type === 'backdrop') {
-            this.selectionResult();
             this.close();
         }
     }
@@ -122,6 +125,17 @@ export default class Select {
     }
 
     select(id) {
+        this.selectedId = id;
+        this.value.textContent = this.current.value;
+
+        this.elem.querySelectorAll('[data-type="item"]').forEach(el => {
+            el.classList.remove('selected');
+        });
+        this.elem.querySelector(`[data-id="${id}"]`).classList.add('selected');
+        this.close();
+    }
+
+    multiSelect(id) {
         if (this.selectedItems.length <= 1 && this.selectedItems[0] === "All members") {
             this.elem.querySelector(`[data-id="${this.selectedId}"]`).classList.remove(classes.selected);
             this.selectedItems.splice(this.isSelected, 1);
@@ -152,7 +166,11 @@ export default class Select {
     }
 
     selectionResult() {
-        this.options.onSelect ? this.options.onSelect(this.selectedItems) : null;
+        if (this.options.onSelect) {
+            this.multi ?
+                this.options.onSelect(this.selectedItems) :
+                this.options.onSelect(this.current);
+        } else { return null; }
     }
 
     toggle() {
@@ -161,5 +179,6 @@ export default class Select {
 
     destroy() {
         this.elem.removeEventListener('click', this.clickHandler);
+        this.elem.textContent = '';
     }
 }

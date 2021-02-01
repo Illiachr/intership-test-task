@@ -76,7 +76,7 @@ body {
     &:hover {
         background-color: darken(#ebedee, 10%);
     }
-    & span {
+    & .cancel-event {
         font-size: 18px;
         font-weight: 700;
         display: none;
@@ -111,7 +111,7 @@ body {
     &__dialog {
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        // overflow: hidden;
         max-height: $screen-height;
         background-color: #ffffff;
         border-radius: 8px;
@@ -157,7 +157,7 @@ body {
 
         &-body {
             flex-grow: 1;
-            overflow: auto;
+            // overflow: auto;
             display: flex;
             margin: 0 auto;
             flex-direction: column;
@@ -246,12 +246,12 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
-    z-index: 100;
+    // z-index: 100;
     
         &__backdrop {
             position: fixed;
             display: none;
-            z-index: -1;
+            z-index: 6;
             top: 0;
             right: 0;
             left: 0;
@@ -290,7 +290,7 @@ body {
             top: $height;
             left: 0;
             right: 0;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             z-index: 100;
     

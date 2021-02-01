@@ -1,4 +1,5 @@
-import { CLASS_LIST } from '../options';
+import { CLASS_LIST, DEV_TEAM, eventHours, workWeek } from '../options';
+import { render } from '../render';
 import Select from '../UI/select/select';
 
 const statePopup = {
@@ -8,21 +9,22 @@ const statePopup = {
     isBooked: false,
 };
 
-const render = () => {
-    document.querySelectorAll('.row-meeting').forEach(row => {
-        if (statePopup.event.time === row.dataset.time) {
-            row.querySelectorAll('.meeting-cell').forEach(cell => {
-                if (cell.dataset.day === statePopup.event.day) {
-                    cell.classList.add(CLASS_LIST.SLOT_BISY);
-                    cell.classList.remove(CLASS_LIST.OPEN_MODAL);
-                    const span = cell.querySelector('.cancel-event');
-                    span.style.display = 'inline';
-                    cell.insertAdjacentHTML('afterbegin', statePopup.event.name);
-                }
-            });
-        }
-    });
-};
+// const render = () => {
+//     document.querySelectorAll('.row-meeting').forEach(row => {
+//         if (statePopup.event.time === row.dataset.time) {
+//             row.querySelectorAll('.meeting-cell').forEach(cell => {
+//                 if (cell.dataset.day === statePopup.event.day) {
+//                     cell.classList.add(CLASS_LIST.SLOT_BISY);
+//                     cell.classList.remove(CLASS_LIST.OPEN_MODAL);
+//                     const span = cell.querySelector('.cancel-event');
+//                     span.style.display = 'inline';
+//                     cell.insertAdjacentHTML('afterbegin',
+//                         `<span data-type="event-name">${statePopup.event.name}</span>`);
+//                 }
+//             });
+//         }
+//     });
+// };
 
 export default (popup, state, day = '', time = '') => {
     const eventForm = popup.querySelector('#event-form');
@@ -34,11 +36,7 @@ export default (popup, state, day = '', time = '') => {
         defaultSeleted: "0",
         data: [
             { id: '0', value: 'All members' },
-            { id: '1', value: 'Maria' },
-            { id: '2', value: 'Max' },
-            { id: '3', value: 'John' },
-            { id: '4', value: 'Nick' },
-            { id: '5', value: 'Natali' },
+            ...DEV_TEAM,
         ],
         onSelect(selectedItems) {
             let members = [];
@@ -61,19 +59,46 @@ export default (popup, state, day = '', time = '') => {
                     return total;
                 }, []);
             }
+            statePopup.event.partisipants = [...members];
+        }
+    }, true);
 
-            state.members = [...members];
-            console.log(state);
+    const selectDay = new Select('#day', {
+        label: 'Day',
+        placeholder: 'Choose day...',
+        defaultSeleted: day,
+        data: [
+            ...workWeek,
+        ],
+        onSelect(selectedItems) {
+            statePopup.event = { ...statePopup.event, day: selectedItems.id };
+        }
+    });
+
+    const eventTimeTable = [];
+    for (let hour = +eventHours.start; hour <= +eventHours.end; hour += +eventHours.step) {
+        const eventTime = { id: `${hour}`, value: `${hour}:00` };
+        eventTimeTable.push(eventTime);
+    }
+
+    const selectTime = new Select('#time', {
+        label: 'Time',
+        placeholder: 'Choose time...',
+        defaultSeleted: time,
+        data: eventTimeTable,
+        onSelect(selectedItems) {
+            console.log(selectedItems);
+            statePopup.event = { ...statePopup.event, time: selectedItems.id };
         }
     });
 
     const submitHandler = e => {
         e.preventDefault();
+        select.selectionResult();
+        selectDay.selectionResult();
+        selectTime.selectionResult();
         [...eventForm.elements].forEach(elem => {
-            if (elem.matches('input[type=checkbox]') && elem.checked) {
-                console.log(elem.value);
-                statePopup.event.partisipants.push(elem.value);
-            } else if (elem.matches('input') || elem.matches('select')) {
+            if (elem.matches('input') || elem.matches('select')) {
                 if (!elem.matches('input[type=checkbox]')) {
                     statePopup.event = { ...statePopup.event, [elem.name]: elem.value };
                 }
@@ -88,8 +113,8 @@ export default (popup, state, day = '', time = '') => {
         }
 
         if (!statePopup.isBooked) {
-            state = state.events.push(statePopup.event);
-            render();
+            state.events.push(statePopup.event);
+            render(statePopup.event);
             closePopup();
         }
     };
@@ -106,12 +131,16 @@ export default (popup, state, day = '', time = '') => {
     function closePopup() {
         popup.removeEventListener('click', clickHandler);
         eventForm.removeEventListener('submit', submitHandler);
+        select.destroy();
+        selectDay.destroy();
+        selectTime.destroy();
         eventForm.reset();
         popup.classList.remove(CLASS_LIST.MODAL_ACTIVE);
     }
 
-    eventForm.day.value = day;
-    eventForm.time.value = time;
+    select.init();
+    selectDay.init();
+    selectTime.init();
 
     popup.addEventListener('click', clickHandler);
     eventForm.addEventListener('submit', submitHandler);

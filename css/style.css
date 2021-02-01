@@ -95,7 +95,7 @@ body {
   background-color: #cfd4d7;
 }
 
-.meeting-cell span {
+.meeting-cell .cancel-event {
   font-size: 18px;
   font-weight: 700;
   display: none;
@@ -143,7 +143,6 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  overflow: hidden;
   max-height: 80vh;
   background-color: #ffffff;
   border-radius: 8px;
@@ -202,7 +201,6 @@ body {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  overflow: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -316,13 +314,12 @@ body {
       -ms-flex-align: center;
           align-items: center;
   width: 100%;
-  z-index: 100;
 }
 
 .select__backdrop {
   position: fixed;
   display: none;
-  z-index: -1;
+  z-index: 6;
   top: 0;
   right: 0;
   left: 0;
@@ -368,7 +365,7 @@ body {
   top: 36px;
   left: 0;
   right: 0;
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
   z-index: 100;
 }
