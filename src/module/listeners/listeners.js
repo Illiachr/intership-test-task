@@ -30,32 +30,33 @@ export default (selector = '.app') => {
         ],
         onSelect(item) {
             console.log(item);
-            state.events.forEach(event => {
+            const filtered = state.events.reduce((arr, event) => {
                 // todo filter by reduce
-                console.log(event.partisipants);
-                console.log(event.partisipants.includes(item.value));
-            });
-            state.filtered = state.events.filter(event => event.partisipants.includes(item.value));
+                event.partisipants.forEach(member => {
+                    if (member.id === item.id) {
+                        arr.push(event);
+                    }
+                });
+                return arr;
+            }, []);
+            console.log(filtered);
         }
     });
 
     filterByMember.init();
     calendar.addEventListener('click', e => {
         const { target } = e;
-        console.log(target);
 
         if (target.closest(`.${CLASS_LIST.OPEN_MODAL}`)) {
-            let day = '0';
-            let time = '0';
+            let day = '1';
+            let time = '9';
             if (target.matches(`.${CLASS_LIST.METTING_CELL}`)) {
                 time = target.dataset.time;
                 day = target.dataset.day;
-                console.log(time);
             }
             const modalId = target.dataset.modal;
             const modal = document.getElementById(modalId);
             popup(modal, state, day, time);
-            console.log(state);
         }
 
         if (target.closest('#filter')) {
@@ -68,5 +69,4 @@ export default (selector = '.app') => {
         }
     });
 
-    console.log(state);
 };

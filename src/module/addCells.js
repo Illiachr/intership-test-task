@@ -1,4 +1,5 @@
 import { eventHours, workWeek } from "./options";
+import { renderFormLS } from "./render";
 
 const getGridHeaderTempl = () => {
     const gridHeader = workWeek.map(day => `
@@ -33,29 +34,11 @@ const getGridTemplate = hour => {
 
 export default (selector = '.calendar-grid') => {
     const calendarGrid = document.querySelector(selector);
+
     calendarGrid.insertAdjacentHTML('beforeend', getGridHeaderTempl());
     for (let hour = +eventHours.start; hour <= +eventHours.end; hour += +eventHours.step) {
         calendarGrid.insertAdjacentHTML('beforeend', getGridTemplate(hour));
     }
-    // `
-    //         <div class="row-meeting" data-time="${i}">
-    //             <div class="cell time-cell">${i}:00</div>
-    //             <div class="cell meeting-cell js-modal-open" data-day="1" data-modal="modal-event">
-    //                 <span class="cancel-event">&times;</span>
-    //             </div>
-    //             <div class="cell meeting-cell js-modal-open" data-day="2" data-modal="modal-event">
-    //                 <span class="cancel-event">&times;</span>
-    //             </div>
-    //             <div class="cell meeting-cell js-modal-open" data-day="3" data-modal="modal-event">
-    //                 <span class="cancel-event">&times;</span>
-    //             </div>
-    //             <div class="cell meeting-cell js-modal-open" data-day="4" data-modal="modal-event">
-    //                 <span class="cancel-event">&times;</span>
-    //             </div>
-    //             <div class="cell meeting-cell js-modal-open" data-day="5" data-modal="modal-event">
-    //                 <span class="cancel-event">&times;</span>
-    //             </div>
-    //         </div>
-    //     `);
-    // }
+
+    renderFormLS();
 };

@@ -9,23 +9,6 @@ const statePopup = {
     isBooked: false,
 };
 
-// const render = () => {
-//     document.querySelectorAll('.row-meeting').forEach(row => {
-//         if (statePopup.event.time === row.dataset.time) {
-//             row.querySelectorAll('.meeting-cell').forEach(cell => {
-//                 if (cell.dataset.day === statePopup.event.day) {
-//                     cell.classList.add(CLASS_LIST.SLOT_BISY);
-//                     cell.classList.remove(CLASS_LIST.OPEN_MODAL);
-//                     const span = cell.querySelector('.cancel-event');
-//                     span.style.display = 'inline';
-//                     cell.insertAdjacentHTML('afterbegin',
-//                         `<span data-type="event-name">${statePopup.event.name}</span>`);
-//                 }
-//             });
-//         }
-//     });
-// };
-
 export default (popup, state, day = '', time = '') => {
     const eventForm = popup.querySelector('#event-form');
     popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`).textContent = 'Add Event';
@@ -97,6 +80,7 @@ export default (popup, state, day = '', time = '') => {
         select.selectionResult();
         selectDay.selectionResult();
         selectTime.selectionResult();
+
         [...eventForm.elements].forEach(elem => {
             if (elem.matches('input') || elem.matches('select')) {
                 if (!elem.matches('input[type=checkbox]')) {
@@ -114,8 +98,11 @@ export default (popup, state, day = '', time = '') => {
 
         if (!statePopup.isBooked) {
             state.events.push(statePopup.event);
+            localStorage.eventStore = JSON.stringify(state);
             render(statePopup.event);
             closePopup();
+        } else {
+            console.log(`time is already booked`);
         }
     };
 
