@@ -1,10 +1,10 @@
 import { CLASS_LIST, DEV_TEAM } from '../options';
+import { render, renderFormLS, resetGrid } from '../render';
 import Select from '../UI/select/select';
 import popup from './popup';
 
 const state = {
     events: [],
-    filtered: []
 };
 
 // const render = () => {
@@ -39,10 +39,14 @@ export default (selector = '.app') => {
                 });
                 return arr;
             }, []);
+            state.filtered = filtered;
+            resetGrid();
             console.log(filtered);
+            filtered.forEach(render);
         }
     });
 
+    state.events = renderFormLS();
     filterByMember.init();
     calendar.addEventListener('click', e => {
         const { target } = e;
@@ -60,8 +64,7 @@ export default (selector = '.app') => {
         }
 
         if (target.closest('#filter')) {
-            filterByMember.selectionResult();
-            console.log(state);
+            
         }
 
         if (target.closest(`.${CLASS_LIST.SLOT_BISY}`)) {

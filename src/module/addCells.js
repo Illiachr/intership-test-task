@@ -1,5 +1,4 @@
 import { eventHours, workWeek } from "./options";
-import { renderFormLS } from "./render";
 
 const getGridHeaderTempl = () => {
     const gridHeader = workWeek.map(day => `
@@ -39,6 +38,4 @@ export default (selector = '.calendar-grid') => {
     for (let hour = +eventHours.start; hour <= +eventHours.end; hour += +eventHours.step) {
         calendarGrid.insertAdjacentHTML('beforeend', getGridTemplate(hour));
     }
-
-    renderFormLS();
 };

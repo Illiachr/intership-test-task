@@ -12,11 +12,6 @@ const getEvents = () => {
     return state;
 };
 
-export const renderFormLS = () => {
-    const events = getEvents().events;
-    console.log(events);
-};
-
 export const render = event => {
     document.querySelectorAll('.row-meeting').forEach(row => {
         if (event.time === row.dataset.time) {
@@ -32,4 +27,27 @@ export const render = event => {
             });
         }
     });
+};
+
+export const resetGrid = () => {
+    document.querySelectorAll('.row-meeting').forEach(row => {
+        row.querySelectorAll('.meeting-cell').forEach(cell => {
+            cell.classList.remove(CLASS_LIST.SLOT_BISY);
+            cell.classList.add(CLASS_LIST.OPEN_MODAL);
+            const eventTitle = cell.querySelector('[data-type="event-name"]');
+            const removeEventIcon = cell.querySelector('.cancel-event');
+            eventTitle ? eventTitle.remove() : null;
+            removeEventIcon.style.display = 'none';
+        });
+    });
+};
+
+export const renderFormLS = () => {
+    let state = {};
+    if (localStorage.getItem('eventStore')) {
+        state = { ...JSON.parse(localStorage.getItem('eventStore')) };
+    }
+    state.events.forEach(render);
+    console.log(state.events);
+    return state.events;
 };

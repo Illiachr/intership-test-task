@@ -110,6 +110,8 @@ export default class Select {
         this.arrow.classList.remove(classes.arrowDown);
         this.arrow.classList.add(classes.arrowRight);
         this.elem.classList.remove(classes.open);
+
+        this.selectionResult();
     }
 
     get isOpen() {
