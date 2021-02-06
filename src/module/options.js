@@ -10,6 +10,7 @@ export const CLASS_LIST = {
     METTING_CELL: 'meeting-cell',
     SLOT_BISY: 'meeting-cell--bisy',
     RM_EVT: 'cancel-event',
+    WARN: 'modal__dialog-header-warning',
 };
 
 export const DEV_TEAM = [

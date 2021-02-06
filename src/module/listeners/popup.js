@@ -12,8 +12,9 @@ const statePopup = {
 };
 
 export default (popup, state, day = '', time = '') => {
-    const eventForm = popup.querySelector('#event-form');
+    const eventForm = popup.querySelector('form');
     const popUpHeader = popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`);
+    const wranMsg = popup.querySelector(`.${CLASS_LIST.WARN}`);
     popUpHeader.textContent = 'Add Event';
     popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
 
@@ -55,6 +56,7 @@ export default (popup, state, day = '', time = '') => {
             ...workWeek,
         ],
         onSelect(selectedItems) {
+            wranMsg.classList.remove('active');
             statePopup.event = { ...statePopup.event, day: selectedItems.id };
         },
     });
@@ -70,13 +72,17 @@ export default (popup, state, day = '', time = '') => {
         defaultSeleted: time,
         data: eventTimeTable,
         onSelect(selectedItems) {
-            console.log(selectedItems);
+            wranMsg.classList.remove('active');
             statePopup.event = { ...statePopup.event, time: selectedItems.id };
         },
     });
 
     const submitHandler = e => {
         e.preventDefault();
+        if (eventForm.name.value === '') {
+            wranMsg.classList.add('active');
+            return;
+        }
         statePopup.event.id = `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
         select.selectionResult();
         selectDay.selectionResult();
@@ -104,6 +110,7 @@ export default (popup, state, day = '', time = '') => {
             closePopup();
         } else {
             console.log('time is already booked');
+            wranMsg.classList.add('active');
         }
     };
 
@@ -113,6 +120,10 @@ export default (popup, state, day = '', time = '') => {
             target.classList.contains(CLASS_LIST.MODAL_ACTIVE)
         ) {
             closePopup();
+        }
+
+        if (target.closest(`.${CLASS_LIST.WARN}`)) {
+            wranMsg.classList.remove('active');
         }
     };
 

@@ -139,8 +139,16 @@ $transition: .2s;
 
         &-header {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             text-align: center;
+            justify-content: center;
+            &-wrapper {
+                display: flex;
+                align-items: center;
+                text-align: center;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
 
             &-content {
                 flex-grow: 1;
@@ -159,6 +167,19 @@ $transition: .2s;
                     cursor:pointer;
                     font-size: 24px;
                     line-height: 24px;
+                }
+            }
+            &-warning {
+                display: none;
+                cursor: pointer;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                background-color: rgb(243, 156, 156);
+                color: rgb(150, 33, 33);
+
+                &.active {
+                    display: flex;
                 }
             }
         }
