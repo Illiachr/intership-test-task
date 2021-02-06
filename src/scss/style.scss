@@ -29,6 +29,7 @@ body {
     grid-template-columns: 3fr 2fr 1fr;
     grid-gap: 10px;
     margin-bottom: 20px;
+    align-items: center;
 }
 
 .calendar-grid {
@@ -71,10 +72,16 @@ body {
 }
 
 .meeting-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     cursor: pointer;
     transition: .2s;
     &:hover {
         background-color: darken(#ebedee, 10%);
+    }
+    & .name {
+        margin: 0 auto;
     }
     & .cancel-event {
         font-size: 18px;
@@ -129,7 +136,7 @@ body {
         &-header,
         &-body,
         &-footer {
-            padding: 20px 40px;
+            padding: 20px 20px;
         }
 
         &-header {
@@ -162,12 +169,16 @@ body {
             flex-grow: 1;
             // overflow: auto;
             display: flex;
-            margin: 0 auto;
             flex-direction: column;
-            max-width: 60%;
+            margin: 0 auto;
+            max-width: 90%;
 
             & label {
-                margin-bottom: .5rem;
+                margin-right: .5rem;
+            }
+
+            & .control-wrapper {
+                display: flex;
             }
         }
 
@@ -211,6 +222,7 @@ body {
 .btn {
     display: inline-block;
     padding: 8px 16px;
+    min-width: 100px;
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;

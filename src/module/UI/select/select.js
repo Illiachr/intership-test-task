@@ -28,7 +28,6 @@ const getTemplate = props => {
 
     return `        
             <div class="${classes.base}__backdrop" data-type="backdrop"></div>
-            <span class="${classes.base}__label">${props.label}:</span>
             <div class="${classes.base}__wrapper">
                 <div class="${classes.base}__input" data-type="input" data-action="toggle">
                     <span data-type="value">${defVal}</span>
@@ -58,10 +57,9 @@ export default class Select {
     }
 
     render() {
-        const { label, data } = this.options;
+        const { data } = this.options;
         this.elem.classList.add('select');
         this.elem.insertAdjacentHTML('beforeend', getTemplate({
-            label,
             data,
             selectedId: this.selectedId,
         }));

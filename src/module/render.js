@@ -22,7 +22,7 @@ export const render = event => {
                     const span = cell.querySelector('.cancel-event');
                     span.style.display = 'inline';
                     cell.insertAdjacentHTML('afterbegin',
-                        `<span data-type="event-name">${event.name}</span>`);
+                        `<span class="name" data-type="event-name">${event.name}</span>`);
                 }
             });
         }

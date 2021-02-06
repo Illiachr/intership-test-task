@@ -15,7 +15,6 @@ export default (popup, state, day = '', time = '') => {
     popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
 
     const select = new Select('#participants', {
-        label: 'Participants',
         defaultSeleted: "0",
         data: [
             { id: '0', value: 'All members' },
@@ -47,7 +46,6 @@ export default (popup, state, day = '', time = '') => {
     }, true);
 
     const selectDay = new Select('#day', {
-        label: 'Day',
         placeholder: 'Choose day...',
         defaultSeleted: day,
         data: [
@@ -65,7 +63,6 @@ export default (popup, state, day = '', time = '') => {
     }
 
     const selectTime = new Select('#time', {
-        label: 'Time',
         placeholder: 'Choose time...',
         defaultSeleted: time,
         data: eventTimeTable,
