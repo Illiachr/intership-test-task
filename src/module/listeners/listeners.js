@@ -20,8 +20,12 @@ export default (selector = '.app') => {
         ],
         onSelect(item) {
             console.log(item);
+            if (item.id === '0') {
+                resetGrid();
+                state.events.forEach(render);
+                return;
+            }
             const filtered = state.events.reduce((arr, event) => {
-                // todo filter by reduce
                 event.partisipants.forEach(member => {
                     if (member.id === item.id) {
                         arr.push(event);
