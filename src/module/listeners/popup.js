@@ -1,21 +1,24 @@
-import { CLASS_LIST, DEV_TEAM, eventHours, workWeek } from '../options';
+import {
+    CLASS_LIST, DEV_TEAM, eventHours, workWeek,
+} from '../options';
 import { render } from '../render';
 import Select from '../UI/select/select';
 
 const statePopup = {
     event: {
-        partisipants: []
+        partisipants: [],
     },
     isBooked: false,
 };
 
 export default (popup, state, day = '', time = '') => {
     const eventForm = popup.querySelector('#event-form');
-    popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`).textContent = 'Add Event';
+    const popUpHeader = popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`);
+    popUpHeader.textContent = 'Add Event';
     popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
 
     const select = new Select('#participants', {
-        defaultSeleted: "0",
+        defaultSeleted: '0',
         data: [
             { id: '0', value: 'All members' },
             ...DEV_TEAM,
@@ -42,7 +45,7 @@ export default (popup, state, day = '', time = '') => {
                 }, []);
             }
             statePopup.event.partisipants = [...members];
-        }
+        },
     }, true);
 
     const selectDay = new Select('#day', {
@@ -53,7 +56,7 @@ export default (popup, state, day = '', time = '') => {
         ],
         onSelect(selectedItems) {
             statePopup.event = { ...statePopup.event, day: selectedItems.id };
-        }
+        },
     });
 
     const eventTimeTable = [];
@@ -69,11 +72,12 @@ export default (popup, state, day = '', time = '') => {
         onSelect(selectedItems) {
             console.log(selectedItems);
             statePopup.event = { ...statePopup.event, time: selectedItems.id };
-        }
+        },
     });
 
     const submitHandler = e => {
         e.preventDefault();
+        statePopup.event.id = `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
         select.selectionResult();
         selectDay.selectionResult();
         selectTime.selectionResult();
@@ -99,7 +103,7 @@ export default (popup, state, day = '', time = '') => {
             render(statePopup.event);
             closePopup();
         } else {
-            console.log(`time is already booked`);
+            console.log('time is already booked');
         }
     };
 
@@ -129,5 +133,3 @@ export default (popup, state, day = '', time = '') => {
     popup.addEventListener('click', clickHandler);
     eventForm.addEventListener('submit', submitHandler);
 };
-
-

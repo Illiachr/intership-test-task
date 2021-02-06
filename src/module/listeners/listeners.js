@@ -7,23 +7,13 @@ const state = {
     events: [],
 };
 
-// const render = () => {
-//     document.querySelectorAll('.row-meeting').forEach(row => {
-//         state.events.forEach(event => {
-//             if (event.time === row.dataset.time) {
-//                 console.log(row);
-//             }
-//         });
-//     });
-// };
-
 export default (selector = '.app') => {
     const calendar = document.querySelector(selector);
 
     const filterByMember = new Select('#filter', {
         label: 'Filter',
         placeholder: 'Choose member...',
-        defaultSeleted: "0",
+        defaultSeleted: '0',
         data: [
             { id: '0', value: 'All members' },
             ...DEV_TEAM,
@@ -43,10 +33,12 @@ export default (selector = '.app') => {
             resetGrid();
             console.log(filtered);
             filtered.forEach(render);
-        }
+        },
     });
 
     state.events = renderFormLS();
+    console.log(state);
+    state.events.forEach(render);
     filterByMember.init();
     calendar.addEventListener('click', e => {
         const { target } = e;
@@ -63,13 +55,19 @@ export default (selector = '.app') => {
             popup(modal, state, day, time);
         }
 
-        if (target.closest('#filter')) {
-            
-        }
-
-        if (target.closest(`.${CLASS_LIST.SLOT_BISY}`)) {
-            console.log('remove dialog');
+        if (target.closest(`.${CLASS_LIST.RM_EVT}`)) {
+            const eventSlot = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
+            if (eventSlot) {
+                console.dir(eventSlot);
+                const eventIndex = state.events.findIndex(event => event.id === eventSlot.dataset.eventId);
+                state.events.splice(eventIndex, 1);
+                eventSlot.dataset.eventId = '';
+                eventSlot.classList.remove(CLASS_LIST.SLOT_BISY);
+                eventSlot.children[0].textContent = '';
+                eventSlot.children[1].style.display = 'none';
+                localStorage.eventStore = JSON.stringify(state);
+            } else { console.warn('No event'); }
+            console.log(state);
         }
     });
-
 };

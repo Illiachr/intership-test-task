@@ -1,16 +1,4 @@
-import { CLASS_LIST } from "./options";
-
-const initialState = {
-    events: [],
-};
-
-const getEvents = () => {
-    let state = {};
-    if (localStorage.getItem('eventStore')) {
-        state = { ...JSON.parse(localStorage.getItem('eventStore')) };
-    }
-    return state;
-};
+import { CLASS_LIST } from './options';
 
 export const render = event => {
     document.querySelectorAll('.row-meeting').forEach(row => {
@@ -19,6 +7,7 @@ export const render = event => {
                 if (cell.dataset.day === event.day) {
                     cell.classList.add(CLASS_LIST.SLOT_BISY);
                     cell.classList.remove(CLASS_LIST.OPEN_MODAL);
+                    cell.dataset.eventId = event.id;
                     const span = cell.querySelector('.cancel-event');
                     span.style.display = 'inline';
                     cell.insertAdjacentHTML('afterbegin',
@@ -36,18 +25,18 @@ export const resetGrid = () => {
             cell.classList.add(CLASS_LIST.OPEN_MODAL);
             const eventTitle = cell.querySelector('[data-type="event-name"]');
             const removeEventIcon = cell.querySelector('.cancel-event');
-            eventTitle ? eventTitle.remove() : null;
+            if (eventTitle) { eventTitle.remove(); }
             removeEventIcon.style.display = 'none';
         });
     });
 };
 
 export const renderFormLS = () => {
-    let state = {};
+    let state = {
+        events: [],
+    };
     if (localStorage.getItem('eventStore')) {
         state = { ...JSON.parse(localStorage.getItem('eventStore')) };
     }
-    state.events.forEach(render);
-    console.log(state.events);
     return state.events;
 };

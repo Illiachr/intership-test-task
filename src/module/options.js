@@ -9,6 +9,7 @@ export const CLASS_LIST = {
     OPEN_MODAL: 'js-modal-open',
     METTING_CELL: 'meeting-cell',
     SLOT_BISY: 'meeting-cell--bisy',
+    RM_EVT: 'cancel-event',
 };
 
 export const DEV_TEAM = [
@@ -28,7 +29,7 @@ export const workWeek = [
 ];
 
 export const eventHours = {
-    start: "10",
-    end: "18",
-    step: "1",
+    start: '10',
+    end: '18',
+    step: '1',
 };
