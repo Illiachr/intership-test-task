@@ -166,7 +166,7 @@ button {
   align-items: center;
 }
 .modal__dialog-header-close-btn {
-  margin: 0;
+  margin-left: auto;
   padding: 0;
   border: 0;
   background: none;
@@ -193,11 +193,19 @@ button {
   margin: 0 auto;
   max-width: 90%;
 }
-.modal__dialog-body label {
-  margin-right: 0.5rem;
-}
 .modal__dialog-body .control-wrapper {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal__dialog-body .control-wrapper .label {
+  min-width: 100px;
+  text-align: left;
+  font-weight: 700;
+}
+.modal__dialog-body .control-wrapper .control-input {
+  width: 100%;
+  margin: 8px;
 }
 .modal__dialog-footer {
   display: flex;
@@ -266,9 +274,6 @@ button {
   border-color: #cccccc;
   border-radius: 4px;
   transition: 0.2s;
-}
-.control-input:hover, .control-input :focus {
-  background-color: #cfd4d7;
 }
 
 .select {

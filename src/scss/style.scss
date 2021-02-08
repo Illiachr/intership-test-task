@@ -160,7 +160,7 @@ $transition: .2s;
                 align-items: center;
 
                 &-btn {
-                    margin: 0;
+                    margin-left: auto;
                     padding: 0;
                     border: 0;
                     background: none;
@@ -192,12 +192,21 @@ $transition: .2s;
             margin: 0 auto;
             max-width: 90%;
 
-            & label {
-                margin-right: .5rem;
-            }
-
             & .control-wrapper {
                 display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                & .label {
+                    min-width: 100px;
+                    text-align: left;
+                    font-weight: 700;
+                }
+
+                & .control-input {
+                    width: 100%;
+                    margin: 8px;
+                }
             }
         }
 
@@ -269,9 +278,7 @@ $transition: .2s;
     border-radius: 4px;
     transition: $transition;
 
-    &:hover, :focus{
-        background-color: darken(#ebedee, 10%);
-    }
+    // closePopup(clickHandler);
 }
 
 .select {

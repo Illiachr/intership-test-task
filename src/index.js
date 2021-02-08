@@ -1,8 +1,4 @@
-// TODO: modify styles, add remove dialog
-// TODO: add options by script
-// TODO: save to localStorage
-// TODO: add eslint airbnb
-// TODO: edit event
+// TODO: modify styles
 // TODO: drag n drop
 
 import './index.html';
