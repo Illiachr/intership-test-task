@@ -10,7 +10,7 @@
     <div class="app">
         <div class="controls">
             <h2 class="title">Calendar</h2>
-            <div id="filter" class="control-input"></div>
+            <div id="filter"></div>
             <button class="btn js-modal-open" data-modal="modal-event">
                 <span>New event</span>
                 <span class="fas fa-plus"></span>
@@ -44,20 +44,20 @@
                     </div>
                     <div class="control-wrapper">
                         <div class="label">Participants</div>                   
-                        <div id="participants" class="control-input"></div>
+                        <div id="participants"></div>
                     </div>
                     <div class="control-wrapper">
                         <div class="label">Day</div>
-                        <div id="day" class="control-input"></div>
+                        <div id="day"></div>
                     </div>
                     <div class="control-wrapper">
                         <div class="label">Time</div>
-                        <div id="time" class="control-input"></div>
+                        <div id="time"></div>
                     </div>
-                </div>
-                <div class="modal__dialog-footer">                
-                    <button name="create" type="submit" class="js-modal-submit btn">Create</button>
-                    <button type="button" class="js-modal-close btn btn-close">Cancel</button>
+                    <div class="control-wrapper">                
+                        <button name="create" type="submit" class="js-modal-submit btn">Create</button>
+                        <button type="button" class="js-modal-close btn btn-close">Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -5,7 +5,7 @@ const removeEvent = (state, eventSlot) => {
   const eventSlotchildren = eventSlot.children;
   const eventIndex = state.events.findIndex(event => event.id === eventSlot.dataset.eventId);
   state.events.splice(eventIndex, 1);
-  eventSlot.cell.removeAttribute('data-event-id');
+  eventSlot.removeAttribute('data-event-id');
   eventSlot.classList.remove(CLASS_LIST.SLOT_BISY);
   eventSlotchildren[0].textContent = '';
   eventSlotchildren[1].style.display = 'none';

@@ -15,15 +15,15 @@ export default (popupId, state, day = '', time = '') => {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const popUpHeader = popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`);
-  const wranMsg = popup.querySelector(`.${CLASS_LIST.WARN}`);
+  const warnMsg = popup.querySelector(`.${CLASS_LIST.WARN}`);
   const msg = {
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
     timeErr: 'Failed to create event. This time is already booked',
     regExpNameReplace: /[^a-z\s]/gi,
-    regExpNameTest: /^a-z\s?$/gi,
+    regExpNameTest: /[a-z\s]/gi,
   };
-  popUpHeader.textContent = 'Add Event';
+  popUpHeader.innerHTML = '<h4>Add Event</h4>';
   popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
 
   const select = new Select('#participants', {
@@ -64,7 +64,7 @@ export default (popupId, state, day = '', time = '') => {
       ...workWeek,
     ],
     onSelect(selectedItems) {
-      wranMsg.classList.remove('active');
+      warnMsg.classList.remove('active');
       stateEventSlot.event = { ...stateEventSlot.event, day: selectedItems.id };
     },
   });
@@ -80,7 +80,7 @@ export default (popupId, state, day = '', time = '') => {
     defaultSeleted: time,
     data: eventTimeTable,
     onSelect(selectedItems) {
-      wranMsg.classList.remove('active');
+      warnMsg.classList.remove('active');
       stateEventSlot.event = { ...stateEventSlot.event, time: selectedItems.id };
     },
   });
@@ -89,14 +89,14 @@ export default (popupId, state, day = '', time = '') => {
     const { target } = e;
 
     if (target === eventForm.name) {
-      wranMsg.classList.remove('active');
+      const checkValue = msg.regExpNameTest.test(target.value);
+      if (checkValue) {
+        warnMsg.classList.remove('active');
+      } else {
+        warnMsg.children[1].textContent = msg.inputWarn;
+        warnMsg.classList.add('active');
+      }
       target.value = target.value.replace(msg.regExpNameReplace, '');
-      // if (msg.regExpName.test(target.value)) {
-      //   console.log('ok');
-      // }
-
-      wranMsg.children[1].textContent = msg.inputWarn;
-      wranMsg.classList.add('active');
     }
   };
 
@@ -104,8 +104,8 @@ export default (popupId, state, day = '', time = '') => {
     e.preventDefault();
 
     if (eventForm.name.value.trim() === '') {
-      wranMsg.children[1].textContent = msg.nameWarn;
-      wranMsg.classList.add('active');
+      warnMsg.children[1].textContent = msg.nameWarn;
+      warnMsg.classList.add('active');
       return;
     }
 
@@ -136,8 +136,8 @@ export default (popupId, state, day = '', time = '') => {
       render(stateEventSlot.event);
       closePopup();
     } else {
-      wranMsg.children[1].textContent = msg.timeErr;
-      wranMsg.classList.add('active');
+      warnMsg.children[1].textContent = msg.timeErr;
+      warnMsg.classList.add('active');
     }
   };
 
@@ -150,7 +150,7 @@ export default (popupId, state, day = '', time = '') => {
     }
 
     if (target.closest(`.${CLASS_LIST.WARN}`)) {
-      wranMsg.classList.remove('active');
+      warnMsg.classList.remove('active');
     }
   };
 
@@ -162,7 +162,7 @@ export default (popupId, state, day = '', time = '') => {
     selectDay.destroy();
     selectTime.destroy();
     eventForm.reset();
-    wranMsg.classList.remove('active');
+    warnMsg.classList.remove('active');
     popup.classList.remove(CLASS_LIST.MODAL_ACTIVE);
   }
 

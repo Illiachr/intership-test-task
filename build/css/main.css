@@ -35,15 +35,18 @@ button {
   flex-direction: column;
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-  padding: 10px;
+  padding: 2rem;
 }
 
 .controls {
   display: grid;
-  grid-template-columns: 3fr 2fr 1fr;
-  grid-gap: 10px;
+  grid-template-columns: 2fr 2fr 1fr;
+  grid-gap: 1rem;
   margin-bottom: 20px;
   align-items: center;
+}
+.controls .btn {
+  min-width: 200px;
 }
 
 .calendar-grid {
@@ -110,6 +113,9 @@ button {
 .meeting-cell--bisy:hover {
   background-color: #ae99de;
 }
+.meeting-cell.drag-hover {
+  background-color: #9072d2;
+}
 
 .time-cell {
   font-weight: 700;
@@ -166,8 +172,10 @@ button {
   align-items: center;
 }
 .modal__dialog-header-close-btn {
-  margin-left: auto;
-  padding: 0;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  outline: none;
   border: 0;
   background: none;
   cursor: pointer;
@@ -183,6 +191,10 @@ button {
   background-color: #f39c9c;
   color: #962121;
 }
+.modal__dialog-header-warning-text {
+  margin-left: 0.5rem;
+  margin-right: auto;
+}
 .modal__dialog-header-warning.active {
   display: flex;
 }
@@ -195,8 +207,9 @@ button {
 }
 .modal__dialog-body .control-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  margin-bottom: 1rem;
 }
 .modal__dialog-body .control-wrapper .label {
   min-width: 100px;
@@ -205,7 +218,10 @@ button {
 }
 .modal__dialog-body .control-wrapper .control-input {
   width: 100%;
-  margin: 8px;
+  margin: 0 8px;
+}
+.modal__dialog-body .control-wrapper .btn {
+  margin: 0 8px;
 }
 .modal__dialog-footer {
   display: flex;
@@ -250,13 +266,14 @@ button {
   padding: 8px 16px;
   min-width: 100px;
   font-family: "Open Sans", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 28px;
+  height: 46px;
   color: #354664;
   cursor: pointer;
   background-color: #ebedee;
   border: 0;
+  outline: none;
   border-radius: 4px;
   transition: 0.2s;
 }
@@ -265,10 +282,11 @@ button {
 }
 
 .control-input {
-  padding: 8px 8px;
-  margin-bottom: 0.6rem;
+  padding: 0.5rem 1rem;
   font-family: "Open Sans", sans-serif;
-  font-size: 14px;
+  border: 1px solid #cccccc;
+  outline: none;
+  font-size: 16px;
   line-height: 28px;
   color: #354664;
   border-color: #cccccc;
@@ -303,12 +321,13 @@ button {
   cursor: pointer;
   border: 1px solid #cccccc;
   border-radius: 5px;
-  height: 36px;
-  width: 100%;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 .select__dropdown {
   display: none;
@@ -316,10 +335,11 @@ button {
   border: 1px solid #cccccc;
   box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  top: 36px;
+  top: 46px;
   left: 0;
   right: 0;
   max-height: 300px;
+  margin: 0 8px;
   overflow-y: auto;
   z-index: 100;
 }

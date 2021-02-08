@@ -97,19 +97,42 @@ export default (selector = '.app') => {
     }
   });
 
+  calendar.addEventListener('dragenter', e => {
+    const { target } = e;
+    const targetBooked = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
+    if (!targetBooked && target.closest(`.${CLASS_LIST.METTING_CELL}`)) {
+      e.target.classList.add('drag-hover');
+    }
+  });
+
   calendar.addEventListener('dragover', e => {
-    e.preventDefault();
+    const { target } = e;
+    const targetBooked = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
+    if (!targetBooked && target.closest(`.${CLASS_LIST.METTING_CELL}`)) {
+      e.preventDefault();
+    }
+  });
+
+  calendar.addEventListener('dragleave', e => {
+    e.target.classList.remove('drag-hover');
   });
 
   calendar.addEventListener('drop', e => {
-    e.preventDefault();
-    const { target } = e;
-    const eventId = e.dataTransfer.getData('text/plain');
-    const eventIndex = state.events.findIndex(event => event.id === eventId);
-    state.events[eventIndex].time = target.dataset.time;
-    state.events[eventIndex].day = target.dataset.day;
-    localStorage.eventStore = JSON.stringify(state);
-    resetGrid();
-    state.events.forEach(render);
+    const { target, dataTransfer } = e;
+    const targetBooked = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
+
+    if (!targetBooked && target.closest(`.${CLASS_LIST.METTING_CELL}`)) {
+      e.preventDefault();
+      target.classList.remove('drag-hover');
+      const eventId = dataTransfer.getData('text/plain');
+
+      const eventIndex = state.events.findIndex(event => event.id === eventId);
+      state.events[eventIndex].time = target.dataset.time;
+      state.events[eventIndex].day = target.dataset.day;
+
+      localStorage.eventStore = JSON.stringify(state);
+      resetGrid();
+      state.events.forEach(render);
+    }
   });
 };

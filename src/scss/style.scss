@@ -1,16 +1,6 @@
 $cell-border: 2px solid #cccccc;
 $transition: .2s;
-
-// * {
-//     box-sizing: border-box;
-//     margin: 0;
-//     padding: 0;
-// }
-
-// body {
-//     font-family: 'Open Sans', sans-serif;
-//     font-size: 14px;
-// }
+$is-booker-color: #9072d2;
 
 .app {
     max-width: 70vw;
@@ -19,15 +9,19 @@ $transition: .2s;
     flex-direction: column;
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .4);
-    padding: 10px;
+    padding: 2rem;
 }
 
 .controls {
     display: grid;
-    grid-template-columns: 3fr 2fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-gap: 1rem;
     margin-bottom: 20px;
     align-items: center;
+
+    & .btn {
+        min-width: 200px;
+    }
 }
 
 .calendar-grid {
@@ -89,11 +83,15 @@ $transition: .2s;
 
     &--bisy { 
         color: #ffffff;
-        background-color: #9072d2;
+        background-color: $is-booker-color;
     }
     &--bisy:hover {
-        background-color: lighten(#9072d2, 10%);
+        background-color: lighten($is-booker-color, 10%);
     }
+
+    &.drag-hover {
+        background-color: $is-booker-color;
+    } 
 }
 
 .time-cell {
@@ -160,8 +158,10 @@ $transition: .2s;
                 align-items: center;
 
                 &-btn {
-                    margin-left: auto;
-                    padding: 0;
+                    position: fixed;
+                    top: 1rem;
+                    right: 1rem;
+                    outline: none;
                     border: 0;
                     background: none;
                     cursor:pointer;
@@ -178,9 +178,20 @@ $transition: .2s;
                 background-color: rgb(243, 156, 156);
                 color: rgb(150, 33, 33);
 
+                &-text {
+                    margin-left: .5rem;
+                    margin-right: auto;
+                }
+
                 &.active {
                     display: flex;
                 }
+
+                // &.warn {
+                //     display: flex;
+                //     background-color: #ffcc00;
+                //     color: darken(#ffcc00, 25%);
+                // }
             }
         }
 
@@ -194,8 +205,9 @@ $transition: .2s;
 
             & .control-wrapper {
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-end;
                 align-items: center;
+                margin-bottom: 1rem;
 
                 & .label {
                     min-width: 100px;
@@ -205,7 +217,11 @@ $transition: .2s;
 
                 & .control-input {
                     width: 100%;
-                    margin: 8px;
+                    margin: 0 8px;
+                }
+
+                & .btn {
+                    margin: 0 8px;
                 }
             }
         }
@@ -252,13 +268,15 @@ $transition: .2s;
     padding: 8px 16px;
     min-width: 100px;
     font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
-    line-height: 28px;
+    height: 46px;
+    // line-height: 28px;
     color: #354664;
     cursor: pointer;
     background-color: #ebedee;
     border: 0;
+    outline: none;
     border-radius: 4px;
     transition: $transition;
 
@@ -268,10 +286,11 @@ $transition: .2s;
 }
 
 .control-input {
-    padding: 8px 8px;
-    margin-bottom: .6rem;
+    padding: 0.5rem 1rem;
     font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
+    border: 1px solid #cccccc;
+    outline: none;
+    font-size: 16px;
     line-height: 28px;
     color: #354664;
     border-color: #cccccc;
@@ -282,7 +301,7 @@ $transition: .2s;
 }
 
 .select {
-    $height: 36px;
+    $height: 46px;
     $parent: &;
     display: flex;
     align-items: center;
@@ -315,11 +334,14 @@ $transition: .2s;
             border: 1px solid #cccccc;
             border-radius: 5px;
             height: $height;
-            width: 100%;
+            // width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 1rem;
+            margin-left: .5rem;
+            margin-right: 0.5rem;
+            // margin-bottom: 1rem;
         }
     
         &__dropdown {
@@ -332,6 +354,7 @@ $transition: .2s;
             left: 0;
             right: 0;
             max-height: 300px;
+            margin: 0 8px;
             overflow-y: auto;
             z-index: 100;
     
