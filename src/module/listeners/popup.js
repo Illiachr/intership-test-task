@@ -4,18 +4,25 @@ import {
 import { render } from '../render';
 import Select from '../UI/select/select';
 
-const statePopup = {
+const stateEventSlot = {
   event: {
     partisipants: [],
   },
   isBooked: false,
 };
 
-export default (modalId, state, day = '', time = '') => {
-  const popup = document.getElementById(modalId);
+export default (popupId, state, day = '', time = '') => {
+  const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const popUpHeader = popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`);
   const wranMsg = popup.querySelector(`.${CLASS_LIST.WARN}`);
+  const msg = {
+    nameWarn: 'Enter event name, please',
+    inputWarn: 'Only letters a-z and space, please',
+    timeErr: 'Failed to create event. This time is already booked',
+    regExpNameReplace: /[^a-z\s]/gi,
+    regExpNameTest: /^a-z\s?$/gi,
+  };
   popUpHeader.textContent = 'Add Event';
   popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
 
@@ -46,7 +53,7 @@ export default (modalId, state, day = '', time = '') => {
           return total;
         }, []);
       }
-      statePopup.event.partisipants = [...members];
+      stateEventSlot.event.partisipants = [...members];
     },
   }, true);
 
@@ -58,7 +65,7 @@ export default (modalId, state, day = '', time = '') => {
     ],
     onSelect(selectedItems) {
       wranMsg.classList.remove('active');
-      statePopup.event = { ...statePopup.event, day: selectedItems.id };
+      stateEventSlot.event = { ...stateEventSlot.event, day: selectedItems.id };
     },
   });
 
@@ -74,17 +81,35 @@ export default (modalId, state, day = '', time = '') => {
     data: eventTimeTable,
     onSelect(selectedItems) {
       wranMsg.classList.remove('active');
-      statePopup.event = { ...statePopup.event, time: selectedItems.id };
+      stateEventSlot.event = { ...stateEventSlot.event, time: selectedItems.id };
     },
   });
 
+  const inputHandler = e => {
+    const { target } = e;
+
+    if (target === eventForm.name) {
+      wranMsg.classList.remove('active');
+      target.value = target.value.replace(msg.regExpNameReplace, '');
+      // if (msg.regExpName.test(target.value)) {
+      //   console.log('ok');
+      // }
+
+      wranMsg.children[1].textContent = msg.inputWarn;
+      wranMsg.classList.add('active');
+    }
+  };
+
   const submitHandler = e => {
     e.preventDefault();
-    if (eventForm.name.value === '') {
+
+    if (eventForm.name.value.trim() === '') {
+      wranMsg.children[1].textContent = msg.nameWarn;
       wranMsg.classList.add('active');
       return;
     }
-    statePopup.event.id = `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
+
+    stateEventSlot.event.id = `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
     select.selectionResult();
     selectDay.selectionResult();
     selectTime.selectionResult();
@@ -92,25 +117,26 @@ export default (modalId, state, day = '', time = '') => {
     [...eventForm.elements].forEach(elem => {
       if (elem.matches('input') || elem.matches('select')) {
         if (!elem.matches('input[type=checkbox]')) {
-          statePopup.event = { ...statePopup.event, [elem.name]: elem.value };
+          stateEventSlot.event = { ...stateEventSlot.event, [elem.name]: elem.value };
         }
       }
     });
-    if (state.events.length > 0) {
+    if (state.events.length >= 0) {
       state.events.forEach(event => {
-        if (event.day === statePopup.event.day && event.time === statePopup.event.time) {
-          statePopup.isBooked = true;
-        } else { statePopup.isBooked = false; }
+        if (event.day === stateEventSlot.event.day &&
+            event.time === stateEventSlot.event.time) {
+          stateEventSlot.isBooked = true;
+        } else { stateEventSlot.isBooked = false; }
       });
     }
 
-    if (!statePopup.isBooked) {
-      state.events.push(statePopup.event);
+    if (!stateEventSlot.isBooked) {
+      state.events.push(stateEventSlot.event);
       localStorage.eventStore = JSON.stringify(state);
-      render(statePopup.event);
+      render(stateEventSlot.event);
       closePopup();
     } else {
-      console.log('time is already booked');
+      wranMsg.children[1].textContent = msg.timeErr;
       wranMsg.classList.add('active');
     }
   };
@@ -131,6 +157,7 @@ export default (modalId, state, day = '', time = '') => {
   function closePopup() {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
+    eventForm.removeEventListener('input', inputHandler);
     select.destroy();
     selectDay.destroy();
     selectTime.destroy();
@@ -144,5 +171,6 @@ export default (modalId, state, day = '', time = '') => {
   selectTime.init();
 
   popup.addEventListener('click', clickHandler);
+  eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
 };

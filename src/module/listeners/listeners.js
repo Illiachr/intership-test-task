@@ -1,7 +1,6 @@
 import {
   CLASS_LIST,
   DEV_TEAM,
-  eventHours,
   workWeek,
 } from '../options';
 import { render, renderFormLS, resetGrid } from '../render';
@@ -46,6 +45,26 @@ export default (selector = '.app') => {
     },
   });
 
+  const firstFreeSlot = () => {
+    let nextFreeTime = '';
+    let lastBookedDay = '';
+    workWeek.forEach(day => {
+      calendar.querySelectorAll(`.cell[data-day="${day.id}"]`)
+        .forEach(elem => {
+          if (!elem.dataset.eventId || elem.dataset.eventId.trim() === '') {
+            if (lastBookedDay === '' && nextFreeTime === '') {
+              lastBookedDay = elem.dataset.day;
+              nextFreeTime = elem.dataset.time;
+            }
+          }
+        });
+    });
+    return {
+      day: lastBookedDay,
+      time: nextFreeTime,
+    };
+  }; // end firstFreeSlot
+
   state.events = renderFormLS();
   console.log(state);
   state.events.forEach(render);
@@ -55,12 +74,9 @@ export default (selector = '.app') => {
 
     if (target.closest(`.${CLASS_LIST.OPEN_MODAL}`)) {
       const targetElem = target.closest(`.${CLASS_LIST.OPEN_MODAL}`);
-      let day = workWeek[0].id;
-      let time = eventHours.start;
-      if (targetElem.matches(`.${CLASS_LIST.METTING_CELL}`)) {
-        time = targetElem.dataset.time;
-        day = targetElem.dataset.day;
-      }
+      const firstFree = firstFreeSlot();
+      const day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
+      const time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
       const modalId = targetElem.dataset.modal;
       if (modalId) { popup(modalId, state, day, time); }
     }
@@ -68,10 +84,32 @@ export default (selector = '.app') => {
     if (target.closest(`.${CLASS_LIST.RM_EVT}`)) {
       const eventSlot = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
       if (eventSlot) {
-        console.dir(eventSlot);
         removeDialog('event-remove', eventSlot, state);
       } else { console.warn('No event'); }
-      console.log(state);
     }
+  });
+
+  calendar.addEventListener('dragstart', e => {
+    const { target, dataTransfer } = e;
+    const dragTarget = target.closest(`.${CLASS_LIST.SLOT_BISY}`);
+    if (dragTarget) {
+      dataTransfer.setData('text/plain', dragTarget.dataset.eventId);
+    }
+  });
+
+  calendar.addEventListener('dragover', e => {
+    e.preventDefault();
+  });
+
+  calendar.addEventListener('drop', e => {
+    e.preventDefault();
+    const { target } = e;
+    const eventId = e.dataTransfer.getData('text/plain');
+    const eventIndex = state.events.findIndex(event => event.id === eventId);
+    state.events[eventIndex].time = target.dataset.time;
+    state.events[eventIndex].day = target.dataset.day;
+    localStorage.eventStore = JSON.stringify(state);
+    resetGrid();
+    state.events.forEach(render);
   });
 };
