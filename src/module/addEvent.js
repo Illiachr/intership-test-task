@@ -1,8 +1,9 @@
 import {
-  CLASS_LIST, DEV_TEAM, eventHours, workWeek,
-} from '../options';
-import { render } from '../render';
-import Select from '../UI/select/select';
+  classes,
+  eventHours, team, workWeek,
+} from './auxiliary';
+import { render } from './render';
+import Select from './UI/select/select';
 
 const stateEventSlot = {
   event: {
@@ -14,8 +15,7 @@ const stateEventSlot = {
 export default (popupId, state, day = '', time = '') => {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
-  const popUpHeader = popup.querySelector(`.${CLASS_LIST.MODAL_TITLE}`);
-  const warnMsg = popup.querySelector(`.${CLASS_LIST.WARN}`);
+  const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
   const msg = {
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
@@ -23,14 +23,13 @@ export default (popupId, state, day = '', time = '') => {
     regExpNameReplace: /[^a-z\s]/gi,
     regExpNameTest: /[a-z\s]/gi,
   };
-  popUpHeader.innerHTML = '<h4>Add Event</h4>';
-  popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
+  popup.classList.add(classes.modalActive);
 
   const select = new Select('#participants', {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'All members' },
-      ...DEV_TEAM,
+      ...team,
     ],
     onSelect(selectedItems) {
       let members = [];
@@ -143,13 +142,13 @@ export default (popupId, state, day = '', time = '') => {
 
   const clickHandler = e => {
     const { target } = e;
-    if (target.closest(`.${CLASS_LIST.TRIGGER_CLOSE}`) ||
-            target.classList.contains(CLASS_LIST.MODAL_ACTIVE)
+    if (target.closest(`.${classes.triggerClose}`) ||
+            target.classList.contains(classes.modalActive)
     ) {
       closePopup();
     }
 
-    if (target.closest(`.${CLASS_LIST.WARN}`)) {
+    if (target.closest(`.${classes.modalWarning}`)) {
       warnMsg.classList.remove('active');
     }
   };
@@ -163,12 +162,8 @@ export default (popupId, state, day = '', time = '') => {
     selectTime.destroy();
     eventForm.reset();
     warnMsg.classList.remove('active');
-    popup.classList.remove(CLASS_LIST.MODAL_ACTIVE);
+    popup.classList.remove(classes.modalActive);
   }
-
-  select.init();
-  selectDay.init();
-  selectTime.init();
 
   popup.addEventListener('click', clickHandler);
   eventForm.addEventListener('input', inputHandler);

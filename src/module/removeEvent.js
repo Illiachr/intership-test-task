@@ -1,4 +1,4 @@
-import { CLASS_LIST } from '../options';
+import { classes } from './auxiliary';
 
 const removeEvent = (state, eventSlot) => {
   console.log(state);
@@ -6,7 +6,7 @@ const removeEvent = (state, eventSlot) => {
   const eventIndex = state.events.findIndex(event => event.id === eventSlot.dataset.eventId);
   state.events.splice(eventIndex, 1);
   eventSlot.removeAttribute('data-event-id');
-  eventSlot.classList.remove(CLASS_LIST.SLOT_BISY);
+  eventSlot.classList.remove(classes.slotBooked);
   eventSlotchildren[0].textContent = '';
   eventSlotchildren[1].style.display = 'none';
   localStorage.eventStore = JSON.stringify(state);
@@ -15,11 +15,11 @@ const removeEvent = (state, eventSlot) => {
 export default (modalId, elem, state) => {
   const popup = document.getElementById(modalId);
 
-  popup.classList.add(CLASS_LIST.MODAL_ACTIVE);
+  popup.classList.add(classes.modalActive);
 
   const closePopup = (...args) => {
     popup.removeEventListener('click', args.clickHandler);
-    popup.classList.remove(CLASS_LIST.MODAL_ACTIVE);
+    popup.classList.remove(classes.modalActive);
   };
 
   const clickHandler = e => {
@@ -31,8 +31,8 @@ export default (modalId, elem, state) => {
       closePopup(clickHandler);
     }
 
-    if (target.closest(`.${CLASS_LIST.TRIGGER_CLOSE}`) ||
-            target.classList.contains(CLASS_LIST.MODAL_ACTIVE)
+    if (target.closest(`.${classes.triggerClose}`) ||
+            target.classList.contains(classes.modalActive)
     ) {
       closePopup(clickHandler);
     }

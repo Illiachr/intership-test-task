@@ -1,4 +1,4 @@
-import { eventHours, workWeek } from './options';
+import { eventHours, workWeek } from './auxiliary';
 
 const getGridHeaderTempl = () => {
   const gridHeader = workWeek.map(day => `

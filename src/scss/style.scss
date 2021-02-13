@@ -3,7 +3,7 @@ $transition: .2s;
 $is-booker-color: #9072d2;
 
 .app {
-    max-width: 70vw;
+    max-width: 1140px;
     margin: 20vh auto 0;
     display: flex;
     flex-direction: column;
@@ -18,9 +18,20 @@ $is-booker-color: #9072d2;
     grid-gap: 1rem;
     margin-bottom: 20px;
     align-items: center;
+    & .title {
+        font-size: 36px;
+    }
+    
+    & .select {
+        font-size: 18px;
+    }
 
     & .btn {
+        display: flex;
         min-width: 200px;
+        align-items: center;
+        justify-content: space-evenly;
+        font-size: 18px;
     }
 }
 
@@ -117,7 +128,6 @@ $is-booker-color: #9072d2;
     &__dialog {
         display: flex;
         flex-direction: column;
-        // overflow: hidden;
         max-height: $screen-height;
         background-color: #ffffff;
         border-radius: 8px;
@@ -186,18 +196,11 @@ $is-booker-color: #9072d2;
                 &.active {
                     display: flex;
                 }
-
-                // &.warn {
-                //     display: flex;
-                //     background-color: #ffcc00;
-                //     color: darken(#ffcc00, 25%);
-                // }
             }
         }
 
         &-body {
             flex-grow: 1;
-            // overflow: auto;
             display: flex;
             flex-direction: column;
             margin: 0 auto;
@@ -239,26 +242,19 @@ $is-booker-color: #9072d2;
             }
         }
     }
-    &--s &__dialog { width: 300px; }
+    &--s &__dialog { width: 300px;
+        &-body {
+            text-align: center;
+        }
+    }
     &--m &__dialog { width: 600px; }
     &--l &__dialog { width: 900px; }
-
-    &--screen-height &__dialog { max-height: $screen-height; }
 
     &--active {
         visibility: visible;
         opacity: 1;
         #{$parent}__dialog {
             transform: translateY(0);
-        }
-    }
-
-    &--has-scroll {
-        #{$parent}__dialog-header,
-        #{$parent}__dialog-footer {
-            position: relative;
-            z-index: 5;
-            box-shadow: 0 0 8px rgba(0, 0, 0, .4);
         }
     }
 }
@@ -271,7 +267,6 @@ $is-booker-color: #9072d2;
     font-size: 16px;
     font-weight: 700;
     height: 46px;
-    // line-height: 28px;
     color: #354664;
     cursor: pointer;
     background-color: #ebedee;
@@ -296,8 +291,6 @@ $is-booker-color: #9072d2;
     border-color: #cccccc;
     border-radius: 4px;
     transition: $transition;
-
-    // closePopup(clickHandler);
 }
 
 .select {
@@ -306,7 +299,6 @@ $is-booker-color: #9072d2;
     display: flex;
     align-items: center;
     width: 100%;
-    // z-index: 100;
     
         &__backdrop {
             position: fixed;
@@ -334,14 +326,12 @@ $is-booker-color: #9072d2;
             border: 1px solid #cccccc;
             border-radius: 5px;
             height: $height;
-            // width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 1rem;
             margin-left: .5rem;
             margin-right: 0.5rem;
-            // margin-bottom: 1rem;
         }
     
         &__dropdown {

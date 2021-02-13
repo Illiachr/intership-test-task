@@ -49,6 +49,8 @@ export default class Select {
     this.multi = multi;
     this.selectedId = options.defaultSeleted;
     this.selectedItems = [];
+
+    this.init();
   }
 
   init() {
