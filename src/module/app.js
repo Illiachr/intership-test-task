@@ -25,7 +25,6 @@ export default (selector = '.app') => {
       ...team,
     ],
     onSelect(item) {
-      console.log(item);
       if (item.id === '0') {
         resetGrid();
         state.events.forEach(render);
@@ -41,7 +40,6 @@ export default (selector = '.app') => {
       }, []);
       state.filtered = filtered;
       resetGrid();
-      console.log(filtered);
       filtered.forEach(render);
     },
   });
@@ -67,7 +65,6 @@ export default (selector = '.app') => {
   }; // end firstFreeSlot
 
   state.events = getEventStore().events;
-  console.log(state);
   if (state.events.length > 0) {
     state.events.forEach(render);
   }

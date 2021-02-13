@@ -3,16 +3,15 @@ import { classes } from './auxiliary';
 export const render = event => {
   document.querySelectorAll('.row-meeting').forEach(row => {
     if (event.time === row.dataset.time) {
-      row.querySelectorAll('.meeting-cell').forEach(cell => {
-        if (cell.dataset.day === event.day) {
-          cell.classList.add(classes.slotBooked);
-          cell.classList.remove(classes.triggerOpen);
-          cell.setAttribute('data-event-id', event.id);
-          cell.setAttribute('draggable', true);
-          const span = cell.querySelector('.cancel-event');
-          span.style.display = 'inline';
-          cell.insertAdjacentHTML('afterbegin',
-            `<span class="name" data-type="event-name">${event.name}</span>`);
+      row.querySelectorAll('.meeting-cell').forEach(eventSlot => {
+        if (eventSlot.dataset.day === event.day) {
+          const eventSlotChildren = eventSlot.children;
+          eventSlot.classList.add(classes.slotBooked);
+          eventSlot.classList.remove(classes.triggerOpen);
+          eventSlot.setAttribute('data-event-id', event.id);
+          eventSlot.setAttribute('draggable', true);
+          eventSlotChildren[0].textContent = event.name;
+          eventSlotChildren[1].style.display = 'inline';
         }
       });
     }
@@ -21,14 +20,14 @@ export const render = event => {
 
 export const resetGrid = () => {
   document.querySelectorAll('.row-meeting').forEach(row => {
-    row.querySelectorAll('.meeting-cell').forEach(cell => {
-      cell.classList.remove(classes.slotBooked);
-      cell.classList.add(classes.triggerOpen);
-      cell.removeAttribute('data-event-id');
-      const eventTitle = cell.querySelector('[data-type="event-name"]');
-      const removeEventIcon = cell.querySelector('.cancel-event');
-      if (eventTitle) { eventTitle.remove(); }
-      removeEventIcon.style.display = 'none';
+    row.querySelectorAll('.meeting-cell').forEach(eventSlot => {
+      const eventSlotChildren = eventSlot.children;
+      eventSlot.classList.remove(classes.slotBooked);
+      eventSlot.classList.add(classes.triggerOpen);
+      eventSlot.removeAttribute('data-event-id');
+      eventSlot.removeAttribute('draggable', true);
+      eventSlotChildren[0].textContent = '';
+      eventSlotChildren[1].style.display = 'none';
     });
   });
 };

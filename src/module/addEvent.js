@@ -1,21 +1,23 @@
 import {
   classes,
-  eventHours, team, workWeek,
+  eventHours,
+  team,
+  workWeek,
 } from './auxiliary';
 import { render } from './render';
 import Select from './UI/select/select';
 
-const stateEventSlot = {
-  event: {
-    partisipants: [],
-  },
-  isBooked: false,
-};
+const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
 export default (popupId, state, day = '', time = '') => {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
+  const stateEventSlot = {
+    event: { partisipants: [] },
+    isBooked: false,
+  };
+
   const msg = {
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
@@ -64,7 +66,7 @@ export default (popupId, state, day = '', time = '') => {
     ],
     onSelect(selectedItems) {
       warnMsg.classList.remove('active');
-      stateEventSlot.event = { ...stateEventSlot.event, day: selectedItems.id };
+      stateEventSlot.event.day = selectedItems.id;
     },
   });
 
@@ -80,7 +82,7 @@ export default (popupId, state, day = '', time = '') => {
     data: eventTimeTable,
     onSelect(selectedItems) {
       warnMsg.classList.remove('active');
-      stateEventSlot.event = { ...stateEventSlot.event, time: selectedItems.id };
+      stateEventSlot.event.time = selectedItems.id;
     },
   });
 
@@ -101,6 +103,7 @@ export default (popupId, state, day = '', time = '') => {
 
   const submitHandler = e => {
     e.preventDefault();
+    stateEventSlot.isBooked = false;
 
     if (eventForm.name.value.trim() === '') {
       warnMsg.children[1].textContent = msg.nameWarn;
@@ -108,26 +111,17 @@ export default (popupId, state, day = '', time = '') => {
       return;
     }
 
-    stateEventSlot.event.id = `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
+    stateEventSlot.event.id = generateId();
+    stateEventSlot.event.name = eventForm.name.value;
     select.selectionResult();
     selectDay.selectionResult();
     selectTime.selectionResult();
 
-    [...eventForm.elements].forEach(elem => {
-      if (elem.matches('input') || elem.matches('select')) {
-        if (!elem.matches('input[type=checkbox]')) {
-          stateEventSlot.event = { ...stateEventSlot.event, [elem.name]: elem.value };
-        }
+    state.events.forEach(event => {
+      if (event.day === stateEventSlot.event.day && event.time === stateEventSlot.event.time) {
+        stateEventSlot.isBooked = true;
       }
     });
-    if (state.events.length >= 0) {
-      state.events.forEach(event => {
-        if (event.day === stateEventSlot.event.day &&
-            event.time === stateEventSlot.event.time) {
-          stateEventSlot.isBooked = true;
-        } else { stateEventSlot.isBooked = false; }
-      });
-    }
 
     if (!stateEventSlot.isBooked) {
       state.events.push(stateEventSlot.event);

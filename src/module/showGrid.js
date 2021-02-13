@@ -18,6 +18,7 @@ const getGridTemplate = hour => {
   const rowCells = workWeek
     .map(
       day => `<div class="${cellCls.join(' ')}" data-day="${day.id}" data-time="${hour}" data-modal="modal-event">
+                        <span class="name" data-type="event-name"></span>
                         <span class="cancel-event fas fa-times"></span>
                     </div>`,
     );
