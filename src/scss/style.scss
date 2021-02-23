@@ -13,9 +13,8 @@ $is-booker-color: #9072d2;
 }
 
 .controls {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
-    grid-gap: 1rem;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 20px;
     align-items: center;
     & .title {
@@ -24,6 +23,8 @@ $is-booker-color: #9072d2;
     
     & .select {
         font-size: 18px;
+        max-width: 400px;
+        margin-left: auto;
     }
 
     & .btn {
