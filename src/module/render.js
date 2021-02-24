@@ -33,11 +33,9 @@ export const resetGrid = () => {
 };
 
 export const getEventStore = () => {
-  let eventStore = {
-    events: [],
-  };
+  let eventStore = [];
   if (localStorage.getItem('eventStore')) {
-    eventStore = { ...JSON.parse(localStorage.getItem('eventStore')) };
+    eventStore = JSON.parse(localStorage.getItem('eventStore'));
   }
   return eventStore;
 };
