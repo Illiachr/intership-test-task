@@ -27,7 +27,7 @@ const firstFreeSlot = calendar => {
 export default class Admin extends User {
   init() {
     super.init();
-    this.addEventBtn = this.calendar('[data-type="add-event"]');
+    this.addEventBtn = this.calendar.querySelector('[data-type="add-event"]');
     this.addEventBtn.style.display = 'flex';
     this.calendar.addEventListener('click', e => {
       this.onClick(e);

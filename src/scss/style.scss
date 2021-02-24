@@ -1,3 +1,4 @@
+@import "~normalize.css";
 @import "variables";
 
 .app {
@@ -247,6 +248,7 @@
         }
         & .select {
             min-width: 300px;
+            text-align: left;
         }
     }
     &--m &__dialog { width: 600px; }
