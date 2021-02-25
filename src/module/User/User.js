@@ -5,8 +5,6 @@ export default class User {
     this.user = user;
     this.selector = selector;
     this.user.rights = ['filter'];
-
-    this.init();
   }
 
   init() {

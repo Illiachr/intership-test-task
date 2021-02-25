@@ -37,13 +37,13 @@ export default modalId => {
         currentUser.role) {
       closePopup(clickHandler);
       if (currentUser.role === 'user') {
-        // eslint-disable-next-line no-unused-vars
         const user = new User(currentUser, '.app');
+        user.init();
       }
 
       if (currentUser.role === 'admin') {
         const admin = new Admin(currentUser, '.app');
-        console.log(admin);
+        admin.init();
       }
     }
   };

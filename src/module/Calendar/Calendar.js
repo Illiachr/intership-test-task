@@ -25,7 +25,6 @@ export default class Calendar {
   }
 
   init() {
-    console.log(this.user);
     this.user.rights.forEach(right => this[getMethodName(right)]());
     this.clickListener();
   }
@@ -73,7 +72,7 @@ export default class Calendar {
   }
 
   onUpdatedd() {
-    this.calendar.addEventListener('dragstart', e => {
+    this.root.addEventListener('dragstart', e => {
       const { target, dataTransfer } = e;
       const dragTarget = target.closest(`.${classes.slotBooked}`);
       if (dragTarget) {
@@ -81,7 +80,7 @@ export default class Calendar {
       }
     });
 
-    this.calendar.addEventListener('dragenter', e => {
+    this.root.addEventListener('dragenter', e => {
       const { target } = e;
       const targetBooked = target.closest(`.${classes.slotBooked}`);
       if (!targetBooked && target.closest(`.${classes.eventSlot}`)) {
@@ -89,7 +88,7 @@ export default class Calendar {
       }
     });
 
-    this.calendar.addEventListener('dragover', e => {
+    this.root.addEventListener('dragover', e => {
       const { target } = e;
       const targetBooked = target.closest(`.${classes.slotBooked}`);
       if (!targetBooked && target.closest(`.${classes.eventSlot}`)) {
@@ -97,11 +96,11 @@ export default class Calendar {
       }
     });
 
-    this.calendar.addEventListener('dragleave', e => {
+    this.root.addEventListener('dragleave', e => {
       e.target.classList.remove('drag-hover');
     });
 
-    this.calendar.addEventListener('drop', e => {
+    this.root.addEventListener('drop', e => {
       const { target, dataTransfer } = e;
       const targetBooked = target.closest(`.${classes.slotBooked}`);
 
@@ -138,14 +137,13 @@ export default class Calendar {
     }, []);
     this.filtred = filtred;
     resetGrid();
-    console.log(filtred);
     filtred.forEach(render);
   }
 
   newEvent(elem) {
     if (elem.closest(`.${classes.triggerOpen}`)) {
       const targetElem = elem.closest(`.${classes.triggerOpen}`);
-      const firstFree = firstFreeSlot(this.calendar);
+      const firstFree = firstFreeSlot(this.root);
       const day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
       const time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
       const modalId = targetElem.dataset.modal;
