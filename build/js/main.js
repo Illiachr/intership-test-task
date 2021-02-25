@@ -215,491 +215,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_index_html__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _css_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./css/style.css */ "./css/style.css");
 /* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scss/style.scss */ "./scss/style.scss");
-/* harmony import */ var _module_BlockContainer_BlockContainer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./module/BlockContainer/BlockContainer */ "./module/BlockContainer/BlockContainer.js");
-/* harmony import */ var _module_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/model */ "./module/model.js");
-/* harmony import */ var _module_showGrid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./module/showGrid */ "./module/showGrid.js");
-/* harmony import */ var _module_login__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./module/login */ "./module/login.js");
-/* harmony import */ var _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./module/UI/DomElement/DomElement */ "./module/UI/DomElement/DomElement.js");
+/* harmony import */ var _module_appTemplate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./module/appTemplate */ "./module/appTemplate.js");
 
 
 
 
-
-
-
- // import Modal from './module/UI/Modal/Modal';
-
-var header = new _module_BlockContainer_BlockContainer__WEBPACK_IMPORTED_MODULE_3__.default('#app', ['controls'], _module_model__WEBPACK_IMPORTED_MODULE_4__.appHeader);
-var table = new _module_BlockContainer_BlockContainer__WEBPACK_IMPORTED_MODULE_3__.default('#app', ['calendar-grid']); // const login = new Modal('login', ['modal', 'modal--s'], loginModal);
-
-header.render();
-table.render();
-(0,_module_showGrid__WEBPACK_IMPORTED_MODULE_5__.default)();
-var modalLogin = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  id: 'login',
-  classes: ['modal', 'modal--s']
-});
-var modalWrapper = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  classes: ['modal__dialog']
-});
-var modalHeader = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  classes: ['modal__dialog-header']
-});
-var modalHeaderCnt = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  classes: ['modal__dialog-header-content']
-});
-var modalTitle = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('h4', {}, 'Please autorize');
-var modalBody = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  classes: ['modal__dialog-body']
-});
-var modalUserSelect = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  id: 'user-select'
-});
-var modalFooter = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('div', {
-  classes: ['modal__dialog-footer']
-});
-var modalLoginBtn = new _module_UI_DomElement_DomElement__WEBPACK_IMPORTED_MODULE_7__.default('button', {
-  classes: ['js-modal-submit btn']
-}, 'Login');
-modalLogin.add(document.body);
-modalWrapper.add(modalLogin.elem);
-modalHeader.add(modalWrapper.elem);
-modalHeaderCnt.add(modalHeader.elem);
-modalTitle.add(modalHeaderCnt.elem);
-modalBody.add(modalWrapper.elem);
-modalUserSelect.add(modalBody.elem);
-modalFooter.add(modalWrapper.elem);
-modalLoginBtn.add(modalFooter.elem);
-modalLoginBtn.elem.name = 'login';
-modalLoginBtn.elem.type = 'button';
-(0,_module_login__WEBPACK_IMPORTED_MODULE_6__.default)('login');
-
-/***/ }),
-
-/***/ "./module/Block.js":
-/*!*************************!*\
-  !*** ./module/Block.js ***!
-  \*************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ Block; }
-/* harmony export */ });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Block = /*#__PURE__*/function () {
-  function Block(value, options) {
-    _classCallCheck(this, Block);
-
-    this.value = value;
-    this.options = options;
-    this.errMsg = 'toHTML method must be implemented';
-  }
-
-  _createClass(Block, [{
-    key: "toHTML",
-    value: function toHTML() {
-      throw new Error(this.errMsg);
-    }
-  }]);
-
-  return Block;
-}();
-
-
-
-/***/ }),
-
-/***/ "./module/BlockContainer/BlockContainer.js":
-/*!*************************************************!*\
-  !*** ./module/BlockContainer/BlockContainer.js ***!
-  \*************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ BlockContainer; }
-/* harmony export */ });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var BlockContainer = /*#__PURE__*/function () {
-  function BlockContainer(selector, classes, model) {
-    _classCallCheck(this, BlockContainer);
-
-    this.parent = document.querySelector(selector);
-    this.classes = classes || [];
-    this.model = model || [];
-  }
-
-  _createClass(BlockContainer, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      this.elem = document.createElement('div');
-      this.elem.className = this.classes.join(' ');
-      this.parent.append(this.elem);
-      this.model.forEach(function (block) {
-        _this.elem.insertAdjacentHTML('beforeend', block.toHTML());
-      });
-    }
-  }]);
-
-  return BlockContainer;
-}();
-
-
-
-/***/ }),
-
-/***/ "./module/UI/ButtonBlock/AddEventBtnBlock.js":
-/*!***************************************************!*\
-  !*** ./module/UI/ButtonBlock/AddEventBtnBlock.js ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ AddEventBtnBlock; }
-/* harmony export */ });
-/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Block */ "./module/Block.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var AddEventBtnBlock = /*#__PURE__*/function (_Block) {
-  _inherits(AddEventBtnBlock, _Block);
-
-  var _super = _createSuper(AddEventBtnBlock);
-
-  function AddEventBtnBlock() {
-    _classCallCheck(this, AddEventBtnBlock);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(AddEventBtnBlock, [{
-    key: "toHTML",
-    value: function toHTML() {
-      var _this$options = this.options,
-          tag = _this$options.tag,
-          classes = _this$options.classes,
-          dataSet = _this$options.dataSet,
-          iconClassses = _this$options.iconClassses;
-      return "<".concat(tag, " class=\"").concat(classes.join(' '), "\" ").concat(dataSet.join(' '), ">\n                <span>").concat(this.value, "</span>\n                <span class=\"").concat(iconClassses.join(' '), "\"></span>\n            </").concat(tag, ">");
-    }
-  }]);
-
-  return AddEventBtnBlock;
-}(_Block__WEBPACK_IMPORTED_MODULE_0__.default);
-
-
-
-/***/ }),
-
-/***/ "./module/UI/ButtonBlock/ButtonBlock.js":
-/*!**********************************************!*\
-  !*** ./module/UI/ButtonBlock/ButtonBlock.js ***!
-  \**********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ ButtonBlock; }
-/* harmony export */ });
-/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Block */ "./module/Block.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var ButtonBlock = /*#__PURE__*/function (_Block) {
-  _inherits(ButtonBlock, _Block);
-
-  var _super = _createSuper(ButtonBlock);
-
-  function ButtonBlock() {
-    _classCallCheck(this, ButtonBlock);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(ButtonBlock, [{
-    key: "toHTML",
-    value: function toHTML() {
-      var _this$options = this.options,
-          tag = _this$options.tag,
-          name = _this$options.name,
-          type = _this$options.type,
-          classes = _this$options.classes;
-      return "<".concat(tag, " name=").concat(name, ", type=").concat(type, " class=\"").concat(classes.join(' '), "\">\n                ").concat(this.value, "\n            </").concat(tag, ">");
-    }
-  }]);
-
-  return ButtonBlock;
-}(_Block__WEBPACK_IMPORTED_MODULE_0__.default);
-
-
-
-/***/ }),
-
-/***/ "./module/UI/DivBlock/DivBlock.js":
-/*!****************************************!*\
-  !*** ./module/UI/DivBlock/DivBlock.js ***!
-  \****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ TitleBlock; }
-/* harmony export */ });
-/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Block */ "./module/Block.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var TitleBlock = /*#__PURE__*/function (_Block) {
-  _inherits(TitleBlock, _Block);
-
-  var _super = _createSuper(TitleBlock);
-
-  function TitleBlock() {
-    _classCallCheck(this, TitleBlock);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(TitleBlock, [{
-    key: "toHTML",
-    value: function toHTML() {
-      var _this$options = this.options,
-          tag = _this$options.tag,
-          id = _this$options.id;
-      return "<".concat(tag, " id=\"").concat(id, "\">").concat(this.value, "</").concat(tag, ">");
-    }
-  }]);
-
-  return TitleBlock;
-}(_Block__WEBPACK_IMPORTED_MODULE_0__.default);
-
-
-
-/***/ }),
-
-/***/ "./module/UI/DomElement/DomElement.js":
-/*!********************************************!*\
-  !*** ./module/UI/DomElement/DomElement.js ***!
-  \********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ DomElement; }
-/* harmony export */ });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var DomElement = /*#__PURE__*/function () {
-  function DomElement(tag, options, content) {
-    _classCallCheck(this, DomElement);
-
-    this.tag = tag;
-    this.elem = document.createElement(this.tag);
-    this.content = content || null;
-    this.id = options.id || null;
-    this.classes = options.classes || null;
-    this.data = options.data || null;
-    this.init();
-  }
-
-  _createClass(DomElement, [{
-    key: "init",
-    value: function init() {
-      this.addClass();
-      this.setId();
-      this.setData();
-
-      if (this.content) {
-        this.elem.textContent = this.content;
-      }
-    }
-  }, {
-    key: "add",
-    value: function add(parent) {
-      parent.append(this.elem);
-    }
-  }, {
-    key: "addClass",
-    value: function addClass() {
-      if (this.classes) {
-        this.elem.className = this.classes.join(' ');
-      }
-    }
-  }, {
-    key: "setId",
-    value: function setId() {
-      if (this.id) {
-        this.elem.id = this.id;
-      }
-    }
-  }, {
-    key: "setData",
-    value: function setData() {
-      var _this = this;
-
-      if (this.data) {
-        Object.keys(this.data).forEach(function (key) {
-          _this.elem.dataset[key] = _this.data[key];
-        });
-      }
-    }
-  }]);
-
-  return DomElement;
-}();
-
-
-
-/***/ }),
-
-/***/ "./module/UI/TitleBlock/TitleBlock.js":
-/*!********************************************!*\
-  !*** ./module/UI/TitleBlock/TitleBlock.js ***!
-  \********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ TitleBlock; }
-/* harmony export */ });
-/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Block */ "./module/Block.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var TitleBlock = /*#__PURE__*/function (_Block) {
-  _inherits(TitleBlock, _Block);
-
-  var _super = _createSuper(TitleBlock);
-
-  function TitleBlock() {
-    _classCallCheck(this, TitleBlock);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(TitleBlock, [{
-    key: "toHTML",
-    value: function toHTML() {
-      var _this$options = this.options,
-          tag = _this$options.tag,
-          classes = _this$options.classes;
-      return "<".concat(tag, " class=\"").concat(classes.join(' '), "\">").concat(this.value, "</").concat(tag, ">");
-    }
-  }]);
-
-  return TitleBlock;
-}(_Block__WEBPACK_IMPORTED_MODULE_0__.default);
-
-
+(0,_module_appTemplate__WEBPACK_IMPORTED_MODULE_3__.default)('#app');
 
 /***/ }),
 
@@ -1420,6 +941,34 @@ var generateId = function generateId() {
 
 /***/ }),
 
+/***/ "./module/appTemplate.js":
+/*!*******************************!*\
+  !*** ./module/appTemplate.js ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ appTemplate; }
+/* harmony export */ });
+/* harmony import */ var _showGrid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./showGrid */ "./module/showGrid.js");
+/* harmony import */ var _modalTemplates__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalTemplates */ "./module/modalTemplates.js");
+/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login */ "./module/login.js");
+
+
+
+function appTemplate(selector) {
+  var app = document.querySelector(selector);
+  var template = " <div class=\"controls\">\n            <h2 class=\"title\">Calendar</h2>\n            <div id=\"filter\"></div>\n            <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n                <span>New event</span>\n                <span class=\"fas fa-plus\"></span>\n            </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
+  app.insertAdjacentHTML('beforeend', template);
+  (0,_showGrid__WEBPACK_IMPORTED_MODULE_0__.default)();
+  (0,_modalTemplates__WEBPACK_IMPORTED_MODULE_1__.default)();
+  (0,_login__WEBPACK_IMPORTED_MODULE_2__.default)('login');
+}
+
+/***/ }),
+
 /***/ "./module/auxiliary.js":
 /*!*****************************!*\
   !*** ./module/auxiliary.js ***!
@@ -1526,8 +1075,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (modalId) {
   var popup = document.getElementById(modalId);
   var currentUser = {
-    name: 'userName',
-    role: 'ADMIN'
+    name: null,
+    role: null
   };
   popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive); // eslint-disable-next-line no-unused-vars
 
@@ -1575,74 +1124,37 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /***/ }),
 
-/***/ "./module/model.js":
-/*!*************************!*\
-  !*** ./module/model.js ***!
-  \*************************/
+/***/ "./module/modalTemplates.js":
+/*!**********************************!*\
+  !*** ./module/modalTemplates.js ***!
+  \**********************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "appHeader": function() { return /* binding */ appHeader; },
-/* harmony export */   "loginModal": function() { return /* binding */ loginModal; }
+/* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
-/* harmony import */ var _UI_TitleBlock_TitleBlock__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UI/TitleBlock/TitleBlock */ "./module/UI/TitleBlock/TitleBlock.js");
-/* harmony import */ var _UI_DivBlock_DivBlock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UI/DivBlock/DivBlock */ "./module/UI/DivBlock/DivBlock.js");
-/* harmony import */ var _UI_ButtonBlock_AddEventBtnBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UI/ButtonBlock/AddEventBtnBlock */ "./module/UI/ButtonBlock/AddEventBtnBlock.js");
-/* harmony import */ var _UI_ButtonBlock_ButtonBlock__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UI/ButtonBlock/ButtonBlock */ "./module/UI/ButtonBlock/ButtonBlock.js");
+var modalEvent = function modalEvent() {
+  var template = "\n    <div class=\"modal modal--m\" id=\"modal-event\">\n        <div class=\"modal__dialog\">\n            <div class=\"modal__dialog-header\">\n                <div class=\"modal__dialog-header-wrapper\">\n                    <div class=\"modal__dialog-header-content\"><h4>Add Event</h4></div>\n                    <div class=\"modal__dialog-header-close\">\n                        <button class=\"js-modal-close modal__dialog-header-close-btn\">\n                            <span class=\"fas fa-times\"></span>\n                        </button>\n                    </div>\n                </div>\n                <div class=\"modal__dialog-header-warning\" id=\"modal-warning\">\n                    <span class=\"fas fa-exclamation-circle\"></span>\n                    <span class=\"modal__dialog-header-warning-text\"></span>\n                    <span class=\"modal__dialog-header-warning-close fas fa-times-circle\"></span>\n                </div>\n            </div>\n            <form name=\"event-form\" id=\"event-form\">\n                <div class=\"modal__dialog-body\">\n                    <div class=\"control-wrapper\">\n                        <div class=\"label\">Event name</div>\n                        <input \n                          type=\"text\"\n                          name=\"name\"\n                          id=\"event-name\"\n                          class=\"name__event\n                          control-input\"\n                          placeholder=\"Enter event name, please\"> \n                    </div>\n                    <div class=\"control-wrapper\">\n                        <div class=\"label\">Participants</div>                   \n                        <div id=\"participants\"></div>\n                    </div>\n                    <div class=\"control-wrapper\">\n                        <div class=\"label\">Day</div>\n                        <div id=\"day\"></div>\n                    </div>\n                    <div class=\"control-wrapper\">\n                        <div class=\"label\">Time</div>\n                        <div id=\"time\"></div>\n                    </div>\n                    <div class=\"control-wrapper\">                \n                        <button name=\"create\" type=\"submit\" class=\"js-modal-submit btn\">Create</button>\n                        <button type=\"button\" class=\"js-modal-close btn btn-close\">Cancel</button>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n    ";
+  document.body.insertAdjacentHTML('beforeend', template);
+};
 
+var modalRemove = function modalRemove() {
+  var template = "\n    <div class=\"modal modal--s\" id=\"event-remove\">\n        <div class=\"modal__dialog\">\n            <div class=\"modal__dialog-header\">\n                <div class=\"modal__dialog-header-content\">\n                    <h4>Remove event</h4>\n                </div>\n                <div class=\"modal__dialog-header-close\">\n                    <button class=\"js-modal-close modal__dialog-header-close-btn\">\n                        <span class=\"fas fa-times\"></span>\n                    </button>\n                </div>\n            </div>\n            <div class=\"modal__dialog-body\">\n                Are you sure you want to delete \"Event name\" event?\n            </div>\n            <div class=\"modal__dialog-footer\">                \n                <button name=\"yes\" type=\"submit\" class=\"js-modal-submit btn\">Yes</button>\n                <button name=\"no\"type=\"button\" class=\"js-modal-close btn btn-close\">No</button>\n            </div>\n        </div>\n    </div>\n    ";
+  document.body.insertAdjacentHTML('beforeend', template);
+};
 
+var modalLogin = function modalLogin() {
+  var template = "\n    <div class=\"modal modal--s\" id=\"login\">\n        <div class=\"modal__dialog\">\n            <div class=\"modal__dialog-header\">\n                <div class=\"modal__dialog-header-content\">\n                    <h4>Please autorize</h4>\n                </div>\n            </div>\n            <div class=\"modal__dialog-body\">\n                <div id=\"user-select\"></div>\n            </div>\n            <div class=\"modal__dialog-footer\">\n                <button name=\"login\" type=\"submit\" class=\"js-modal-submit btn\">Login</button>\n            </div>\n        </div>\n    </div>";
+  document.body.insertAdjacentHTML('beforeend', template);
+};
 
-
-/* eslint-disable import/prefer-default-export */
-
-var appHeader = [new _UI_TitleBlock_TitleBlock__WEBPACK_IMPORTED_MODULE_0__.default('Calendar', {
-  tag: 'h2',
-  classes: ['title']
-}), new _UI_DivBlock_DivBlock__WEBPACK_IMPORTED_MODULE_1__.default('', {
-  tag: 'div',
-  id: ['filter']
-}), new _UI_ButtonBlock_AddEventBtnBlock__WEBPACK_IMPORTED_MODULE_2__.default('New event', {
-  tag: 'button',
-  classes: ['btn', 'js-modal-open'],
-  iconClassses: ['fas', 'fa-plus'],
-  dataSet: ['data-type="add-event"', 'data-modal="modal-event"']
-})];
-var loginModal = [{
-  modalHeader: {
-    content: [new _UI_TitleBlock_TitleBlock__WEBPACK_IMPORTED_MODULE_0__.default('Please autorize', {
-      tag: 'h4',
-      classes: ['']
-    })],
-    options: {
-      tag: 'div',
-      classes: ['modal__dialog-header-content']
-    }
-  }
-}, {
-  modalBody: {
-    content: [new _UI_DivBlock_DivBlock__WEBPACK_IMPORTED_MODULE_1__.default('', {
-      tag: 'div',
-      id: ['user-select']
-    })],
-    options: {
-      classes: ['modal__dialog-body']
-    }
-  }
-}, {
-  modalFooter: {
-    content: [new _UI_ButtonBlock_ButtonBlock__WEBPACK_IMPORTED_MODULE_3__.default('Login', {
-      tag: 'button',
-      name: 'login',
-      type: 'submit',
-      classes: ['js-modal-submit', 'btn']
-    })],
-    options: {
-      classes: ['modal__dialog-body']
-    }
-  }
-}];
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function () {
+  modalEvent();
+  modalRemove();
+  modalLogin();
+});
 
 /***/ }),
 
@@ -2803,7 +2315,7 @@ exports.XmlEntities = XmlEntities;
 /***/ (function(module) {
 
 // Module
-var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Meeting calendar</title>\r\n    <script defer src=\"https://kit.fontawesome.com/668b42271a.js\" crossorigin=\"anonymous\"></script>\r\n</head>\r\n<body>\r\n    <div id=\"app\" class=\"app\">\r\n        <!-- <div class=\"controls\">\r\n            <h2 class=\"title\">Calendar</h2>\r\n            <div id=\"filter\"></div>\r\n            <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\r\n                <span>New event</span>\r\n                <span class=\"fas fa-plus\"></span>\r\n            </button>            \r\n        </div> -->\r\n        <!-- <div class=\"calendar-grid\">\r\n        </div> -->\r\n    </div>\r\n    <div class=\"modal modal--m\" id=\"modal-event\">\r\n        <div class=\"modal__dialog\">\r\n            <div class=\"modal__dialog-header\">\r\n                <div class=\"modal__dialog-header-wrapper\">\r\n                    <div class=\"modal__dialog-header-content\"><h4>Add Event</h4></div>\r\n                    <div class=\"modal__dialog-header-close\">\r\n                        <button class=\"js-modal-close modal__dialog-header-close-btn\">\r\n                            <span class=\"fas fa-times\"></span>\r\n                        </button>\r\n                    </div>\r\n                </div>\r\n                <div class=\"modal__dialog-header-warning\" id=\"modal-warning\">\r\n                    <span class=\"fas fa-exclamation-circle\"></span>\r\n                    <span class=\"modal__dialog-header-warning-text\"></span>\r\n                    <span class=\"modal__dialog-header-warning-close fas fa-times-circle\"></span>\r\n                </div>\r\n            </div>\r\n            <form name=\"event-form\" id=\"event-form\">\r\n                <div class=\"modal__dialog-body\">\r\n                    <div class=\"control-wrapper\">\r\n                        <div class=\"label\">Event name</div>\r\n                        <input type=\"text\" name=\"name\" id=\"event-name\" class=\"name__event control-input\" placeholder=\"Enter event name\"> \r\n                    </div>\r\n                    <div class=\"control-wrapper\">\r\n                        <div class=\"label\">Participants</div>                   \r\n                        <div id=\"participants\"></div>\r\n                    </div>\r\n                    <div class=\"control-wrapper\">\r\n                        <div class=\"label\">Day</div>\r\n                        <div id=\"day\"></div>\r\n                    </div>\r\n                    <div class=\"control-wrapper\">\r\n                        <div class=\"label\">Time</div>\r\n                        <div id=\"time\"></div>\r\n                    </div>\r\n                    <div class=\"control-wrapper\">                \r\n                        <button name=\"create\" type=\"submit\" class=\"js-modal-submit btn\">Create</button>\r\n                        <button type=\"button\" class=\"js-modal-close btn btn-close\">Cancel</button>\r\n                    </div>\r\n                </div>\r\n            </form>\r\n        </div>\r\n    </div>\r\n    <!-- /.modal -->\r\n    <div class=\"modal modal--s\" id=\"event-remove\">\r\n        <div class=\"modal__dialog\">\r\n            <div class=\"modal__dialog-header\">\r\n                <div class=\"modal__dialog-header-content\">\r\n                    <h4>Remove event</h4>\r\n                </div>\r\n                <div class=\"modal__dialog-header-close\">\r\n                    <button class=\"js-modal-close modal__dialog-header-close-btn\">\r\n                        <span class=\"fas fa-times\"></span>\r\n                    </button>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal__dialog-body\">\r\n                Are you sure you want to delete \"Event name\" event?\r\n            </div>\r\n            <div class=\"modal__dialog-footer\">                \r\n                <button name=\"yes\" type=\"submit\" class=\"js-modal-submit btn\">Yes</button>\r\n                <button name=\"no\"type=\"button\" class=\"js-modal-close btn btn-close\">No</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <!-- /.modal -->\r\n    <!-- <div class=\"modal modal--s\" id=\"login\">\r\n        <div class=\"modal__dialog\">\r\n            <div class=\"modal__dialog-header\">\r\n                <div class=\"modal__dialog-header-content\">\r\n                    <h4>Please autorize</h4>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal__dialog-body\">\r\n                <div id=\"user-select\"></div>\r\n            </div>\r\n            <div class=\"modal__dialog-footer\">\r\n\r\n                <button name=\"login\" type=\"submit\" class=\"js-modal-submit btn\">Login</button>\r\n            </div>\r\n        </div>\r\n    </div> -->\r\n    <!-- /.modal -->\r\n</body>\r\n</html>";
+var code = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Calendar App</title>\r\n    <script defer src=\"https://kit.fontawesome.com/668b42271a.js\" crossorigin=\"anonymous\"></script>\r\n</head>\r\n<body>\r\n    <div id=\"app\" class=\"app\">\r\n    </div>\r\n</body>\r\n</html>";
 // Exports
 module.exports = code;
 
@@ -3380,7 +2892,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614192919310
+      // 1614244335368
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -3400,7 +2912,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614204386797
+      // 1614244335259
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -11956,7 +11468,7 @@ webpackContext.id = "../node_modules/webpack/hot sync ^\\.\\/log$";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "028bbd3779c922e203ba"; }
+/******/ 		__webpack_require__.h = function() { return "3d6a890005b1cce3ca06"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

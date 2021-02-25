@@ -7,8 +7,8 @@ import User from './User/User';
 export default modalId => {
   const popup = document.getElementById(modalId);
   const currentUser = {
-    name: 'userName',
-    role: 'ADMIN',
+    name: null,
+    role: null,
   };
   popup.classList.add(classes.modalActive);
   // eslint-disable-next-line no-unused-vars
