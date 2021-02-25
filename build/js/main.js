@@ -224,6 +224,247 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./module/Calendar/Calendar.js":
+/*!*************************************!*\
+  !*** ./module/Calendar/Calendar.js ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Calendar; }
+/* harmony export */ });
+/* harmony import */ var _addEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../addEvent */ "./module/addEvent.js");
+/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../auxiliary */ "./module/auxiliary.js");
+/* harmony import */ var _removeEvent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../removeEvent */ "./module/removeEvent.js");
+/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../render */ "./module/render.js");
+/* harmony import */ var _UI_select_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../UI/select/select */ "./module/UI/select/select.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./module/utils.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+
+
+
+
+var Calendar = /*#__PURE__*/function () {
+  function Calendar(selector, user) {
+    _classCallCheck(this, Calendar);
+
+    this.root = document.querySelector(selector);
+    this.user = user;
+    this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
+    this.events = [];
+    this.filtred = [];
+    this.handlers = {
+      click: [],
+      dragNdrop: []
+    };
+    this.activeEvents = {};
+    this.init();
+  }
+
+  _createClass(Calendar, [{
+    key: "init",
+    value: function init() {
+      var _this = this;
+
+      console.log(this.user);
+      this.user.rights.forEach(function (right) {
+        return _this[getMethodName(right)]();
+      });
+      this.clickListener();
+    }
+  }, {
+    key: "clickListener",
+    value: function clickListener() {
+      var _this2 = this;
+
+      var clickHandler = function clickHandler(e) {
+        var target = e.target;
+
+        _this2.handlers.click.forEach(function (handler) {
+          return _this2[handler](target);
+        });
+      };
+
+      this.root.addEventListener('click', clickHandler);
+    }
+  }, {
+    key: "onFilter",
+    value: function onFilter() {
+      var filter = this.filterByUser.bind(this); // eslint-disable-next-line no-unused-vars
+
+      var filterByMember = new _UI_select_select__WEBPACK_IMPORTED_MODULE_4__.default('#filter', {
+        label: 'Filter',
+        placeholder: 'Choose member...',
+        defaultSeleted: '0',
+        data: [{
+          id: '0',
+          value: 'All members'
+        }].concat(_toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.team)),
+        onSelect: function onSelect(item) {
+          filter(item);
+        }
+      });
+      this.events = (0,_render__WEBPACK_IMPORTED_MODULE_3__.getEventStore)();
+
+      if (this.events.length > 0) {
+        this.events.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
+      }
+    }
+  }, {
+    key: "onAdd",
+    value: function onAdd() {
+      this.newEvent = this.newEvent.bind(this);
+      this.handlers.click.push('newEvent');
+      this.addEventBtn.style.display = 'flex';
+    }
+  }, {
+    key: "onRemove",
+    value: function onRemove() {
+      this.rmEvent = this.rmEvent.bind(this);
+      this.handlers.click.push('rmEvent');
+    }
+  }, {
+    key: "onUpdatedd",
+    value: function onUpdatedd() {
+      var _this3 = this;
+
+      this.calendar.addEventListener('dragstart', function (e) {
+        var target = e.target,
+            dataTransfer = e.dataTransfer;
+        var dragTarget = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
+
+        if (dragTarget) {
+          dataTransfer.setData('text/plain', dragTarget.dataset.eventId);
+        }
+      });
+      this.calendar.addEventListener('dragenter', function (e) {
+        var target = e.target;
+        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
+
+        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
+          e.target.classList.add('drag-hover');
+        }
+      });
+      this.calendar.addEventListener('dragover', function (e) {
+        var target = e.target;
+        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
+
+        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
+          e.preventDefault();
+        }
+      });
+      this.calendar.addEventListener('dragleave', function (e) {
+        e.target.classList.remove('drag-hover');
+      });
+      this.calendar.addEventListener('drop', function (e) {
+        var target = e.target,
+            dataTransfer = e.dataTransfer;
+        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
+
+        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
+          e.preventDefault();
+          target.classList.remove('drag-hover');
+          var eventId = dataTransfer.getData('text/plain');
+          dataTransfer.setData('text/plain', '');
+
+          var eventIndex = _this3.events.findIndex(function (event) {
+            return event.id === eventId;
+          });
+
+          _this3.events[eventIndex].time = target.dataset.time;
+          _this3.events[eventIndex].day = target.dataset.day;
+          localStorage.eventStore = JSON.stringify(_this3.events);
+          (0,_render__WEBPACK_IMPORTED_MODULE_3__.resetGrid)();
+
+          _this3.events.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
+        }
+      });
+    }
+  }, {
+    key: "filterByUser",
+    value: function filterByUser(item) {
+      if (item.id === '0') {
+        (0,_render__WEBPACK_IMPORTED_MODULE_3__.resetGrid)();
+        this.events.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
+        return;
+      }
+
+      var filtred = this.events.reduce(function (arr, event) {
+        event.partisipants.forEach(function (member) {
+          if (member.id === item.id) {
+            arr.push(event);
+          }
+        });
+        return arr;
+      }, []);
+      this.filtred = filtred;
+      (0,_render__WEBPACK_IMPORTED_MODULE_3__.resetGrid)();
+      console.log(filtred);
+      filtred.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
+    }
+  }, {
+    key: "newEvent",
+    value: function newEvent(elem) {
+      if (elem.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen))) {
+        var targetElem = elem.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen));
+        var firstFree = (0,_utils__WEBPACK_IMPORTED_MODULE_5__.firstFreeSlot)(this.calendar);
+        var day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
+        var time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
+        var modalId = targetElem.dataset.modal;
+
+        if (modalId) {
+          (0,_addEvent__WEBPACK_IMPORTED_MODULE_0__.default)(modalId, this.events, day, time);
+        }
+      }
+    }
+  }, {
+    key: "rmEvent",
+    value: function rmEvent(elem) {
+      if (elem.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.removeEvent))) {
+        var eventSlot = elem.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
+
+        if (eventSlot) {
+          (0,_removeEvent__WEBPACK_IMPORTED_MODULE_2__.default)('event-remove', eventSlot, this.events);
+        } else {
+          console.warn('No event');
+        }
+      }
+    }
+  }]);
+
+  return Calendar;
+}();
+
+
+
+function getMethodName(eventName) {
+  return "on".concat((0,_utils__WEBPACK_IMPORTED_MODULE_5__.capitalize)(eventName));
+}
+
+/***/ }),
+
 /***/ "./module/UI/select/select.js":
 /*!************************************!*\
   !*** ./module/UI/select/select.js ***!
@@ -470,11 +711,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ Admin; }
 /* harmony export */ });
-/* harmony import */ var _addEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../addEvent */ "./module/addEvent.js");
-/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../auxiliary */ "./module/auxiliary.js");
-/* harmony import */ var _removeEvent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../removeEvent */ "./module/removeEvent.js");
-/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../render */ "./module/render.js");
-/* harmony import */ var _User__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./User */ "./module/User/User.js");
+/* harmony import */ var _User__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./User */ "./module/User/User.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -503,143 +740,44 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
-
-
-
-var firstFreeSlot = function firstFreeSlot(calendar) {
-  var nextFreeTime = '';
-  var lastBookedDay = '';
-  _auxiliary__WEBPACK_IMPORTED_MODULE_1__.workWeek.forEach(function (day) {
-    calendar.querySelectorAll(".cell[data-day=\"".concat(day.id, "\"]")).forEach(function (elem) {
-      if (!elem.dataset.eventId || elem.dataset.eventId.trim() === '') {
-        if (lastBookedDay === '' && nextFreeTime === '') {
-          lastBookedDay = elem.dataset.day;
-          nextFreeTime = elem.dataset.time;
-        }
-      }
-    });
-  });
-  return {
-    day: lastBookedDay,
-    time: nextFreeTime
-  };
-}; // end firstFreeSlot
-
-
 var Admin = /*#__PURE__*/function (_User) {
   _inherits(Admin, _User);
 
   var _super = _createSuper(Admin);
 
-  function Admin() {
+  function Admin(user, selector) {
+    var _this;
+
     _classCallCheck(this, Admin);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, user, selector);
+    _this.aditionalRights = ['add', 'remove', 'updatedd'];
+
+    _this.init();
+
+    return _this;
   }
 
   _createClass(Admin, [{
     key: "init",
     value: function init() {
-      var _this = this;
-
       _get(_getPrototypeOf(Admin.prototype), "init", this).call(this);
 
-      this.addEventBtn = this.calendar.querySelector('[data-type="add-event"]');
-      this.addEventBtn.style.display = 'flex';
-      this.calendar.addEventListener('click', function (e) {
-        _this.onClick(e);
-      });
-      this.updateEvent();
+      this.extendUserRights();
     }
   }, {
-    key: "onClick",
-    value: function onClick(e) {
-      var target = e.target;
-
-      if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen))) {
-        var targetElem = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen));
-        var firstFree = firstFreeSlot(this.calendar);
-        var day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
-        var time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
-        var modalId = targetElem.dataset.modal;
-
-        if (modalId) {
-          (0,_addEvent__WEBPACK_IMPORTED_MODULE_0__.default)(modalId, this.events, day, time);
-        }
-      }
-
-      if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.removeEvent))) {
-        var eventSlot = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
-
-        if (eventSlot) {
-          (0,_removeEvent__WEBPACK_IMPORTED_MODULE_2__.default)('event-remove', eventSlot, this.events);
-        } else {
-          console.warn('No event');
-        }
-      }
-    }
-  }, {
-    key: "updateEvent",
-    value: function updateEvent() {
+    key: "extendUserRights",
+    value: function extendUserRights() {
       var _this2 = this;
 
-      this.calendar.addEventListener('dragstart', function (e) {
-        var target = e.target,
-            dataTransfer = e.dataTransfer;
-        var dragTarget = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
-
-        if (dragTarget) {
-          dataTransfer.setData('text/plain', dragTarget.dataset.eventId);
-        }
-      });
-      this.calendar.addEventListener('dragenter', function (e) {
-        var target = e.target;
-        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
-
-        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
-          e.target.classList.add('drag-hover');
-        }
-      });
-      this.calendar.addEventListener('dragover', function (e) {
-        var target = e.target;
-        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
-
-        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
-          e.preventDefault();
-        }
-      });
-      this.calendar.addEventListener('dragleave', function (e) {
-        e.target.classList.remove('drag-hover');
-      });
-      this.calendar.addEventListener('drop', function (e) {
-        var target = e.target,
-            dataTransfer = e.dataTransfer;
-        var targetBooked = target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked));
-
-        if (!targetBooked && target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.eventSlot))) {
-          e.preventDefault();
-          target.classList.remove('drag-hover');
-          var eventId = dataTransfer.getData('text/plain');
-          dataTransfer.setData('text/plain', '');
-
-          var eventIndex = _this2.events.findIndex(function (event) {
-            return event.id === eventId;
-          });
-
-          _this2.events[eventIndex].time = target.dataset.time;
-          _this2.events[eventIndex].day = target.dataset.day;
-          localStorage.eventStore = JSON.stringify(_this2.events);
-          (0,_render__WEBPACK_IMPORTED_MODULE_3__.resetGrid)();
-
-          _this2.events.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
-        }
+      ['add', 'remove', 'updatedd'].forEach(function (right) {
+        return _this2.user.rights.push(right);
       });
     }
   }]);
 
   return Admin;
-}(_User__WEBPACK_IMPORTED_MODULE_4__.default);
+}(_User__WEBPACK_IMPORTED_MODULE_0__.default);
 
 
 
@@ -656,21 +794,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ User; }
 /* harmony export */ });
-/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../auxiliary */ "./module/auxiliary.js");
-/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../render */ "./module/render.js");
-/* harmony import */ var _UI_select_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../UI/select/select */ "./module/UI/select/select.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+/* harmony import */ var _Calendar_Calendar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Calendar/Calendar */ "./module/Calendar/Calendar.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -679,63 +803,20 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-
-
 var User = /*#__PURE__*/function () {
   function User(user, selector) {
     _classCallCheck(this, User);
 
     this.user = user;
-    this.calendar = document.querySelector(selector);
-    this.events = [];
-    this.filtred = [];
+    this.selector = selector;
+    this.user.rights = ['filter'];
     this.init();
   }
 
   _createClass(User, [{
     key: "init",
     value: function init() {
-      var filter = this.filter.bind(this); // eslint-disable-next-line no-unused-vars
-
-      var filterByMember = new _UI_select_select__WEBPACK_IMPORTED_MODULE_2__.default('#filter', {
-        label: 'Filter',
-        placeholder: 'Choose member...',
-        defaultSeleted: '0',
-        data: [{
-          id: '0',
-          value: 'All members'
-        }].concat(_toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.team)),
-        onSelect: function onSelect(item) {
-          filter(item);
-        }
-      });
-      this.events = (0,_render__WEBPACK_IMPORTED_MODULE_1__.getEventStore)();
-
-      if (this.events.length > 0) {
-        this.events.forEach(_render__WEBPACK_IMPORTED_MODULE_1__.render);
-      }
-    }
-  }, {
-    key: "filter",
-    value: function filter(item) {
-      if (item.id === '0') {
-        (0,_render__WEBPACK_IMPORTED_MODULE_1__.resetGrid)();
-        this.events.forEach(_render__WEBPACK_IMPORTED_MODULE_1__.render);
-        return;
-      }
-
-      var filtred = this.events.reduce(function (arr, event) {
-        event.partisipants.forEach(function (member) {
-          if (member.id === item.id) {
-            arr.push(event);
-          }
-        });
-        return arr;
-      }, []);
-      this.filtred = filtred;
-      (0,_render__WEBPACK_IMPORTED_MODULE_1__.resetGrid)();
-      console.log(filtred);
-      filtred.forEach(_render__WEBPACK_IMPORTED_MODULE_1__.render);
+      this.calendar = new _Calendar_Calendar__WEBPACK_IMPORTED_MODULE_0__.default(this.selector, this.user);
     }
   }]);
 
@@ -1109,7 +1190,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (currentUser.role === 'user') {
         // eslint-disable-next-line no-unused-vars
-        var user = new _User_User__WEBPACK_IMPORTED_MODULE_3__.default(currentUser);
+        var user = new _User_User__WEBPACK_IMPORTED_MODULE_3__.default(currentUser, '.app');
       }
 
       if (currentUser.role === 'admin') {
@@ -1312,6 +1393,48 @@ var getGridTemplate = function getGridTemplate(hour) {
     calendarGrid.insertAdjacentHTML('beforeend', getGridTemplate(hour));
   }
 });
+
+/***/ }),
+
+/***/ "./module/utils.js":
+/*!*************************!*\
+  !*** ./module/utils.js ***!
+  \*************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "capitalize": function() { return /* binding */ capitalize; },
+/* harmony export */   "firstFreeSlot": function() { return /* binding */ firstFreeSlot; }
+/* harmony export */ });
+/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+
+var capitalize = function capitalize(string) {
+  if (typeof string !== 'string') {
+    return '';
+  }
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+var firstFreeSlot = function firstFreeSlot(calendar) {
+  var nextFreeTime = '';
+  var lastBookedDay = '';
+  _auxiliary__WEBPACK_IMPORTED_MODULE_0__.workWeek.forEach(function (day) {
+    calendar.querySelectorAll(".cell[data-day=\"".concat(day.id, "\"]")).forEach(function (elem) {
+      if (!elem.dataset.eventId || elem.dataset.eventId.trim() === '') {
+        if (lastBookedDay === '' && nextFreeTime === '') {
+          lastBookedDay = elem.dataset.day;
+          nextFreeTime = elem.dataset.time;
+        }
+      }
+    });
+  });
+  return {
+    day: lastBookedDay,
+    time: nextFreeTime
+  };
+}; // end firstFreeSlot
 
 /***/ }),
 
@@ -2892,7 +3015,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614244335368
+      // 1614256250399
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -2912,7 +3035,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614244335259
+      // 1614256250167
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -11468,7 +11591,7 @@ webpackContext.id = "../node_modules/webpack/hot sync ^\\.\\/log$";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "3d6a890005b1cce3ca06"; }
+/******/ 		__webpack_require__.h = function() { return "527a095db63c80121280"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

@@ -38,7 +38,7 @@ export default modalId => {
       closePopup(clickHandler);
       if (currentUser.role === 'user') {
         // eslint-disable-next-line no-unused-vars
-        const user = new User(currentUser);
+        const user = new User(currentUser, '.app');
       }
 
       if (currentUser.role === 'admin') {
