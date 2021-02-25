@@ -9,7 +9,7 @@ import Select from './UI/select/select';
 
 const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-export default (popupId, state, day = '', time = '') => {
+export default (popupId, events, day = '', time = '') => {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
@@ -117,15 +117,15 @@ export default (popupId, state, day = '', time = '') => {
     selectDay.selectionResult();
     selectTime.selectionResult();
 
-    state.events.forEach(event => {
+    events.forEach(event => {
       if (event.day === stateEventSlot.event.day && event.time === stateEventSlot.event.time) {
         stateEventSlot.isBooked = true;
       }
     });
 
     if (!stateEventSlot.isBooked) {
-      state.events.push(stateEventSlot.event);
-      localStorage.eventStore = JSON.stringify(state);
+      events.push(stateEventSlot.event);
+      localStorage.eventStore = JSON.stringify(events);
       render(stateEventSlot.event);
       closePopup();
     } else {

@@ -12,11 +12,11 @@ export const classes = {
 };
 
 export const team = [
-  { id: '1', value: 'Maria' },
-  { id: '2', value: 'Max' },
-  { id: '3', value: 'John' },
-  { id: '4', value: 'Nick' },
-  { id: '5', value: 'Natali' },
+  { id: '1', value: 'Andriy', role: 'user' },
+  { id: '2', value: 'Maks', role: 'admin' },
+  { id: '3', value: 'Anton', role: 'user' },
+  { id: '4', value: 'Illia', role: 'admin' },
+  { id: '5', value: 'Danil', role: 'user' },
 ];
 
 export const workWeek = [

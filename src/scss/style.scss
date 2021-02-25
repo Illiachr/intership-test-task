@@ -1,6 +1,5 @@
-$cell-border: 2px solid #cccccc;
-$transition: .2s;
-$is-booker-color: #9072d2;
+@import "~normalize.css";
+@import "variables";
 
 .app {
     max-width: 1140px;
@@ -13,9 +12,8 @@ $is-booker-color: #9072d2;
 }
 
 .controls {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
-    grid-gap: 1rem;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 20px;
     align-items: center;
     & .title {
@@ -24,10 +22,12 @@ $is-booker-color: #9072d2;
     
     & .select {
         font-size: 18px;
+        max-width: 400px;
+        margin-left: auto;
     }
 
     & .btn {
-        display: flex;
+        display: none;
         min-width: 200px;
         align-items: center;
         justify-content: space-evenly;
@@ -94,14 +94,14 @@ $is-booker-color: #9072d2;
 
     &--bisy { 
         color: #ffffff;
-        background-color: $is-booker-color;
+        background-color: $primary-color;
     }
     &--bisy:hover {
-        background-color: lighten($is-booker-color, 10%);
+        background-color: lighten($primary-color, 10%);
     }
 
     &.drag-hover {
-        background-color: $is-booker-color;
+        background-color: $primary-color;
     } 
 }
 
@@ -242,9 +242,13 @@ $is-booker-color: #9072d2;
             }
         }
     }
-    &--s &__dialog { width: 300px;
+    &--s &__dialog { width: 400px;
         &-body {
             text-align: center;
+        }
+        & .select {
+            min-width: 300px;
+            text-align: left;
         }
     }
     &--m &__dialog { width: 600px; }
