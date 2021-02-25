@@ -7,7 +7,7 @@ Clone into the current folder and remove all unnecessary (one command):
 <pre>git clone https://github.com/Illiachr/intership-test-task.git .; rm -rf trunk .gitignore .eslintrc readme.md .git</pre>
 <ol>
   <li>Clone or Download from GitHub</li>
-  <li>Install Node Modules: npm i</li>
+  <li>Install Node Modules: <pre>npm i</pre></li>
   <li>Run webpack:
     <ul>
       <li>develop mode: <pre>npm run dev</pre></li>
