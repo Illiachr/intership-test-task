@@ -1,5 +1,21 @@
 ## Ciklum JavaScript internship test task
 
+## How to use
+
+Clone into the current folder and remove all unnecessary (one command):
+
+<pre>git clone https://github.com/Illiachr/intership-test-task.git .; rm -rf trunk .gitignore .eslintrc readme.md .git</pre>
+<ol>
+  <li>Clone or Download from GitHub</li>
+  <li>Install Node Modules: npm i</li>
+  <li>Run webpack:
+    <ul>
+      <li>develop mode: <pre>npm run dev</pre></li>
+      <li>production mode: <pre>npm run build</pre></li>      
+    </ul>
+  </li>
+</ol>
+
 ### Used technologies:
 
 - JavaScript
@@ -7,13 +23,6 @@
 - SCSS
 - Webpack bundler whit babel
 - ESLint whit airbnb style guide
-
-## Usage
-
-- git clone
-- npm i
-- npm run dev
-- npm run build
 
 ## Features
 
