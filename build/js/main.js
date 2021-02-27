@@ -265,54 +265,6 @@ module.exports = function () {
 
 /***/ }),
 
-/***/ "./apiUtils.js/apiUtils.js":
-/*!*********************************!*\
-  !*** ./apiUtils.js/apiUtils.js ***!
-  \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getData": function() { return /* binding */ getData; },
-/* harmony export */   "postData": function() { return /* binding */ postData; },
-/* harmony export */   "updateData": function() { return /* binding */ updateData; },
-/* harmony export */   "deleteData": function() { return /* binding */ deleteData; }
-/* harmony export */ });
-var url = 'http://158.101.166.74:8080/api/data/Illiachr-evt-cldr-v0.1.0/';
-var getData = function getData(entityName) {
-  return fetch(url + entityName);
-};
-var postData = function postData(entityName, objInJson) {
-  return fetch("".concat(url).concat(entityName), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      data: objInJson
-    })
-  });
-};
-var updateData = function updateData(entityName, id, objInjson) {
-  return fetch("".concat(url).concat(entityName, "/").concat(id), {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      data: objInjson
-    })
-  });
-};
-var deleteData = function deleteData(id) {
-  return fetch("".concat(url, "/").concat(id), {
-    method: 'DELETE'
-  });
-};
-
-/***/ }),
-
 /***/ "./index.js":
 /*!******************!*\
   !*** ./index.js ***!
@@ -377,11 +329,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Calendar = /*#__PURE__*/function () {
-  function Calendar(selector, user) {
+  function Calendar(selector, user, userList) {
     _classCallCheck(this, Calendar);
 
     this.root = document.querySelector(selector);
     this.user = user;
+    this.userList = userList;
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
     this.events = [];
     this.filtred = [];
@@ -421,6 +374,8 @@ var Calendar = /*#__PURE__*/function () {
   }, {
     key: "onFilter",
     value: function onFilter() {
+      var userList = this.userList;
+      console.log('userList:', userList);
       var filter = this.filterByUser.bind(this); // eslint-disable-next-line no-unused-vars
 
       var filterByMember = new _UI_select_select__WEBPACK_IMPORTED_MODULE_4__.default('#filter', {
@@ -430,16 +385,17 @@ var Calendar = /*#__PURE__*/function () {
         data: [{
           id: '0',
           value: 'All members'
-        }].concat(_toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.team)),
+        }].concat(_toConsumableArray(userList)),
         onSelect: function onSelect(item) {
+          console.log(item);
           filter(item);
         }
-      });
-      this.events = (0,_render__WEBPACK_IMPORTED_MODULE_3__.getEventStore)();
+      }); // this.events = getEventStore();
 
-      if (this.events.length > 0) {
-        this.events.forEach(_render__WEBPACK_IMPORTED_MODULE_3__.render);
-      }
+      (0,_render__WEBPACK_IMPORTED_MODULE_3__.getEventsFromApi)(this.events); // console.log(this.events);
+      // if (this.events.length > 0) {
+      //   this.events.forEach(render);
+      // }
     }
   }, {
     key: "onAdd",
@@ -543,7 +499,7 @@ var Calendar = /*#__PURE__*/function () {
         var modalId = targetElem.dataset.modal;
 
         if (modalId) {
-          (0,_addEvent__WEBPACK_IMPORTED_MODULE_0__.default)(modalId, this.events, day, time);
+          (0,_addEvent__WEBPACK_IMPORTED_MODULE_0__.default)(modalId, this.events, this.userList, day, time);
         }
       }
     }
@@ -865,10 +821,10 @@ var Admin = /*#__PURE__*/function (_User) {
 
   _createClass(Admin, [{
     key: "init",
-    value: function init() {
+    value: function init(userList) {
       this.setExtendedUserRights();
 
-      _get(_getPrototypeOf(Admin.prototype), "init", this).call(this);
+      _get(_getPrototypeOf(Admin.prototype), "init", this).call(this, userList);
     }
   }, {
     key: "setExtendedUserRights",
@@ -919,8 +875,9 @@ var User = /*#__PURE__*/function () {
 
   _createClass(User, [{
     key: "init",
-    value: function init() {
-      this.calendar = new _Calendar_Calendar__WEBPACK_IMPORTED_MODULE_0__.default(this.selector, this.user);
+    value: function init(userList) {
+      console.log(userList);
+      this.calendar = new _Calendar_Calendar__WEBPACK_IMPORTED_MODULE_0__.default(this.selector, this.user, userList);
     }
   }]);
 
@@ -942,9 +899,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
-/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
-/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./render */ "./module/render.js");
-/* harmony import */ var _UI_select_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UI/select/select */ "./module/UI/select/select.js");
+/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./render */ "./module/render.js");
+/* harmony import */ var _UI_select_select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UI/select/select */ "./module/UI/select/select.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -960,17 +922,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
+ // const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-var generateId = function generateId() {
-  return "e".concat(Math.trunc(Math.random() * 1e8).toString(16));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (popupId, events) {
-  var day = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-  var time = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (popupId, events, userList) {
+  var day = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  var time = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
   var popup = document.getElementById(popupId);
   var eventForm = popup.querySelector('#event-form');
-  var warnMsg = popup.querySelector(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalWarning));
+  var warnMsg = popup.querySelector(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalWarning));
   var stateEventSlot = {
     event: {
       partisipants: []
@@ -978,19 +937,21 @@ var generateId = function generateId() {
     isBooked: false
   };
   var msg = {
+    processed: 'Event store in progress...',
+    success: 'Event is stored',
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
     timeErr: 'Failed to create event. This time is already booked',
     regExpNameReplace: /[^a-z\s]/gi,
     regExpNameTest: /[a-z\s]/gi
   };
-  popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive);
-  var select = new _UI_select_select__WEBPACK_IMPORTED_MODULE_2__.default('#participants', {
+  popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive);
+  var select = new _UI_select_select__WEBPACK_IMPORTED_MODULE_3__.default('#participants', {
     defaultSeleted: '0',
     data: [{
       id: '0',
       value: 'All members'
-    }].concat(_toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.team)),
+    }].concat(_toConsumableArray(userList)),
     onSelect: function onSelect(selectedItems) {
       var members = [];
 
@@ -1017,10 +978,10 @@ var generateId = function generateId() {
       stateEventSlot.event.partisipants = _toConsumableArray(members);
     }
   }, true);
-  var selectDay = new _UI_select_select__WEBPACK_IMPORTED_MODULE_2__.default('#day', {
+  var selectDay = new _UI_select_select__WEBPACK_IMPORTED_MODULE_3__.default('#day', {
     placeholder: 'Choose day...',
     defaultSeleted: day,
-    data: _toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.workWeek),
+    data: _toConsumableArray(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.workWeek),
     onSelect: function onSelect(selectedItems) {
       warnMsg.classList.remove('active');
       stateEventSlot.event.day = selectedItems.id;
@@ -1028,7 +989,7 @@ var generateId = function generateId() {
   });
   var eventTimeTable = [];
 
-  for (var hour = +_auxiliary__WEBPACK_IMPORTED_MODULE_0__.eventHours.start; hour <= +_auxiliary__WEBPACK_IMPORTED_MODULE_0__.eventHours.end; hour += +_auxiliary__WEBPACK_IMPORTED_MODULE_0__.eventHours.step) {
+  for (var hour = +_auxiliary__WEBPACK_IMPORTED_MODULE_1__.eventHours.start; hour <= +_auxiliary__WEBPACK_IMPORTED_MODULE_1__.eventHours.end; hour += +_auxiliary__WEBPACK_IMPORTED_MODULE_1__.eventHours.step) {
     var eventTime = {
       id: "".concat(hour),
       value: "".concat(hour, ":00")
@@ -1036,7 +997,7 @@ var generateId = function generateId() {
     eventTimeTable.push(eventTime);
   }
 
-  var selectTime = new _UI_select_select__WEBPACK_IMPORTED_MODULE_2__.default('#time', {
+  var selectTime = new _UI_select_select__WEBPACK_IMPORTED_MODULE_3__.default('#time', {
     placeholder: 'Choose time...',
     defaultSeleted: time,
     data: eventTimeTable,
@@ -1073,7 +1034,6 @@ var generateId = function generateId() {
       return;
     }
 
-    stateEventSlot.event.id = generateId();
     stateEventSlot.event.name = eventForm.name.value;
     select.selectionResult();
     selectDay.selectionResult();
@@ -1086,8 +1046,8 @@ var generateId = function generateId() {
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
+      storeEvent(stateEventSlot.event);
       localStorage.eventStore = JSON.stringify(events);
-      (0,_render__WEBPACK_IMPORTED_MODULE_1__.render)(stateEventSlot.event);
       closePopup();
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
@@ -1098,11 +1058,11 @@ var generateId = function generateId() {
   var clickHandler = function clickHandler(e) {
     var target = e.target;
 
-    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.triggerClose)) || target.classList.contains(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive)) {
+    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerClose)) || target.classList.contains(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive)) {
       closePopup();
     }
 
-    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalWarning))) {
+    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalWarning))) {
       warnMsg.classList.remove('active');
     }
   };
@@ -1116,13 +1076,108 @@ var generateId = function generateId() {
     selectTime.destroy();
     eventForm.reset();
     warnMsg.classList.remove('active');
-    popup.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive);
+    popup.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive);
   }
 
   popup.addEventListener('click', clickHandler);
   eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
 });
+
+function storeEvent(_x) {
+  return _storeEvent.apply(this, arguments);
+}
+
+function _storeEvent() {
+  _storeEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
+    var eventJson, res, data;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            console.log('Event store in progress...');
+            eventJson = JSON.stringify(event);
+            _context.prev = 2;
+            _context.next = 5;
+            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.postData)('events', eventJson);
+
+          case 5:
+            res = _context.sent;
+            _context.next = 8;
+            return res.json();
+
+          case 8:
+            data = _context.sent;
+            console.log(data.id); // eslint-disable-next-line no-param-reassign
+
+            event.id = data.id;
+            (0,_render__WEBPACK_IMPORTED_MODULE_2__.render)(event);
+            console.log('New event stored');
+            _context.next = 18;
+            break;
+
+          case 15:
+            _context.prev = 15;
+            _context.t0 = _context["catch"](2);
+            console.warn(_context.t0);
+
+          case 18:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[2, 15]]);
+  }));
+  return _storeEvent.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./module/apiUtils.js/apiUtils.js":
+/*!****************************************!*\
+  !*** ./module/apiUtils.js/apiUtils.js ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getData": function() { return /* binding */ getData; },
+/* harmony export */   "postData": function() { return /* binding */ postData; },
+/* harmony export */   "updateData": function() { return /* binding */ updateData; },
+/* harmony export */   "deleteData": function() { return /* binding */ deleteData; }
+/* harmony export */ });
+var url = 'http://158.101.166.74:8080/api/data/Illiachr-evt-cldr-v0.1.0/';
+var getData = function getData(entityName) {
+  return fetch(url + entityName);
+};
+var postData = function postData(entityName, objInJson) {
+  return fetch("".concat(url).concat(entityName), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      data: objInJson
+    })
+  });
+};
+var updateData = function updateData(entityName, id, objInjson) {
+  return fetch("".concat(url).concat(entityName, "/").concat(id), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      data: objInjson
+    })
+  });
+};
+var deleteData = function deleteData(entityName, id) {
+  return fetch("".concat(url).concat(entityName, "/").concat(id), {
+    method: 'DELETE'
+  });
+};
 
 /***/ }),
 
@@ -1141,7 +1196,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modalTemplates__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalTemplates */ "./module/appTemplate/modalTemplates.js");
 /* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../login */ "./module/login.js");
 /* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loader */ "./module/appTemplate/loader.js");
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../apiUtils.js/apiUtils */ "./apiUtils.js/apiUtils.js");
+/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -1156,37 +1211,15 @@ function appTemplate(selector) {
   var app = document.querySelector(selector);
   var template = " <div class=\"controls\">\n            <h2 class=\"title\">Calendar</h2>\n            <div id=\"filter\"></div>\n            <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n                <span>New event</span>\n                <span class=\"fas fa-plus\"></span>\n            </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
   var loader = (0,_loader__WEBPACK_IMPORTED_MODULE_3__.default)();
-  document.body.append(loader); // loader.classList.add('active');
-
+  document.body.append(loader);
   app.insertAdjacentHTML('beforeend', template);
-  getList(loader, app); // showGrid();
-
-  (0,_modalTemplates__WEBPACK_IMPORTED_MODULE_1__.default)(); // userAuth('login');
+  (0,_modalTemplates__WEBPACK_IMPORTED_MODULE_1__.default)();
+  getList(loader, app);
 }
 
 function getList() {
   return _getList.apply(this, arguments);
-} // function getList() {
-//  if (loader) { loader.classList.add('active'); }
-//   getData('users')
-//     .then(res => {
-//       if (res.status !== 200) { throw new Error('Network status not 200'); }
-//       return res.json();
-//     })
-//     .then(data => {
-//       console.log(data);
-//       const list = [];
-//       data.forEach(obj => {
-//         const item = { id: obj.id, ...JSON.parse(obj.data) };
-//         list.push(item);
-//       });
-//       console.log(list);
-//       // const users = getList(data);
-//       // console.log(users);
-//     })
-//     .catch(err => console.warn(err));
-// }
-
+}
 
 function _getList() {
   _getList = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -1476,13 +1509,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       closePopup(clickHandler);
 
       if (currentUser.role === 'user') {
+        console.log(userList);
         var user = new _User_User__WEBPACK_IMPORTED_MODULE_3__.default(currentUser, '.app');
-        user.init();
+        user.init(userList);
       }
 
       if (currentUser.role === 'admin') {
+        console.log(userList);
         var admin = new _User_Admin__WEBPACK_IMPORTED_MODULE_2__.default(currentUser, '.app');
-        admin.init();
+        admin.init(userList);
       }
     }
   };
@@ -1503,7 +1538,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return __WEBPACK_DEFAULT_EXPORT__; }
 /* harmony export */ });
-/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
 
 
 var removeEvent = function removeEvent(events, eventSlot) {
@@ -1513,7 +1554,7 @@ var removeEvent = function removeEvent(events, eventSlot) {
   });
   events.splice(eventIndex, 1);
   eventSlot.removeAttribute('data-event-id');
-  eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.slotBooked);
+  eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked);
   eventSlotChildren[0].textContent = '';
   eventSlotChildren[1].style.display = 'none';
   localStorage.eventStore = JSON.stringify(events);
@@ -1522,7 +1563,7 @@ var removeEvent = function removeEvent(events, eventSlot) {
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (modalId, elem, events) {
   var popup = document.getElementById(modalId);
-  popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive);
+  popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive);
 
   var closePopup = function closePopup() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -1530,24 +1571,65 @@ var removeEvent = function removeEvent(events, eventSlot) {
     }
 
     popup.removeEventListener('click', args.clickHandler);
-    popup.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive);
+    popup.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive);
   };
 
   var clickHandler = function clickHandler(e) {
     var target = e.target;
 
     if (target.name === 'yes') {
-      removeEvent(events, elem);
+      removeEventApi('events', events, elem);
       closePopup(clickHandler);
     }
 
-    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.triggerClose)) || target.classList.contains(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive)) {
+    if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerClose)) || target.classList.contains(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive)) {
       closePopup(clickHandler);
     }
   };
 
   popup.addEventListener('click', clickHandler);
 });
+
+function removeEventApi(_x, _x2, _x3) {
+  return _removeEventApi.apply(this, arguments);
+}
+
+function _removeEventApi() {
+  _removeEventApi = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(entityName, events, elem) {
+    var res;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.deleteData)(entityName, elem.dataset.eventId);
+
+          case 3:
+            res = _context.sent;
+            console.log(res);
+
+            if (res.status === 204) {
+              removeEvent(events, elem);
+            }
+
+            _context.next = 11;
+            break;
+
+          case 8:
+            _context.prev = 8;
+            _context.t0 = _context["catch"](0);
+            console.warn(_context.t0);
+
+          case 11:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[0, 8]]);
+  }));
+  return _removeEventApi.apply(this, arguments);
+}
 
 /***/ }),
 
@@ -1562,9 +1644,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "render": function() { return /* binding */ render; },
 /* harmony export */   "resetGrid": function() { return /* binding */ resetGrid; },
-/* harmony export */   "getEventStore": function() { return /* binding */ getEventStore; }
+/* harmony export */   "getEventStore": function() { return /* binding */ getEventStore; },
+/* harmony export */   "getEventsFromApi": function() { return /* binding */ getEventsFromApi; }
 /* harmony export */ });
-/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
 
 var render = function render(event) {
   document.querySelectorAll('.row-meeting').forEach(function (row) {
@@ -1572,8 +1667,8 @@ var render = function render(event) {
       row.querySelectorAll('.meeting-cell').forEach(function (eventSlot) {
         if (eventSlot.dataset.day === event.day) {
           var eventSlotChildren = eventSlot.children;
-          eventSlot.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.slotBooked);
-          eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.triggerOpen);
+          eventSlot.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked);
+          eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen);
           eventSlot.setAttribute('data-event-id', event.id);
           eventSlot.setAttribute('draggable', true);
           eventSlotChildren[0].textContent = event.name;
@@ -1587,8 +1682,8 @@ var resetGrid = function resetGrid() {
   document.querySelectorAll('.row-meeting').forEach(function (row) {
     row.querySelectorAll('.meeting-cell').forEach(function (eventSlot) {
       var eventSlotChildren = eventSlot.children;
-      eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.slotBooked);
-      eventSlot.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.triggerOpen);
+      eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked);
+      eventSlot.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen);
       eventSlot.removeAttribute('data-event-id');
       eventSlot.removeAttribute('draggable', true);
       eventSlotChildren[0].textContent = '';
@@ -1605,6 +1700,75 @@ var getEventStore = function getEventStore() {
 
   return eventStore;
 };
+function getEventsFromApi(_x) {
+  return _getEventsFromApi.apply(this, arguments);
+}
+
+function _getEventsFromApi() {
+  _getEventsFromApi = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(events) {
+    var entityName,
+        eventList,
+        res,
+        data,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            entityName = _args.length > 1 && _args[1] !== undefined ? _args[1] : 'events';
+            eventList = [];
+            console.log('Loading');
+            _context.prev = 3;
+            _context.next = 6;
+            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.getData)(entityName);
+
+          case 6:
+            res = _context.sent;
+            console.log(res);
+            _context.next = 10;
+            return res.json();
+
+          case 10:
+            data = _context.sent;
+            console.log(data);
+            data.forEach(function (obj) {
+              var parsedData = JSON.parse(obj.data);
+
+              var item = _objectSpread({
+                id: obj.id
+              }, parsedData);
+
+              eventList.push(item);
+            });
+            console.log(eventList);
+            _context.next = 19;
+            break;
+
+          case 16:
+            _context.prev = 16;
+            _context.t0 = _context["catch"](3);
+            console.warn(_context.t0);
+
+          case 19:
+            _context.prev = 19;
+            // eslint-disable-next-line no-param-reassign
+            events = eventList;
+
+            if (eventList.length > 0) {
+              eventList.forEach(render);
+            }
+
+            return _context.finish(19);
+
+          case 23:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[3, 16, 19, 23]]);
+  }));
+  return _getEventsFromApi.apply(this, arguments);
+}
 
 /***/ }),
 
@@ -12353,7 +12517,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614421875676
+      // 1614451400681
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -12373,7 +12537,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614421874456
+      // 1614451449359
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -21687,7 +21851,7 @@ webpackContext.id = "../node_modules/webpack/hot sync ^\\.\\/log$";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "13ece99778194bd36808"; }
+/******/ 		__webpack_require__.h = function() { return "8773317fe8f8582f9ae9"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

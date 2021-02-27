@@ -24,8 +24,8 @@ export const updateData = (entityName, id, objInjson) => fetch(
   },
 );
 
-export const deleteData = id => fetch(
-  `${url}/${id}`,
+export const deleteData = (entityName, id) => fetch(
+  `${url}${entityName}/${id}`,
   {
     method: 'DELETE',
   },

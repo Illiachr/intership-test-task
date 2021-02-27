@@ -1,3 +1,4 @@
+import { getData } from './apiUtils.js/apiUtils';
 import { classes } from './auxiliary';
 
 export const render = event => {
@@ -39,3 +40,28 @@ export const getEventStore = () => {
   }
   return eventStore;
 };
+
+export async function getEventsFromApi(events, entityName = 'events') {
+  const eventList = [];
+  console.log('Loading');
+  try {
+    const res = await getData(entityName);
+    console.log(res);
+    const data = await res.json();
+    console.log(data);
+    data.forEach(obj => {
+      const parsedData = JSON.parse(obj.data);
+      const item = { id: obj.id, ...parsedData };
+      eventList.push(item);
+    });
+    console.log(eventList);
+  } catch (err) {
+    console.warn(err);
+  } finally {
+    // eslint-disable-next-line no-param-reassign
+    events = eventList;
+    if (eventList.length > 0) {
+      eventList.forEach(render);
+    }
+  }
+}

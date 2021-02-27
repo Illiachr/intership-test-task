@@ -7,7 +7,8 @@ export default class User {
     this.user.rights = ['filter'];
   }
 
-  init() {
-    this.calendar = new Calendar(this.selector, this.user);
+  init(userList) {
+    console.log(userList);
+    this.calendar = new Calendar(this.selector, this.user, userList);
   }
 }

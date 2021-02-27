@@ -37,13 +37,15 @@ export default (modalId, userList) => {
         currentUser.role) {
       closePopup(clickHandler);
       if (currentUser.role === 'user') {
+        console.log(userList);
         const user = new User(currentUser, '.app');
-        user.init();
+        user.init(userList);
       }
 
       if (currentUser.role === 'admin') {
+        console.log(userList);
         const admin = new Admin(currentUser, '.app');
-        admin.init();
+        admin.init(userList);
       }
     }
   };

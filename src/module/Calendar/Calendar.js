@@ -1,14 +1,15 @@
 import addEvent from '../addEvent';
-import { classes, team } from '../auxiliary';
+import { classes } from '../auxiliary';
 import removeEvent from '../removeEvent';
-import { getEventStore, render, resetGrid } from '../render';
+import { getEventsFromApi, render, resetGrid } from '../render';
 import Select from '../UI/select/select';
 import { capitalize, firstFreeSlot } from '../utils';
 
 export default class Calendar {
-  constructor(selector, user) {
+  constructor(selector, user, userList) {
     this.root = document.querySelector(selector);
     this.user = user;
+    this.userList = userList;
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
 
     this.events = [];
@@ -39,6 +40,8 @@ export default class Calendar {
   }
 
   onFilter() {
+    const { userList } = this;
+    console.log('userList:', userList);
     const filter = this.filterByUser.bind(this);
     // eslint-disable-next-line no-unused-vars
     const filterByMember = new Select('#filter', {
@@ -47,17 +50,20 @@ export default class Calendar {
       defaultSeleted: '0',
       data: [
         { id: '0', value: 'All members' },
-        ...team,
+        ...userList,
       ],
       onSelect(item) {
+        console.log(item);
         filter(item);
       },
     });
 
-    this.events = getEventStore();
-    if (this.events.length > 0) {
-      this.events.forEach(render);
-    }
+    // this.events = getEventStore();
+    getEventsFromApi(this.events);
+    // console.log(this.events);
+    // if (this.events.length > 0) {
+    //   this.events.forEach(render);
+    // }
   }
 
   onAdd() {
@@ -147,7 +153,7 @@ export default class Calendar {
       const day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
       const time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
       const modalId = targetElem.dataset.modal;
-      if (modalId) { addEvent(modalId, this.events, day, time); }
+      if (modalId) { addEvent(modalId, this.events, this.userList, day, time); }
     }
   }
 

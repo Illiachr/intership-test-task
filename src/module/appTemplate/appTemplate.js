@@ -3,7 +3,7 @@ import showGrid from '../showGrid';
 import modalTemplates from './modalTemplates';
 import userAuth from '../login';
 import lds from './loader';
-import { getData } from '../../apiUtils.js/apiUtils';
+import { getData } from '../apiUtils.js/apiUtils';
 
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
@@ -19,13 +19,9 @@ export default function appTemplate(selector) {
         </div>`;
   const loader = lds();
   document.body.append(loader);
-  // loader.classList.add('active');
   app.insertAdjacentHTML('beforeend', template);
-  getList(loader, app);
-
-  // showGrid();
   modalTemplates();
-  // userAuth('login');
+  getList(loader, app);
 }
 
 async function getList(loader = null, app) {
@@ -51,24 +47,3 @@ async function getList(loader = null, app) {
     userAuth('login', userList);
   }
 }
-
-// function getList() {
-//  if (loader) { loader.classList.add('active'); }
-//   getData('users')
-//     .then(res => {
-//       if (res.status !== 200) { throw new Error('Network status not 200'); }
-//       return res.json();
-//     })
-//     .then(data => {
-//       console.log(data);
-//       const list = [];
-//       data.forEach(obj => {
-//         const item = { id: obj.id, ...JSON.parse(obj.data) };
-//         list.push(item);
-//       });
-//       console.log(list);
-//       // const users = getList(data);
-//       // console.log(users);
-//     })
-//     .catch(err => console.warn(err));
-// }
