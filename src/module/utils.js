@@ -26,3 +26,20 @@ export const firstFreeSlot = calendar => {
     time: nextFreeTime,
   };
 }; // end firstFreeSlot
+
+// data template: { id: "value" }
+export function getIdList(data) {
+  const idList = [];
+  data.forEach(obj => idList.push(obj.id));
+  return idList;
+}
+
+// data template: { data: "{\"key\":\"value\",}" }
+export function getList(data) {
+  const users = [];
+  data.forEach(obj => {
+    const user = { id: obj.id, ...JSON.parse(obj.data) };
+    users.push(user);
+  });
+  return users;
+}
