@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
-import { classes, team } from './auxiliary';
+import { classes } from './auxiliary';
 import Select from './UI/select/select';
 import Admin from './User/Admin';
 import User from './User/User';
 
-export default modalId => {
+export default (modalId, userList) => {
   const popup = document.getElementById(modalId);
   const currentUser = {
     name: null,
@@ -18,7 +18,7 @@ export default modalId => {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'Choose user name' },
-      ...team,
+      ...userList,
     ],
     onSelect(user) {
       currentUser.name = user.value;

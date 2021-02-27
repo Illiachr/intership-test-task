@@ -15,7 +15,7 @@ const generateFilename = ext => (isDev ?
 
 module.exports = {
   entry: {
-    main: './index.js',
+    main: ['@babel/polyfill', './index.js'],
   },
 
   output: {
