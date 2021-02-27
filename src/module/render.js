@@ -60,7 +60,8 @@ export async function getEventsFromApi(events, entityName = 'events') {
   } finally {
     // eslint-disable-next-line no-param-reassign
     events = eventList;
-    if (eventList.length > 0) {
+    console.log(events);
+    if (events.length > 0) {
       eventList.forEach(render);
     }
   }

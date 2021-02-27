@@ -1,4 +1,5 @@
 import addEvent from '../addEvent';
+import { updateData } from '../apiUtils.js/apiUtils';
 import { classes } from '../auxiliary';
 import removeEvent from '../removeEvent';
 import { getEventsFromApi, render, resetGrid } from '../render';
@@ -26,6 +27,7 @@ export default class Calendar {
   }
 
   init() {
+    getEventsFromApi(this.events);
     this.user.rights.forEach(right => this[getMethodName(right)]());
     this.clickListener();
   }
@@ -59,7 +61,7 @@ export default class Calendar {
     });
 
     // this.events = getEventStore();
-    getEventsFromApi(this.events);
+    
     // console.log(this.events);
     // if (this.events.length > 0) {
     //   this.events.forEach(render);
@@ -115,14 +117,12 @@ export default class Calendar {
         target.classList.remove('drag-hover');
         const eventId = dataTransfer.getData('text/plain');
         dataTransfer.setData('text/plain', '');
-
+        console.log(this.events);
         const eventIndex = this.events.findIndex(event => event.id === eventId);
         this.events[eventIndex].time = target.dataset.time;
         this.events[eventIndex].day = target.dataset.day;
 
-        localStorage.eventStore = JSON.stringify(this.events);
-        resetGrid();
-        this.events.forEach(render);
+        updateEvent(this.events, eventIndex);
       }
     });
   }
@@ -169,4 +169,20 @@ export default class Calendar {
 
 function getMethodName(eventName) {
   return `on${capitalize(eventName)}`;
+}
+
+async function updateEvent(events, eventIndex) {
+  console.log('Event store in progress...');
+  const eventJson = JSON.stringify(events[eventIndex]);
+  try {
+    const res = await updateData('events', events[eventIndex].id, eventJson);
+    const data = await res.text();
+    console.log(data);
+    localStorage.eventStore = JSON.stringify(this.events);
+    resetGrid();
+    this.events.forEach(render);
+    console.log('Event updated');
+  } catch (err) {
+    console.warn(err);
+  }
 }
