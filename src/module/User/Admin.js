@@ -6,9 +6,9 @@ export default class Admin extends User {
     this.extendedRights = ['add', 'remove', 'updatedd'];
   }
 
-  init(userList) {
+  init(userList, events) {
     this.setExtendedUserRights();
-    super.init(userList);
+    super.init(userList, events);
   }
 
   setExtendedUserRights() {

@@ -2,18 +2,18 @@ import addEvent from '../addEvent';
 import { updateData } from '../apiUtils.js/apiUtils';
 import { classes } from '../auxiliary';
 import removeEvent from '../removeEvent';
-import { getEventsFromApi, render, resetGrid } from '../render';
+import { render, resetGrid } from '../render';
 import Select from '../UI/select/select';
 import { capitalize, firstFreeSlot } from '../utils';
 
 export default class Calendar {
-  constructor(selector, user, userList) {
+  constructor(selector, user, userList, events) {
     this.root = document.querySelector(selector);
     this.user = user;
     this.userList = userList;
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
 
-    this.events = [];
+    this.events = events || [];
     this.filtred = [];
 
     this.handlers = {
@@ -27,7 +27,9 @@ export default class Calendar {
   }
 
   init() {
-    getEventsFromApi(this.events);
+    if (this.events.length > 0) {
+      this.events.forEach(render);
+    }
     this.user.rights.forEach(right => this[getMethodName(right)]());
     this.clickListener();
   }
@@ -61,7 +63,6 @@ export default class Calendar {
     });
 
     // this.events = getEventStore();
-    
     // console.log(this.events);
     // if (this.events.length > 0) {
     //   this.events.forEach(render);
@@ -178,9 +179,9 @@ async function updateEvent(events, eventIndex) {
     const res = await updateData('events', events[eventIndex].id, eventJson);
     const data = await res.text();
     console.log(data);
-    localStorage.eventStore = JSON.stringify(this.events);
+    localStorage.eventStore = JSON.stringify(events);
     resetGrid();
-    this.events.forEach(render);
+    events.forEach(render);
     console.log('Event updated');
   } catch (err) {
     console.warn(err);

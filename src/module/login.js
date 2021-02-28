@@ -4,7 +4,7 @@ import Select from './UI/select/select';
 import Admin from './User/Admin';
 import User from './User/User';
 
-export default (modalId, userList) => {
+export default (modalId, userList, events) => {
   const popup = document.getElementById(modalId);
   const currentUser = {
     name: null,
@@ -39,13 +39,13 @@ export default (modalId, userList) => {
       if (currentUser.role === 'user') {
         console.log(userList);
         const user = new User(currentUser, '.app');
-        user.init(userList);
+        user.init(userList, events);
       }
 
       if (currentUser.role === 'admin') {
         console.log(userList);
         const admin = new Admin(currentUser, '.app');
-        admin.init(userList);
+        admin.init(userList, events);
       }
     }
   };

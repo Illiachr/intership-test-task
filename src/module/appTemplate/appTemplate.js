@@ -27,8 +27,10 @@ export default function appTemplate(selector) {
 async function getList(loader = null, app) {
   if (loader) { loader.classList.add('active'); }
   const userList = [];
+  const events = [];
   try {
     const res = await getData('users');
+    const resEvents = await getData('events');
     if (res.status === 200) {
       const data = await res.json();
       data.forEach(obj => {
@@ -36,7 +38,14 @@ async function getList(loader = null, app) {
         const item = { id: obj.id, value: parsedData.name, role: parsedData.type };
         userList.push(item);
       });
-      console.log(userList);
+    } else { throw new Error('Network status not 200'); }
+    if (resEvents.status === 200) {
+      const data = await resEvents.json();
+      data.forEach(obj => {
+        const parsedData = JSON.parse(obj.data);
+        const item = { id: obj.id, ...parsedData };
+        events.push(item);
+      });
     } else { throw new Error('Network status not 200'); }
   } catch (err) {
     console.warn(err);
@@ -44,6 +53,6 @@ async function getList(loader = null, app) {
     if (loader) { loader.classList.remove('active'); }
     app.classList.add('active');
     showGrid();
-    userAuth('login', userList);
+    userAuth('login', userList, events);
   }
 }
