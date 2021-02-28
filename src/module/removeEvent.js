@@ -1,3 +1,4 @@
+import { deleteData } from './apiUtils.js/apiUtils';
 import { classes } from './auxiliary';
 
 const removeEvent = (events, eventSlot) => {
@@ -25,7 +26,7 @@ export default (modalId, elem, events) => {
     const { target } = e;
 
     if (target.name === 'yes') {
-      removeEvent(events, elem);
+      removeEventApi('events', events, elem);
       closePopup(clickHandler);
     }
 
@@ -38,3 +39,15 @@ export default (modalId, elem, events) => {
 
   popup.addEventListener('click', clickHandler);
 };
+
+async function removeEventApi(entityName, events, elem) {
+  try {
+    const res = await deleteData(entityName, elem.dataset.eventId);
+    console.log(res);
+    if (res.status === 204) {
+      removeEvent(events, elem);
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+}

@@ -36,10 +36,11 @@ export function getIdList(data) {
 
 // data template: { data: "{\"key\":\"value\",}" }
 export function getList(data) {
-  const users = [];
+  const list = [];
   data.forEach(obj => {
-    const user = { id: obj.id, ...JSON.parse(obj.data) };
-    users.push(user);
+    const item = { id: obj.id, ...JSON.parse(obj.data) };
+    list.push(item);
   });
-  return users;
+  console.log(list);
+  // return list;
 }

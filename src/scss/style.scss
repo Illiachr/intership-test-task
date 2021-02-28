@@ -1,14 +1,19 @@
 @import "~normalize.css";
 @import "variables";
+@import "loader";
 
 .app {
     max-width: 1140px;
     margin: 8rem auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .4);
     padding: 2rem;
+
+    &.active {
+        display: flex;
+    }
 }
 
 .controls {

@@ -1,15 +1,15 @@
+import { postData } from './apiUtils.js/apiUtils';
 import {
   classes,
   eventHours,
-  team,
   workWeek,
 } from './auxiliary';
 import { render } from './render';
 import Select from './UI/select/select';
 
-const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
+// const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-export default (popupId, events, day = '', time = '') => {
+export default (popupId, events, userList, day = '', time = '') => {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
@@ -19,6 +19,8 @@ export default (popupId, events, day = '', time = '') => {
   };
 
   const msg = {
+    processed: 'Event store in progress...',
+    success: 'Event is stored',
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
     timeErr: 'Failed to create event. This time is already booked',
@@ -31,7 +33,7 @@ export default (popupId, events, day = '', time = '') => {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'All members' },
-      ...team,
+      ...userList,
     ],
     onSelect(selectedItems) {
       let members = [];
@@ -111,7 +113,6 @@ export default (popupId, events, day = '', time = '') => {
       return;
     }
 
-    stateEventSlot.event.id = generateId();
     stateEventSlot.event.name = eventForm.name.value;
     select.selectionResult();
     selectDay.selectionResult();
@@ -125,8 +126,8 @@ export default (popupId, events, day = '', time = '') => {
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
+      storeEvent(stateEventSlot.event);
       localStorage.eventStore = JSON.stringify(events);
-      render(stateEventSlot.event);
       closePopup();
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
@@ -163,3 +164,19 @@ export default (popupId, events, day = '', time = '') => {
   eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
 };
+
+async function storeEvent(event) {
+  console.log('Event store in progress...');
+  const eventJson = JSON.stringify(event);
+  try {
+    const res = await postData('events', eventJson);
+    const data = await res.json();
+    console.log(data.id);
+    // eslint-disable-next-line no-param-reassign
+    event.id = data.id;
+    render(event);
+    console.log('New event stored');
+  } catch (err) {
+    console.warn(err);
+  }
+}
