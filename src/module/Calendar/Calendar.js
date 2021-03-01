@@ -57,6 +57,7 @@ export default class Calendar {
         ...userList,
       ],
       onSelect(item) {
+        console.log(item);
         filter(item);
       },
     });

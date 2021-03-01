@@ -38,6 +38,7 @@ export default (modalId, userList, events) => {
       closePopup(clickHandler);
 
       if (currentUser.role === 'user') {
+        console.log(userList);
         const user = new User(currentUser, '.app');
         user.init(userList, events);
       } else {
