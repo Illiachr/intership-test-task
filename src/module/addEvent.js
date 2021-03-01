@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { postData } from './apiUtils/apiUtils';
 import {
   classes,
@@ -126,8 +127,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
-      storeEvent(stateEventSlot.event, addEvent.close);
-      // addEvent.close();
+      storeEvent(stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -165,18 +165,55 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
   eventForm.addEventListener('submit', submitHandler);
 }
 
-async function storeEvent(event, closeHandler) {
-  console.log('Event store in progress...');
+async function storeEvent(event, closeHandler, msgBlock) {
+  const delay = 6000;
+  const msg = {
+    icon: msgBlock.children[0],
+    text: msgBlock.children[1],
+    loading: 'Event store in progress...',
+    success: 'New event stored',
+    error: 'Something wrong, try again',
+    loadingCss: 'color: #e0b411; background-color: #fdfda6',
+    okCss: 'color: green; background-color: #7fef7d',
+    loadinIconCls: 'fa-sync-alt',
+    okIconCls: 'fa-check',
+  };
+
+  let status = 0;
+
+  msg.icon.classList.remove('fa-exclamation-circle');
+  msg.icon.classList.add(msg.loadinIconCls);
+  msgBlock.style.cssText = msg.loadingCss;
+  msg.text.textContent = msg.loading;
+  msgBlock.classList.add('active');
   const eventJson = JSON.stringify(event);
   try {
     const res = await postData('events', eventJson);
+    status = res.status;
     const data = await res.json();
-    // eslint-disable-next-line no-param-reassign
     event.id = data.id;
     render(event);
-    console.log('New event stored');
-    closeHandler();
+    msg.icon.classList.remove(msg.loadinIconCls);
+    msg.icon.classList.add(msg.okIconCls);
+    msgBlock.style.cssText = msg.okCss;
+    msg.text.textContent = msg.success;
+    // closeHandler();
   } catch (err) {
+    msg.icon.classList.remove(msg.okIconCls);
+    msg.icon.classList.add('fa-exclamation-circle');
+    msgBlock.style.cssText = '';
+    msg.text.textContent = msg.error;
     console.warn(err);
+  } finally {
+    if (status === 200) {
+      setTimeout(() => {
+        closeHandler();
+        msg.icon.classList.remove(msg.okIconCls);
+        msg.icon.classList.add('fa-exclamation-circle');
+        msgBlock.style.cssText = '';
+        msg.text.textContent = '';
+        msgBlock.classList.remove('active');
+      }, delay);
+    }
   }
 }

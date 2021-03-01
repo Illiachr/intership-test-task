@@ -8,13 +8,14 @@ import { getData } from '../apiUtils/apiUtils';
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
   const template = `
-        <div class="modal__dialog-header-warning" id="modal-warning">
-          <span class="fas fa-exclamation-circle"></span>
-          <span class="modal__dialog-header-warning-text"></span>
-          <span class="modal__dialog-header-warning-close fas fa-times-circle"></span>
-        </div>
         <div class="controls">
-          <h2 class="title">Calendar</h2>
+          <div class="controls__title-wrapper">
+            <h2 class="title">Calendar</h2>
+            <div class="controls__title-warning" data-type="controls-warning">
+              <span class="fas fa-sync-alt"></span>
+              <span class="controls__title-warning-text"></span>
+            </div>
+          </div>
           <div id="filter"></div>
           <button class="btn js-modal-open" data-type="add-event" data-modal="modal-event">
               <span>New event</span>

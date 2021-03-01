@@ -11,6 +11,7 @@ export default class Calendar {
     this.root = document.querySelector(selector);
     this.user = user;
     this.userList = userList;
+    this.msgBlock = this.root.querySelector('[data-type="controls-warning"]');
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
 
     this.events = events || [];
@@ -114,7 +115,7 @@ export default class Calendar {
         this.events[eventIndex].time = target.dataset.time;
         this.events[eventIndex].day = target.dataset.day;
 
-        updateEvent(this.events, eventIndex);
+        updateEvent(this.events, eventIndex, this.msgBlock);
       }
     });
   }
@@ -163,15 +164,47 @@ function getMethodName(eventName) {
   return `on${capitalize(eventName)}`;
 }
 
-async function updateEvent(events, eventIndex) {
-  console.log('Event store in progress...');
+async function updateEvent(events, eventIndex, msgBlock) {
+  const delay = 10000;
+  const msg = {
+    icon: msgBlock.children[0],
+    text: msgBlock.children[1],
+    loading: 'Updating event...',
+    success: 'Event updated',
+    error: 'Something wrong, try again',
+    loadinIconCls: 'fa-sync-alt',
+    okIconCls: 'fa-check',
+    erorrIconCls: 'fa-check',
+  };
+
+  let status = 0;
+
+  // eslint-disable-next-line no-param-reassign
+  msg.text.textContent = msg.loading;
+  msgBlock.classList.add('active');
+
   const eventJson = JSON.stringify(events[eventIndex]);
   try {
-    await updateData('events', events[eventIndex].id, eventJson);
+    const res = await updateData('events', events[eventIndex].id, eventJson);
+    status = res.status;
     resetGrid();
     events.forEach(render);
-    console.log('Event updated');
+    msg.icon.classList.remove(msg.loadinIconCls);
+    msg.icon.classList.add(msg.okIconCls);
+    msg.text.textContent = msg.success;
   } catch (err) {
+    msg.icon.classList.remove(msg.okIconCls);
+    msg.icon.classList.add(msg.erorrIconCls);
+    msg.text.textContent = msg.error;
     console.warn(err);
+  } finally {
+    if (status === 200) {
+      setTimeout(() => {
+        msg.icon.classList.remove(msg.okIconCls);
+        msg.icon.classList.add(msg.loadinIconCls);
+        msg.text.textContent = '';
+        msgBlock.classList.remove('active');
+      }, delay);
+    }
   }
 }

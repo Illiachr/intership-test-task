@@ -139,6 +139,7 @@ var Calendar = /*#__PURE__*/function () {
     this.root = document.querySelector(selector);
     this.user = user;
     this.userList = userList;
+    this.msgBlock = this.root.querySelector('[data-type="controls-warning"]');
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
     this.events = events || [];
     this.filtred = [];
@@ -261,7 +262,7 @@ var Calendar = /*#__PURE__*/function () {
 
           _this3.events[eventIndex].time = target.dataset.time;
           _this3.events[eventIndex].day = target.dataset.day;
-          updateEvent(_this3.events, eventIndex);
+          updateEvent(_this3.events, eventIndex, _this3.msgBlock);
         }
       });
     }
@@ -325,41 +326,76 @@ function getMethodName(eventName) {
   return "on".concat((0,_utils__WEBPACK_IMPORTED_MODULE_6__.capitalize)(eventName));
 }
 
-function updateEvent(_x, _x2) {
+function updateEvent(_x, _x2, _x3) {
   return _updateEvent.apply(this, arguments);
 }
 
 function _updateEvent() {
-  _updateEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(events, eventIndex) {
-    var eventJson;
+  _updateEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(events, eventIndex, msgBlock) {
+    var delay, msg, status, eventJson, res;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log('Event store in progress...');
+            delay = 10000;
+            msg = {
+              icon: msgBlock.children[0],
+              text: msgBlock.children[1],
+              loading: 'Updating event...',
+              success: 'Event updated',
+              error: 'Something wrong, try again',
+              loadinIconCls: 'fa-sync-alt',
+              okIconCls: 'fa-check',
+              erorrIconCls: 'fa-check'
+            };
+            status = 0; // eslint-disable-next-line no-param-reassign
+
+            msg.text.textContent = msg.loading;
+            msgBlock.classList.add('active');
             eventJson = JSON.stringify(events[eventIndex]);
-            _context.prev = 2;
-            _context.next = 5;
+            _context.prev = 6;
+            _context.next = 9;
             return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_1__.updateData)('events', events[eventIndex].id, eventJson);
 
-          case 5:
+          case 9:
+            res = _context.sent;
+            status = res.status;
             (0,_render__WEBPACK_IMPORTED_MODULE_4__.resetGrid)();
             events.forEach(_render__WEBPACK_IMPORTED_MODULE_4__.render);
-            console.log('Event updated');
-            _context.next = 13;
+            msg.icon.classList.remove(msg.loadinIconCls);
+            msg.icon.classList.add(msg.okIconCls);
+            msg.text.textContent = msg.success;
+            _context.next = 24;
             break;
 
-          case 10:
-            _context.prev = 10;
-            _context.t0 = _context["catch"](2);
+          case 18:
+            _context.prev = 18;
+            _context.t0 = _context["catch"](6);
+            msg.icon.classList.remove(msg.okIconCls);
+            msg.icon.classList.add(msg.erorrIconCls);
+            msg.text.textContent = msg.error;
             console.warn(_context.t0);
 
-          case 13:
+          case 24:
+            _context.prev = 24;
+
+            if (status === 200) {
+              setTimeout(function () {
+                msg.icon.classList.remove(msg.okIconCls);
+                msg.icon.classList.add(msg.loadinIconCls);
+                msg.text.textContent = '';
+                msgBlock.classList.remove('active');
+              }, delay);
+            }
+
+            return _context.finish(24);
+
+          case 27:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[2, 10]]);
+    }, _callee, null, [[6, 18, 24, 27]]);
   }));
   return _updateEvent.apply(this, arguments);
 }
@@ -753,6 +789,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+/* eslint-disable no-param-reassign */
 
 
 
@@ -880,7 +917,7 @@ function addEvent(popupId, events, userList) {
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
-      storeEvent(stateEventSlot.event, addEvent.close); // addEvent.close();
+      storeEvent(stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -916,49 +953,89 @@ function addEvent(popupId, events, userList) {
   eventForm.addEventListener('submit', submitHandler);
 }
 
-function storeEvent(_x, _x2) {
+function storeEvent(_x, _x2, _x3) {
   return _storeEvent.apply(this, arguments);
 }
 
 function _storeEvent() {
-  _storeEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event, closeHandler) {
-    var eventJson, res, data;
+  _storeEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event, closeHandler, msgBlock) {
+    var delay, msg, status, eventJson, res, data;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log('Event store in progress...');
+            delay = 6000;
+            msg = {
+              icon: msgBlock.children[0],
+              text: msgBlock.children[1],
+              loading: 'Event store in progress...',
+              success: 'New event stored',
+              error: 'Something wrong, try again',
+              loadingCss: 'color: #e0b411; background-color: #fdfda6',
+              okCss: 'color: green; background-color: #7fef7d',
+              loadinIconCls: 'fa-sync-alt',
+              okIconCls: 'fa-check'
+            };
+            status = 0;
+            msg.icon.classList.remove('fa-exclamation-circle');
+            msg.icon.classList.add(msg.loadinIconCls);
+            msgBlock.style.cssText = msg.loadingCss;
+            msg.text.textContent = msg.loading;
+            msgBlock.classList.add('active');
             eventJson = JSON.stringify(event);
-            _context.prev = 2;
-            _context.next = 5;
+            _context.prev = 9;
+            _context.next = 12;
             return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__.postData)('events', eventJson);
 
-          case 5:
+          case 12:
             res = _context.sent;
-            _context.next = 8;
+            status = res.status;
+            _context.next = 16;
             return res.json();
 
-          case 8:
+          case 16:
             data = _context.sent;
-            // eslint-disable-next-line no-param-reassign
             event.id = data.id;
             (0,_render__WEBPACK_IMPORTED_MODULE_2__.render)(event);
-            console.log('New event stored');
-            closeHandler();
-            _context.next = 18;
+            msg.icon.classList.remove(msg.loadinIconCls);
+            msg.icon.classList.add(msg.okIconCls);
+            msgBlock.style.cssText = msg.okCss;
+            msg.text.textContent = msg.success; // closeHandler();
+
+            _context.next = 32;
             break;
 
-          case 15:
-            _context.prev = 15;
-            _context.t0 = _context["catch"](2);
+          case 25:
+            _context.prev = 25;
+            _context.t0 = _context["catch"](9);
+            msg.icon.classList.remove(msg.okIconCls);
+            msg.icon.classList.add('fa-exclamation-circle');
+            msgBlock.style.cssText = '';
+            msg.text.textContent = msg.error;
             console.warn(_context.t0);
 
-          case 18:
+          case 32:
+            _context.prev = 32;
+
+            if (status === 200) {
+              setTimeout(function () {
+                closeHandler();
+                msg.icon.classList.remove(msg.okIconCls);
+                msg.icon.classList.add('fa-exclamation-circle');
+                msgBlock.style.cssText = '';
+                msg.text.textContent = '';
+                msgBlock.classList.remove('active');
+              }, delay);
+            }
+
+            return _context.finish(32);
+
+          case 35:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[2, 15]]);
+    }, _callee, null, [[9, 25, 32, 35]]);
   }));
   return _storeEvent.apply(this, arguments);
 }
@@ -1047,7 +1124,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function appTemplate(selector) {
   var app = document.querySelector(selector);
-  var template = "\n        <div class=\"modal__dialog-header-warning\" id=\"modal-warning\">\n          <span class=\"fas fa-exclamation-circle\"></span>\n          <span class=\"modal__dialog-header-warning-text\"></span>\n          <span class=\"modal__dialog-header-warning-close fas fa-times-circle\"></span>\n        </div>\n        <div class=\"controls\">\n          <h2 class=\"title\">Calendar</h2>\n          <div id=\"filter\"></div>\n          <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n              <span>New event</span>\n              <span class=\"fas fa-plus\"></span>\n          </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
+  var template = "\n        <div class=\"controls\">\n          <div class=\"controls__title-wrapper\">\n            <h2 class=\"title\">Calendar</h2>\n            <div class=\"controls__title-warning\" data-type=\"controls-warning\">\n              <span class=\"fas fa-sync-alt\"></span>\n              <span class=\"controls__title-warning-text\"></span>\n            </div>\n          </div>\n          <div id=\"filter\"></div>\n          <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n              <span>New event</span>\n              <span class=\"fas fa-plus\"></span>\n          </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
   var loader = (0,_loader__WEBPACK_IMPORTED_MODULE_3__.default)();
   document.body.append(loader);
   app.insertAdjacentHTML('beforeend', template);
@@ -1415,7 +1492,9 @@ var removeEvent = function removeEvent(events, eventSlot) {
   });
   events.splice(eventIndex, 1);
   eventSlot.removeAttribute('data-event-id');
+  eventSlot.removeAttribute('draggable');
   eventSlot.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.slotBooked);
+  eventSlot.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerOpen);
   eventSlotChildren[0].textContent = '';
   eventSlotChildren[1].style.display = 'none';
   localStorage.eventStore = JSON.stringify(events);
@@ -11586,7 +11665,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614593977891
+      // 1614598234460
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -11606,7 +11685,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614593977802
+      // 1614603250378
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -12664,7 +12743,7 @@ module.exports.formatError = function (err) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "8f2325a85045f5111311"; }
+/******/ 		__webpack_require__.h = function() { return "6d34d546748470acff80"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

@@ -441,6 +441,20 @@ template {
   margin-bottom: 20px;
   align-items: center;
 }
+.controls__title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.controls__title-warning {
+  color: #9072d2;
+  font-size: 12px;
+  margin-left: 0.5rem;
+  opacity: 0;
+}
+.controls__title-warning.active {
+  opacity: 1;
+}
 .controls .title {
   font-size: 36px;
 }

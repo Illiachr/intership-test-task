@@ -6,7 +6,9 @@ const removeEvent = (events, eventSlot) => {
   const eventIndex = events.findIndex(event => event.id === eventSlot.dataset.eventId);
   events.splice(eventIndex, 1);
   eventSlot.removeAttribute('data-event-id');
+  eventSlot.removeAttribute('draggable');
   eventSlot.classList.remove(classes.slotBooked);
+  eventSlot.classList.add(classes.triggerOpen);
   eventSlotChildren[0].textContent = '';
   eventSlotChildren[1].style.display = 'none';
   localStorage.eventStore = JSON.stringify(events);
