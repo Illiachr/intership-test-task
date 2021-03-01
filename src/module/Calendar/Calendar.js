@@ -154,7 +154,7 @@ export default class Calendar {
     if (elem.closest(`.${classes.removeEvent}`)) {
       const eventSlot = elem.closest(`.${classes.slotBooked}`);
       if (eventSlot) {
-        removeEvent('event-remove', eventSlot, this.events);
+        removeEvent('event-remove', eventSlot, this.events, this.msgBlock);
       } else { console.warn('No event'); }
     }
   }
@@ -172,9 +172,9 @@ async function updateEvent(events, eventIndex, msgBlock) {
     loading: 'Updating event...',
     success: 'Event updated',
     error: 'Something wrong, try again',
-    loadinIconCls: 'fa-sync-alt',
+    loadingIconCls: 'fa-sync-alt',
     okIconCls: 'fa-check',
-    erorrIconCls: 'fa-check',
+    erorrIconCls: 'fa-exclamation-circle',
   };
 
   let status = 0;
@@ -189,7 +189,7 @@ async function updateEvent(events, eventIndex, msgBlock) {
     status = res.status;
     resetGrid();
     events.forEach(render);
-    msg.icon.classList.remove(msg.loadinIconCls);
+    msg.icon.classList.remove(msg.loadingIconCls);
     msg.icon.classList.add(msg.okIconCls);
     msg.text.textContent = msg.success;
   } catch (err) {
@@ -201,7 +201,7 @@ async function updateEvent(events, eventIndex, msgBlock) {
     if (status === 200) {
       setTimeout(() => {
         msg.icon.classList.remove(msg.okIconCls);
-        msg.icon.classList.add(msg.loadinIconCls);
+        msg.icon.classList.add(msg.loadingIconCls);
         msg.text.textContent = '';
         msgBlock.classList.remove('active');
       }, delay);

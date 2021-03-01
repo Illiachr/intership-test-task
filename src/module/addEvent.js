@@ -197,7 +197,6 @@ async function storeEvent(event, closeHandler, msgBlock) {
     msg.icon.classList.add(msg.okIconCls);
     msgBlock.style.cssText = msg.okCss;
     msg.text.textContent = msg.success;
-    // closeHandler();
   } catch (err) {
     msg.icon.classList.remove(msg.okIconCls);
     msg.icon.classList.add('fa-exclamation-circle');
