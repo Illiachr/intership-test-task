@@ -21,7 +21,8 @@ const getTemplate = props => {
                 data-type="item"
                 data-id="${item.id}"
             >
-                ${item.value}
+                <span>${item.value}</span>
+                <span class="${classes.dropDown}-item-option">${item.role || ''}</span>
             </li>
         `;
   });
@@ -148,7 +149,6 @@ export default class Select {
     this.selectedId = id;
     const selectedItem = this.elem.querySelector(`[data-id="${this.selectedId}"]`);
     if (this.selectedId === '0' && !selectedItem.classList.contains(classes.selected)) {
-      console.log(id);
       this.selectedItems = [];
       this.selectedItems.push(this.current.value);
       this.elem.querySelectorAll('[data-type="item"]').forEach(elem => {
@@ -161,7 +161,6 @@ export default class Select {
       this.selectedItems.push(this.current.value);
       selectedItem.classList.add(classes.selected);
     } else if (this.selectedItems.length > 1) {
-      console.log(this.selectedItems.length);
       this.selectedItems.splice(this.isSelected, 1);
       selectedItem.classList.remove(classes.selected);
     }

@@ -9,6 +9,7 @@
   },
   "author": "ic",
   "license": "ISC",
+  "browserslist": "> 0.25%, not dead",
   "devDependencies": {
     "@babel/core": "^7.12.13",
     "@babel/preset-env": "^7.12.13",
@@ -30,5 +31,9 @@
     "webpack": "^5.20.2",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "normalize.css": "^8.0.1"
   }
 }

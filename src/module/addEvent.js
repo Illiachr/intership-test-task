@@ -1,15 +1,16 @@
+/* eslint-disable no-param-reassign */
+import { postData } from './apiUtils/apiUtils';
 import {
   classes,
   eventHours,
-  team,
   workWeek,
 } from './auxiliary';
 import { render } from './render';
 import Select from './UI/select/select';
 
-const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
+// const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-export default (popupId, events, day = '', time = '') => {
+export default function addEvent(popupId, events, userList, day = '', time = '') {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
@@ -19,6 +20,8 @@ export default (popupId, events, day = '', time = '') => {
   };
 
   const msg = {
+    processed: 'Event store in progress...',
+    success: 'Event is stored',
     nameWarn: 'Enter event name, please',
     inputWarn: 'Only letters a-z and space, please',
     timeErr: 'Failed to create event. This time is already booked',
@@ -31,7 +34,7 @@ export default (popupId, events, day = '', time = '') => {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'All members' },
-      ...team,
+      ...userList,
     ],
     onSelect(selectedItems) {
       let members = [];
@@ -111,7 +114,6 @@ export default (popupId, events, day = '', time = '') => {
       return;
     }
 
-    stateEventSlot.event.id = generateId();
     stateEventSlot.event.name = eventForm.name.value;
     select.selectionResult();
     selectDay.selectionResult();
@@ -125,9 +127,7 @@ export default (popupId, events, day = '', time = '') => {
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
-      localStorage.eventStore = JSON.stringify(events);
-      render(stateEventSlot.event);
-      closePopup();
+      storeEvent(stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -136,10 +136,11 @@ export default (popupId, events, day = '', time = '') => {
 
   const clickHandler = e => {
     const { target } = e;
-    if (target.closest(`.${classes.triggerClose}`) ||
-            target.classList.contains(classes.modalActive)
+    if (
+      target.closest(`.${classes.triggerClose}`) ||
+      target.classList.contains(classes.modalActive)
     ) {
-      closePopup();
+      addEvent.close();
     }
 
     if (target.closest(`.${classes.modalWarning}`)) {
@@ -147,7 +148,7 @@ export default (popupId, events, day = '', time = '') => {
     }
   };
 
-  function closePopup() {
+  addEvent.close = () => {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
     eventForm.removeEventListener('input', inputHandler);
@@ -157,9 +158,61 @@ export default (popupId, events, day = '', time = '') => {
     eventForm.reset();
     warnMsg.classList.remove('active');
     popup.classList.remove(classes.modalActive);
-  }
+  };
 
   popup.addEventListener('click', clickHandler);
   eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
-};
+}
+
+async function storeEvent(event, closeHandler, msgBlock) {
+  const delay = 6000;
+  const msg = {
+    icon: msgBlock.children[0],
+    text: msgBlock.children[1],
+    loading: 'Event store in progress...',
+    success: 'New event stored',
+    error: 'Something wrong, try again',
+    loadingCss: 'color: #e0b411; background-color: #fdfda6',
+    okCss: 'color: green; background-color: #7fef7d',
+    loadinIconCls: 'fa-sync-alt',
+    okIconCls: 'fa-check',
+  };
+
+  let status = 0;
+
+  msg.icon.classList.remove('fa-exclamation-circle');
+  msg.icon.classList.add(msg.loadinIconCls);
+  msgBlock.style.cssText = msg.loadingCss;
+  msg.text.textContent = msg.loading;
+  msgBlock.classList.add('active');
+  const eventJson = JSON.stringify(event);
+  try {
+    const res = await postData('events', eventJson);
+    status = res.status;
+    const data = await res.json();
+    event.id = data.id;
+    render(event);
+    msg.icon.classList.remove(msg.loadinIconCls);
+    msg.icon.classList.add(msg.okIconCls);
+    msgBlock.style.cssText = msg.okCss;
+    msg.text.textContent = msg.success;
+  } catch (err) {
+    msg.icon.classList.remove(msg.okIconCls);
+    msg.icon.classList.add('fa-exclamation-circle');
+    msgBlock.style.cssText = '';
+    msg.text.textContent = msg.error;
+    console.warn(err);
+  } finally {
+    if (status === 200) {
+      setTimeout(() => {
+        closeHandler();
+        msg.icon.classList.remove(msg.okIconCls);
+        msg.icon.classList.add('fa-exclamation-circle');
+        msgBlock.style.cssText = '';
+        msg.text.textContent = '';
+        msgBlock.classList.remove('active');
+      }, delay);
+    }
+  }
+}

@@ -1,14 +1,19 @@
 @import "~normalize.css";
 @import "variables";
+@import "loader";
 
 .app {
     max-width: 1140px;
     margin: 8rem auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .4);
     padding: 2rem;
+
+    &.active {
+        display: flex;
+    }
 }
 
 .controls {
@@ -16,6 +21,23 @@
     justify-content: space-between;
     margin-bottom: 20px;
     align-items: center;
+    &__title {
+        &-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        &-warning {
+            color: $primary-color;
+            font-size: 12px;
+            margin-left: 0.5rem;
+            opacity: 0;
+
+            &.active {
+                opacity: 1;
+            }
+        }
+    }
     & .title {
         font-size: 36px;
     }
@@ -359,9 +381,17 @@
             }
     
             &-item {
+                display: flex;
+                justify-content: space-between;
                 padding: 0.5rem;
                 border-bottom: 1px solid #cccccc;
                 background-color: #ffffff;
+
+                &-option {
+                    color: #ccc;
+                    font-size: 14px;
+                    font-style: italic;
+                }
     
                 &:hover {
                     background-color: #eeeeee;
