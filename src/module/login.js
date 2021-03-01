@@ -10,6 +10,8 @@ export default (modalId, userList, events) => {
     name: null,
     role: null,
   };
+  console.log(userList);
+  console.log(events);
   popup.classList.add(classes.modalActive);
   // eslint-disable-next-line no-unused-vars
   const userSelect = new Select('#user-select', {

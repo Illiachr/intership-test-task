@@ -33,19 +33,22 @@ async function getList(loader = null, app) {
     const resEvents = await getData('events');
     if (res.status === 200) {
       const data = await res.json();
+      console.log(data);
       data.forEach(obj => {
         const parsedData = JSON.parse(obj.data);
-        const item = { id: obj.id, value: parsedData.name, role: parsedData.type };
+        const item = { id: obj.id, ...parsedData };
         userList.push(item);
       });
     } else { throw new Error('Network status not 200'); }
     if (resEvents.status === 200) {
       const data = await resEvents.json();
-      data.forEach(obj => {
-        const parsedData = JSON.parse(obj.data);
-        const item = { id: obj.id, ...parsedData };
-        events.push(item);
-      });
+      if (data) {
+        data.forEach(obj => {
+          const parsedData = JSON.parse(obj.data);
+          const item = { id: obj.id, ...parsedData };
+          events.push(item);
+        });
+      }
     } else { throw new Error('Network status not 200'); }
   } catch (err) {
     console.warn(err);

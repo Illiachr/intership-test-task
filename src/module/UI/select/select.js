@@ -21,7 +21,8 @@ const getTemplate = props => {
                 data-type="item"
                 data-id="${item.id}"
             >
-                ${item.value}
+                <span>${item.value}</span>
+                <span class="${classes.dropDown}-item-option">${item.role || ''}</span>
             </li>
         `;
   });

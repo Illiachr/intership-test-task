@@ -1,4 +1,4 @@
-const url = 'http://158.101.166.74:8080/api/data/Illiachr-evt-cldr-v0.1.0/';
+const url = 'http://158.101.166.74:8080/api/data/illia_cherkasov/';
 
 export const getData = entityName => fetch(url + entityName);
 

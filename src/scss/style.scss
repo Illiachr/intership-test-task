@@ -364,9 +364,17 @@
             }
     
             &-item {
+                display: flex;
+                justify-content: space-between;
                 padding: 0.5rem;
                 border-bottom: 1px solid #cccccc;
                 background-color: #ffffff;
+
+                &-option {
+                    color: #ccc;
+                    font-size: 14px;
+                    font-style: italic;
+                }
     
                 &:hover {
                     background-color: #eeeeee;
