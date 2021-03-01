@@ -1,4 +1,4 @@
-import { deleteData } from './apiUtils.js/apiUtils';
+import { deleteData } from './apiUtils/apiUtils';
 import { classes } from './auxiliary';
 
 const removeEvent = (events, eventSlot) => {

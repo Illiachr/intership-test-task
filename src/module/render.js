@@ -1,4 +1,4 @@
-import { getData } from './apiUtils.js/apiUtils';
+import { getData } from './apiUtils/apiUtils';
 import { classes } from './auxiliary';
 
 export const render = event => {

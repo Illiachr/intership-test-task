@@ -8,7 +8,6 @@ export default class User {
   }
 
   init(userList, events) {
-    console.log(userList, events);
     this.calendar = new Calendar(this.selector, this.user, userList, events);
   }
 }

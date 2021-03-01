@@ -3,17 +3,23 @@ import showGrid from '../showGrid';
 import modalTemplates from './modalTemplates';
 import userAuth from '../login';
 import lds from './loader';
-import { getData } from '../apiUtils.js/apiUtils';
+import { getData } from '../apiUtils/apiUtils';
 
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
-  const template = ` <div class="controls">
-            <h2 class="title">Calendar</h2>
-            <div id="filter"></div>
-            <button class="btn js-modal-open" data-type="add-event" data-modal="modal-event">
-                <span>New event</span>
-                <span class="fas fa-plus"></span>
-            </button>            
+  const template = `
+        <div class="modal__dialog-header-warning" id="modal-warning">
+          <span class="fas fa-exclamation-circle"></span>
+          <span class="modal__dialog-header-warning-text"></span>
+          <span class="modal__dialog-header-warning-close fas fa-times-circle"></span>
+        </div>
+        <div class="controls">
+          <h2 class="title">Calendar</h2>
+          <div id="filter"></div>
+          <button class="btn js-modal-open" data-type="add-event" data-modal="modal-event">
+              <span>New event</span>
+              <span class="fas fa-plus"></span>
+          </button>            
         </div>
         <div class="calendar-grid">
         </div>`;
@@ -33,7 +39,6 @@ async function getList(loader = null, app) {
     const resEvents = await getData('events');
     if (res.status === 200) {
       const data = await res.json();
-      console.log(data);
       data.forEach(obj => {
         const parsedData = JSON.parse(obj.data);
         const item = { id: obj.id, ...parsedData };

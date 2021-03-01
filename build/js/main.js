@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ Calendar; }
 /* harmony export */ });
 /* harmony import */ var _addEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../addEvent */ "./module/addEvent.js");
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apiUtils/apiUtils */ "./module/apiUtils/apiUtils.js");
 /* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../auxiliary */ "./module/auxiliary.js");
 /* harmony import */ var _removeEvent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../removeEvent */ "./module/removeEvent.js");
 /* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../render */ "./module/render.js");
@@ -183,7 +183,6 @@ var Calendar = /*#__PURE__*/function () {
     key: "onFilter",
     value: function onFilter() {
       var userList = this.userList;
-      console.log('userList:', userList);
       var filter = this.filterByUser.bind(this); // eslint-disable-next-line no-unused-vars
 
       var filterByMember = new _UI_select_select__WEBPACK_IMPORTED_MODULE_5__.default('#filter', {
@@ -195,14 +194,9 @@ var Calendar = /*#__PURE__*/function () {
           value: 'All members'
         }].concat(_toConsumableArray(userList)),
         onSelect: function onSelect(item) {
-          console.log(item);
           filter(item);
         }
-      }); // this.events = getEventStore();
-      // console.log(this.events);
-      // if (this.events.length > 0) {
-      //   this.events.forEach(render);
-      // }
+      });
     }
   }, {
     key: "onAdd",
@@ -260,7 +254,6 @@ var Calendar = /*#__PURE__*/function () {
           target.classList.remove('drag-hover');
           var eventId = dataTransfer.getData('text/plain');
           dataTransfer.setData('text/plain', '');
-          console.log(_this3.events);
 
           var eventIndex = _this3.events.findIndex(function (event) {
             return event.id === eventId;
@@ -338,7 +331,7 @@ function updateEvent(_x, _x2) {
 
 function _updateEvent() {
   _updateEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(events, eventIndex) {
-    var eventJson, res, data;
+    var eventJson;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -347,34 +340,26 @@ function _updateEvent() {
             eventJson = JSON.stringify(events[eventIndex]);
             _context.prev = 2;
             _context.next = 5;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_1__.updateData)('events', events[eventIndex].id, eventJson);
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_1__.updateData)('events', events[eventIndex].id, eventJson);
 
           case 5:
-            res = _context.sent;
-            _context.next = 8;
-            return res.text();
-
-          case 8:
-            data = _context.sent;
-            console.log(data);
-            localStorage.eventStore = JSON.stringify(events);
             (0,_render__WEBPACK_IMPORTED_MODULE_4__.resetGrid)();
             events.forEach(_render__WEBPACK_IMPORTED_MODULE_4__.render);
             console.log('Event updated');
-            _context.next = 19;
+            _context.next = 13;
             break;
 
-          case 16:
-            _context.prev = 16;
+          case 10:
+            _context.prev = 10;
             _context.t0 = _context["catch"](2);
             console.warn(_context.t0);
 
-          case 19:
+          case 13:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[2, 16]]);
+    }, _callee, null, [[2, 10]]);
   }));
   return _updateEvent.apply(this, arguments);
 }
@@ -560,7 +545,6 @@ var Select = /*#__PURE__*/function () {
       var selectedItem = this.elem.querySelector("[data-id=\"".concat(this.selectedId, "\"]"));
 
       if (this.selectedId === '0' && !selectedItem.classList.contains(classes.selected)) {
-        console.log(id);
         this.selectedItems = [];
         this.selectedItems.push(this.current.value);
         this.elem.querySelectorAll('[data-type="item"]').forEach(function (elem) {
@@ -574,7 +558,6 @@ var Select = /*#__PURE__*/function () {
         this.selectedItems.push(this.current.value);
         selectedItem.classList.add(classes.selected);
       } else if (this.selectedItems.length > 1) {
-        console.log(this.selectedItems.length);
         this.selectedItems.splice(this.isSelected, 1);
         selectedItem.classList.remove(classes.selected);
       }
@@ -728,7 +711,6 @@ var User = /*#__PURE__*/function () {
   _createClass(User, [{
     key: "init",
     value: function init(userList, events) {
-      console.log(userList, events);
       this.calendar = new _Calendar_Calendar__WEBPACK_IMPORTED_MODULE_0__.default(this.selector, this.user, userList, events);
     }
   }]);
@@ -748,7 +730,10 @@ var User = /*#__PURE__*/function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ addEvent; }
+/* harmony export */ });
+/* harmony import */ var _apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils/apiUtils */ "./module/apiUtils/apiUtils.js");
 /* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
 /* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./render */ "./module/render.js");
 /* harmony import */ var _UI_select_select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UI/select/select */ "./module/UI/select/select.js");
@@ -773,7 +758,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
  // const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-/* harmony default export */ __webpack_exports__["default"] = (function (popupId, events, userList) {
+function addEvent(popupId, events, userList) {
   var day = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
   var time = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
   var popup = document.getElementById(popupId);
@@ -895,9 +880,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
-      storeEvent(stateEventSlot.event);
-      localStorage.eventStore = JSON.stringify(events);
-      closePopup();
+      storeEvent(stateEventSlot.event, addEvent.close); // addEvent.close();
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -908,7 +891,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var target = e.target;
 
     if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.triggerClose)) || target.classList.contains(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive)) {
-      closePopup();
+      addEvent.close();
     }
 
     if (target.closest(".".concat(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalWarning))) {
@@ -916,7 +899,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
 
-  function closePopup() {
+  addEvent.close = function () {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
     eventForm.removeEventListener('input', inputHandler);
@@ -926,19 +909,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     eventForm.reset();
     warnMsg.classList.remove('active');
     popup.classList.remove(_auxiliary__WEBPACK_IMPORTED_MODULE_1__.classes.modalActive);
-  }
+  };
 
   popup.addEventListener('click', clickHandler);
   eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
-});
+}
 
-function storeEvent(_x) {
+function storeEvent(_x, _x2) {
   return _storeEvent.apply(this, arguments);
 }
 
 function _storeEvent() {
-  _storeEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
+  _storeEvent = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event, closeHandler) {
     var eventJson, res, data;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -948,7 +931,7 @@ function _storeEvent() {
             eventJson = JSON.stringify(event);
             _context.prev = 2;
             _context.next = 5;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.postData)('events', eventJson);
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__.postData)('events', eventJson);
 
           case 5:
             res = _context.sent;
@@ -957,11 +940,11 @@ function _storeEvent() {
 
           case 8:
             data = _context.sent;
-            console.log(data.id); // eslint-disable-next-line no-param-reassign
-
+            // eslint-disable-next-line no-param-reassign
             event.id = data.id;
             (0,_render__WEBPACK_IMPORTED_MODULE_2__.render)(event);
             console.log('New event stored');
+            closeHandler();
             _context.next = 18;
             break;
 
@@ -982,10 +965,10 @@ function _storeEvent() {
 
 /***/ }),
 
-/***/ "./module/apiUtils.js/apiUtils.js":
-/*!****************************************!*\
-  !*** ./module/apiUtils.js/apiUtils.js ***!
-  \****************************************/
+/***/ "./module/apiUtils/apiUtils.js":
+/*!*************************************!*\
+  !*** ./module/apiUtils/apiUtils.js ***!
+  \*************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1045,7 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modalTemplates__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalTemplates */ "./module/appTemplate/modalTemplates.js");
 /* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../login */ "./module/login.js");
 /* harmony import */ var _loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loader */ "./module/appTemplate/loader.js");
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apiUtils/apiUtils */ "./module/apiUtils/apiUtils.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -1064,7 +1047,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function appTemplate(selector) {
   var app = document.querySelector(selector);
-  var template = " <div class=\"controls\">\n            <h2 class=\"title\">Calendar</h2>\n            <div id=\"filter\"></div>\n            <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n                <span>New event</span>\n                <span class=\"fas fa-plus\"></span>\n            </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
+  var template = "\n        <div class=\"modal__dialog-header-warning\" id=\"modal-warning\">\n          <span class=\"fas fa-exclamation-circle\"></span>\n          <span class=\"modal__dialog-header-warning-text\"></span>\n          <span class=\"modal__dialog-header-warning-close fas fa-times-circle\"></span>\n        </div>\n        <div class=\"controls\">\n          <h2 class=\"title\">Calendar</h2>\n          <div id=\"filter\"></div>\n          <button class=\"btn js-modal-open\" data-type=\"add-event\" data-modal=\"modal-event\">\n              <span>New event</span>\n              <span class=\"fas fa-plus\"></span>\n          </button>            \n        </div>\n        <div class=\"calendar-grid\">\n        </div>";
   var loader = (0,_loader__WEBPACK_IMPORTED_MODULE_3__.default)();
   document.body.append(loader);
   app.insertAdjacentHTML('beforeend', template);
@@ -1103,18 +1086,18 @@ function _getList() {
             events = [];
             _context.prev = 5;
             _context.next = 8;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_4__.getData)('users');
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_4__.getData)('users');
 
           case 8:
             res = _context.sent;
             _context.next = 11;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_4__.getData)('events');
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_4__.getData)('events');
 
           case 11:
             resEvents = _context.sent;
 
             if (!(res.status === 200)) {
-              _context.next = 20;
+              _context.next = 19;
               break;
             }
 
@@ -1123,7 +1106,6 @@ function _getList() {
 
           case 15:
             data = _context.sent;
-            console.log(data);
             data.forEach(function (obj) {
               var parsedData = JSON.parse(obj.data);
 
@@ -1133,22 +1115,22 @@ function _getList() {
 
               userList.push(item);
             });
-            _context.next = 21;
+            _context.next = 20;
             break;
 
-          case 20:
+          case 19:
             throw new Error('Network status not 200');
 
-          case 21:
+          case 20:
             if (!(resEvents.status === 200)) {
-              _context.next = 28;
+              _context.next = 27;
               break;
             }
 
-            _context.next = 24;
+            _context.next = 23;
             return resEvents.json();
 
-          case 24:
+          case 23:
             _data = _context.sent;
 
             if (_data) {
@@ -1163,23 +1145,23 @@ function _getList() {
               });
             }
 
-            _context.next = 29;
+            _context.next = 28;
             break;
 
-          case 28:
+          case 27:
             throw new Error('Network status not 200');
 
-          case 29:
-            _context.next = 34;
+          case 28:
+            _context.next = 33;
             break;
 
-          case 31:
-            _context.prev = 31;
+          case 30:
+            _context.prev = 30;
             _context.t0 = _context["catch"](5);
             console.warn(_context.t0);
 
-          case 34:
-            _context.prev = 34;
+          case 33:
+            _context.prev = 33;
 
             if (loader) {
               loader.classList.remove('active');
@@ -1188,14 +1170,14 @@ function _getList() {
             app.classList.add('active');
             (0,_showGrid__WEBPACK_IMPORTED_MODULE_0__.default)();
             (0,_login__WEBPACK_IMPORTED_MODULE_2__.default)('login', userList, events);
-            return _context.finish(34);
+            return _context.finish(33);
 
-          case 40:
+          case 39:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[5, 31, 34, 40]]);
+    }, _callee, null, [[5, 30, 33, 39]]);
   }));
   return _getList.apply(this, arguments);
 }
@@ -1365,8 +1347,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     name: null,
     role: null
   };
-  console.log(userList);
-  console.log(events);
   popup.classList.add(_auxiliary__WEBPACK_IMPORTED_MODULE_0__.classes.modalActive); // eslint-disable-next-line no-unused-vars
 
   var userSelect = new _UI_select_select__WEBPACK_IMPORTED_MODULE_1__.default('#user-select', {
@@ -1397,13 +1377,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       closePopup(clickHandler);
 
       if (currentUser.role === 'user') {
-        console.log(userList);
         var user = new _User_User__WEBPACK_IMPORTED_MODULE_3__.default(currentUser, '.app');
         user.init(userList, events);
-      }
-
-      if (currentUser.role === 'admin') {
-        console.log(userList);
+      } else {
         var admin = new _User_Admin__WEBPACK_IMPORTED_MODULE_2__.default(currentUser, '.app');
         admin.init(userList, events);
       }
@@ -1423,7 +1399,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils/apiUtils */ "./module/apiUtils/apiUtils.js");
 /* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -1488,7 +1464,7 @@ function _removeEventApi() {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.deleteData)(entityName, elem.dataset.eventId);
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__.deleteData)(entityName, elem.dataset.eventId);
 
           case 3:
             res = _context.sent;
@@ -1532,7 +1508,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getEventStore": function() { return /* binding */ getEventStore; },
 /* harmony export */   "getEventsFromApi": function() { return /* binding */ getEventsFromApi; }
 /* harmony export */ });
-/* harmony import */ var _apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils.js/apiUtils */ "./module/apiUtils.js/apiUtils.js");
+/* harmony import */ var _apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./apiUtils/apiUtils */ "./module/apiUtils/apiUtils.js");
 /* harmony import */ var _auxiliary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auxiliary */ "./module/auxiliary.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -1605,7 +1581,7 @@ function _getEventsFromApi() {
             console.log('Loading');
             _context.prev = 3;
             _context.next = 6;
-            return (0,_apiUtils_js_apiUtils__WEBPACK_IMPORTED_MODULE_0__.getData)(entityName);
+            return (0,_apiUtils_apiUtils__WEBPACK_IMPORTED_MODULE_0__.getData)(entityName);
 
           case 6:
             res = _context.sent;
@@ -11610,7 +11586,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614581732671
+      // 1614593977891
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -11630,7 +11606,7 @@ __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
     if(true) {
-      // 1614583810912
+      // 1614593977802
       var cssReload = __webpack_require__(/*! ../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ "../node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js")(module.id, {"publicPath":"../","locals":false});
       module.hot.dispose(cssReload);
       module.hot.accept(undefined, cssReload);
@@ -12688,7 +12664,7 @@ module.exports.formatError = function (err) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "898a8d6ba1a74b4f1409"; }
+/******/ 		__webpack_require__.h = function() { return "8f2325a85045f5111311"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

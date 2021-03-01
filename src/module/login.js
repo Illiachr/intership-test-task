@@ -10,8 +10,6 @@ export default (modalId, userList, events) => {
     name: null,
     role: null,
   };
-  console.log(userList);
-  console.log(events);
   popup.classList.add(classes.modalActive);
   // eslint-disable-next-line no-unused-vars
   const userSelect = new Select('#user-select', {
@@ -38,14 +36,11 @@ export default (modalId, userList, events) => {
         currentUser.name &&
         currentUser.role) {
       closePopup(clickHandler);
+
       if (currentUser.role === 'user') {
-        console.log(userList);
         const user = new User(currentUser, '.app');
         user.init(userList, events);
-      }
-
-      if (currentUser.role === 'admin') {
-        console.log(userList);
+      } else {
         const admin = new Admin(currentUser, '.app');
         admin.init(userList, events);
       }

@@ -1,4 +1,4 @@
-import { postData } from './apiUtils.js/apiUtils';
+import { postData } from './apiUtils/apiUtils';
 import {
   classes,
   eventHours,
@@ -9,7 +9,7 @@ import Select from './UI/select/select';
 
 // const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
 
-export default (popupId, events, userList, day = '', time = '') => {
+export default function addEvent(popupId, events, userList, day = '', time = '') {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
@@ -126,9 +126,8 @@ export default (popupId, events, userList, day = '', time = '') => {
 
     if (!stateEventSlot.isBooked) {
       events.push(stateEventSlot.event);
-      storeEvent(stateEventSlot.event);
-      localStorage.eventStore = JSON.stringify(events);
-      closePopup();
+      storeEvent(stateEventSlot.event, addEvent.close);
+      // addEvent.close();
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -137,10 +136,11 @@ export default (popupId, events, userList, day = '', time = '') => {
 
   const clickHandler = e => {
     const { target } = e;
-    if (target.closest(`.${classes.triggerClose}`) ||
-            target.classList.contains(classes.modalActive)
+    if (
+      target.closest(`.${classes.triggerClose}`) ||
+      target.classList.contains(classes.modalActive)
     ) {
-      closePopup();
+      addEvent.close();
     }
 
     if (target.closest(`.${classes.modalWarning}`)) {
@@ -148,7 +148,7 @@ export default (popupId, events, userList, day = '', time = '') => {
     }
   };
 
-  function closePopup() {
+  addEvent.close = () => {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
     eventForm.removeEventListener('input', inputHandler);
@@ -158,24 +158,24 @@ export default (popupId, events, userList, day = '', time = '') => {
     eventForm.reset();
     warnMsg.classList.remove('active');
     popup.classList.remove(classes.modalActive);
-  }
+  };
 
   popup.addEventListener('click', clickHandler);
   eventForm.addEventListener('input', inputHandler);
   eventForm.addEventListener('submit', submitHandler);
-};
+}
 
-async function storeEvent(event) {
+async function storeEvent(event, closeHandler) {
   console.log('Event store in progress...');
   const eventJson = JSON.stringify(event);
   try {
     const res = await postData('events', eventJson);
     const data = await res.json();
-    console.log(data.id);
     // eslint-disable-next-line no-param-reassign
     event.id = data.id;
     render(event);
     console.log('New event stored');
+    closeHandler();
   } catch (err) {
     console.warn(err);
   }

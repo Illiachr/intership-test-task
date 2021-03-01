@@ -1,5 +1,5 @@
 import addEvent from '../addEvent';
-import { updateData } from '../apiUtils.js/apiUtils';
+import { updateData } from '../apiUtils/apiUtils';
 import { classes } from '../auxiliary';
 import removeEvent from '../removeEvent';
 import { render, resetGrid } from '../render';
@@ -45,7 +45,6 @@ export default class Calendar {
 
   onFilter() {
     const { userList } = this;
-    console.log('userList:', userList);
     const filter = this.filterByUser.bind(this);
     // eslint-disable-next-line no-unused-vars
     const filterByMember = new Select('#filter', {
@@ -57,16 +56,9 @@ export default class Calendar {
         ...userList,
       ],
       onSelect(item) {
-        console.log(item);
         filter(item);
       },
     });
-
-    // this.events = getEventStore();
-    // console.log(this.events);
-    // if (this.events.length > 0) {
-    //   this.events.forEach(render);
-    // }
   }
 
   onAdd() {
@@ -118,7 +110,6 @@ export default class Calendar {
         target.classList.remove('drag-hover');
         const eventId = dataTransfer.getData('text/plain');
         dataTransfer.setData('text/plain', '');
-        console.log(this.events);
         const eventIndex = this.events.findIndex(event => event.id === eventId);
         this.events[eventIndex].time = target.dataset.time;
         this.events[eventIndex].day = target.dataset.day;
@@ -176,10 +167,7 @@ async function updateEvent(events, eventIndex) {
   console.log('Event store in progress...');
   const eventJson = JSON.stringify(events[eventIndex]);
   try {
-    const res = await updateData('events', events[eventIndex].id, eventJson);
-    const data = await res.text();
-    console.log(data);
-    localStorage.eventStore = JSON.stringify(events);
+    await updateData('events', events[eventIndex].id, eventJson);
     resetGrid();
     events.forEach(render);
     console.log('Event updated');
