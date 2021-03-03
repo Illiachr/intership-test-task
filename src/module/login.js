@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { classes } from './auxiliary';
-import Select from './UI/select/select';
+import { Select } from './UI/Select/Select';
 import Admin from './User/Admin';
 import User from './User/User';
 

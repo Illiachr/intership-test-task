@@ -6,16 +6,22 @@ import {
   workWeek,
 } from './auxiliary';
 import { render } from './render';
-import Select from './UI/select/select';
-
-// const generateId = () => `e${(Math.trunc(Math.random() * 1e8)).toString(16)}`;
+import { Select } from './UI/Select/Select';
+import UserSelect from './UI/Select/SelectMulti';
+import { getTimeTable } from './utils';
 
 export default function addEvent(popupId, events, userList, day = '', time = '') {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
   const stateEventSlot = {
-    event: { partisipants: [] },
+    event: {
+      id: '',
+      name: '',
+      day,
+      time,
+      partisipants: [],
+    },
     isBooked: false,
   };
 
@@ -30,7 +36,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
   };
   popup.classList.add(classes.modalActive);
 
-  const select = new Select('#participants', {
+  const select = new UserSelect('#participants', {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'All members' },
@@ -59,7 +65,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
       }
       stateEventSlot.event.partisipants = [...members];
     },
-  }, true);
+  });
 
   const selectDay = new Select('#day', {
     placeholder: 'Choose day...',
@@ -73,16 +79,10 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     },
   });
 
-  const eventTimeTable = [];
-  for (let hour = +eventHours.start; hour <= +eventHours.end; hour += +eventHours.step) {
-    const eventTime = { id: `${hour}`, value: `${hour}:00` };
-    eventTimeTable.push(eventTime);
-  }
-
   const selectTime = new Select('#time', {
     placeholder: 'Choose time...',
     defaultSeleted: time,
-    data: eventTimeTable,
+    data: getTimeTable(eventHours),
     onSelect(selectedItems) {
       warnMsg.classList.remove('active');
       stateEventSlot.event.time = selectedItems.id;
@@ -116,7 +116,6 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
 
     stateEventSlot.event.name = eventForm.name.value;
     select.selectionResult();
-    selectDay.selectionResult();
     selectTime.selectionResult();
 
     events.forEach(event => {
@@ -126,8 +125,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     });
 
     if (!stateEventSlot.isBooked) {
-      events.push(stateEventSlot.event);
-      storeEvent(stateEventSlot.event, addEvent.close, warnMsg);
+      storeEvent(events, stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -165,7 +163,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
   eventForm.addEventListener('submit', submitHandler);
 }
 
-async function storeEvent(event, closeHandler, msgBlock) {
+async function storeEvent(events, event, closeHandler, msgBlock) {
   const delay = 6000;
   const msg = {
     icon: msgBlock.children[0],
@@ -192,6 +190,8 @@ async function storeEvent(event, closeHandler, msgBlock) {
     status = res.status;
     const data = await res.json();
     event.id = data.id;
+    events.push(event);
+    console.log(events);
     render(event);
     msg.icon.classList.remove(msg.loadinIconCls);
     msg.icon.classList.add(msg.okIconCls);

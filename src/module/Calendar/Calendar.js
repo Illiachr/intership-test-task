@@ -3,7 +3,7 @@ import { updateData } from '../apiUtils/apiUtils';
 import { classes } from '../auxiliary';
 import removeEvent from '../removeEvent';
 import { render, resetGrid } from '../render';
-import Select from '../UI/select/select';
+import { Select } from '../UI/Select/Select';
 import { capitalize, firstFreeSlot } from '../utils';
 
 export default class Calendar {
@@ -57,7 +57,6 @@ export default class Calendar {
         ...userList,
       ],
       onSelect(item) {
-        console.log(item);
         filter(item);
       },
     });

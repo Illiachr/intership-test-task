@@ -11,14 +11,6 @@ export const classes = {
   modalWarning: 'modal__dialog-header-warning',
 };
 
-export const team = [
-  { id: '1', value: 'Andriy', role: 'user' },
-  { id: '2', value: 'Maks', role: 'admin' },
-  { id: '3', value: 'Anton', role: 'user' },
-  { id: '4', value: 'Illia', role: 'admin' },
-  { id: '5', value: 'Danil', role: 'user' },
-];
-
 export const workWeek = [
   { id: '1', value: 'Mon' },
   { id: '2', value: 'Tue' },

@@ -1,4 +1,4 @@
-const classes = {
+export const classes = {
   base: 'select',
   selected: 'selected',
   open: 'select--open',
@@ -43,11 +43,10 @@ const getTemplate = props => {
     `;
 };
 
-export default class Select {
-  constructor(selector, options, multi = false) {
+export class Select {
+  constructor(selector, options) {
     this.elem = document.querySelector(selector);
     this.options = options;
-    this.multi = multi;
     this.selectedId = options.defaultSeleted;
     this.selectedItems = [];
 
@@ -91,9 +90,7 @@ export default class Select {
     }
 
     if (type === 'item') {
-      if (this.multi) {
-        this.multiSelect(target.dataset.id);
-      } else { this.select(target.dataset.id); }
+      this.select(target.dataset.id);
     }
 
     if (type === 'backdrop') {
@@ -138,40 +135,9 @@ export default class Select {
     this.close();
   }
 
-  multiSelect(id) {
-    if (this.selectedItems.length <= 1 && this.selectedItems[0] === 'All members') {
-      this.elem.querySelector(`[data-id="${this.selectedId}"]`).classList.remove(classes.selected);
-      this.selectedItems.splice(this.isSelected, 1);
-      this.elem.querySelectorAll('[data-type="item"]').forEach(elem => {
-        elem.classList.remove(classes.selected);
-      });
-    }
-    this.selectedId = id;
-    const selectedItem = this.elem.querySelector(`[data-id="${this.selectedId}"]`);
-    if (this.selectedId === '0' && !selectedItem.classList.contains(classes.selected)) {
-      this.selectedItems = [];
-      this.selectedItems.push(this.current.value);
-      this.elem.querySelectorAll('[data-type="item"]').forEach(elem => {
-        elem.classList.add(classes.selected);
-      });
-      this.value.textContent = this.selectedItems.join(', ');
-      return;
-    }
-    if (this.isSelected < 0) {
-      this.selectedItems.push(this.current.value);
-      selectedItem.classList.add(classes.selected);
-    } else if (this.selectedItems.length > 1) {
-      this.selectedItems.splice(this.isSelected, 1);
-      selectedItem.classList.remove(classes.selected);
-    }
-    this.value.textContent = this.selectedItems.join(', ');
-  }
-
   selectionResult() {
     if (this.options.onSelect) {
-      if (this.multi) {
-        this.options.onSelect(this.selectedItems);
-      } else { this.options.onSelect(this.current); }
+      this.options.onSelect(this.current);
     }
   }
 
