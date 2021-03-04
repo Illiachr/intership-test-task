@@ -1,13 +1,19 @@
-import Calendar from '../Calendar/Calendar';
+const actionList = ['filter'];
 
 export default class User {
-  constructor(user, selector) {
-    this.user = user;
-    this.selector = selector;
-    this.user.rights = ['filter'];
+  constructor(name) {
+    this.name = name;
+    this.allowedActions = [];
+
+    this.setActions(actionList);
   }
 
-  init(userList, events) {
-    this.calendar = new Calendar(this.selector, this.user, userList, events);
+  setActions(actions) {
+    actions.forEach(action => this.allowedActions.push(action));
+  }
+
+  unsetRight(right) {
+    const index = this.rights.findIndex(currentRight => currentRight === right);
+    this.rights.splice(index, 0);
   }
 }

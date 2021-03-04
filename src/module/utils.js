@@ -16,6 +16,8 @@ export const capitalize = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+export const getMethodName = eventName => `on${capitalize(eventName)}`;
+
 export const firstFreeSlot = calendarElem => {
   let nextFreeTime = '';
   let lastBookedDay = '';

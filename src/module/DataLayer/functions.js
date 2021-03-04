@@ -1,3 +1,4 @@
+/* eslint-disable*/
 async function getList(loader = null, app) {
   if (loader) { loader.classList.add('active'); }
   const userList = [];
@@ -19,7 +20,7 @@ async function getList(loader = null, app) {
         data.forEach(obj => {
           const parsedData = JSON.parse(obj.data);
           const item = { id: obj.id, ...parsedData };
-          events.push(item);
+          events.push(item); 
         });
       }
     } else { throw new Error('Network status not 200'); }

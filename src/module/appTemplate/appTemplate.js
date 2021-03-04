@@ -4,6 +4,7 @@ import modalTemplates from './modalTemplates';
 import userAuth from '../login';
 import lds from './loader';
 import { getData } from '../apiUtils/apiUtils';
+import DataLayer from '../DataLayer/DataLayer';
 
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
@@ -25,6 +26,7 @@ export default function appTemplate(selector) {
         <div class="calendar-grid">
         </div>`;
   const loader = lds();
+  const dataLayer = new DataLayer();
   document.body.append(loader);
   app.insertAdjacentHTML('beforeend', template);
   modalTemplates();

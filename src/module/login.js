@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { classes } from './auxiliary';
+import DataLayer from './DataLayer/DataLayer';
 import { Select } from './UI/Select/Select';
 import Admin from './User/Admin';
 import User from './User/User';
 
-export default (modalId, userList, events) => {
+export default modalId => {
   const popup = document.getElementById(modalId);
+  const dataLayer = new DataLayer();
   const currentUser = {
     name: null,
     role: null,
@@ -18,7 +20,7 @@ export default (modalId, userList, events) => {
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'Choose user name' },
-      ...userList,
+      ...dataLayer.users,
     ],
     onSelect(user) {
       currentUser.name = user.value;
@@ -38,12 +40,12 @@ export default (modalId, userList, events) => {
       closePopup(clickHandler);
 
       if (currentUser.role === 'user') {
-        console.log(userList);
+        console.log(dataLayer.users);
         const user = new User(currentUser, '.app');
-        user.init(userList, events);
+        user.init();
       } else {
         const admin = new Admin(currentUser, '.app');
-        admin.init(userList, events);
+        admin.init();
       }
     }
   };
