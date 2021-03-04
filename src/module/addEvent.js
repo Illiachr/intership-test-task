@@ -1,20 +1,22 @@
 /* eslint-disable no-param-reassign */
-import { postData } from './apiUtils/apiUtils';
 import {
   classes,
   eventHours,
   workWeek,
 } from './auxiliary';
-import { render } from './render';
+import DataLayer from './DataLayer/DataLayer';
+import Emitter from './Emitter';
 import { Select } from './UI/Select/Select';
 import UserSelect from './UI/Select/SelectMulti';
 import { getTimeTable } from './utils';
 
-export default function addEvent(popupId, events, userList, day = '', time = '') {
+export default function addEvent(popupId, day = '', time = '') {
   const popup = document.getElementById(popupId);
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
-  const stateEventSlot = {
+  const dataLayer = new DataLayer();
+  const emitter = new Emitter();
+  const eventSlot = {
     event: {
       id: '',
       name: '',
@@ -40,7 +42,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     defaultSeleted: '0',
     data: [
       { id: '0', value: 'All members' },
-      ...userList,
+      ...dataLayer.users,
     ],
     onSelect(selectedItems) {
       let members = [];
@@ -63,7 +65,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
           return total;
         }, []);
       }
-      stateEventSlot.event.partisipants = [...members];
+      eventSlot.event.partisipants = [...members];
     },
   });
 
@@ -75,7 +77,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     ],
     onSelect(selectedItems) {
       warnMsg.classList.remove('active');
-      stateEventSlot.event.day = selectedItems.id;
+      eventSlot.event.day = selectedItems.id;
     },
   });
 
@@ -85,7 +87,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     data: getTimeTable(eventHours),
     onSelect(selectedItems) {
       warnMsg.classList.remove('active');
-      stateEventSlot.event.time = selectedItems.id;
+      eventSlot.event.time = selectedItems.id;
     },
   });
 
@@ -106,7 +108,7 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
 
   const submitHandler = e => {
     e.preventDefault();
-    stateEventSlot.isBooked = false;
+    eventSlot.isBooked = false;
 
     if (eventForm.name.value.trim() === '') {
       warnMsg.children[1].textContent = msg.nameWarn;
@@ -114,18 +116,19 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
       return;
     }
 
-    stateEventSlot.event.name = eventForm.name.value;
+    eventSlot.event.name = eventForm.name.value;
     select.selectionResult();
     selectTime.selectionResult();
 
-    events.forEach(event => {
-      if (event.day === stateEventSlot.event.day && event.time === stateEventSlot.event.time) {
-        stateEventSlot.isBooked = true;
+    dataLayer.events.forEach(event => {
+      if (event.day === eventSlot.event.day && event.time === eventSlot.event.time) {
+        eventSlot.isBooked = true;
       }
     });
 
-    if (!stateEventSlot.isBooked) {
-      storeEvent(events, stateEventSlot.event, addEvent.close, warnMsg);
+    if (!eventSlot.isBooked) {
+      dataLayer.storeData(dataLayer.eventsEntity, eventSlot.event);
+      // storeEvent(events, stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -146,10 +149,19 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
     }
   };
 
+  const unsubStore = emitter.subscribe('events:stored', storeStatus => {
+    if (storeStatus) {
+      addEvent.close();
+    } else {
+      console.log('error');
+    }
+  });
+
   addEvent.close = () => {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
     eventForm.removeEventListener('input', inputHandler);
+    unsubStore();
     select.destroy();
     selectDay.destroy();
     selectTime.destroy();
@@ -163,56 +175,56 @@ export default function addEvent(popupId, events, userList, day = '', time = '')
   eventForm.addEventListener('submit', submitHandler);
 }
 
-async function storeEvent(events, event, closeHandler, msgBlock) {
-  const delay = 6000;
-  const msg = {
-    icon: msgBlock.children[0],
-    text: msgBlock.children[1],
-    loading: 'Event store in progress...',
-    success: 'New event stored',
-    error: 'Something wrong, try again',
-    loadingCss: 'color: #e0b411; background-color: #fdfda6',
-    okCss: 'color: green; background-color: #7fef7d',
-    loadinIconCls: 'fa-sync-alt',
-    okIconCls: 'fa-check',
-  };
+// async function storeEvent(events, event, closeHandler, msgBlock) {
+//   const delay = 6000;
+//   const msg = {
+//     icon: msgBlock.children[0],
+//     text: msgBlock.children[1],
+//     loading: 'Event store in progress...',
+//     success: 'New event stored',
+//     error: 'Something wrong, try again',
+//     loadingCss: 'color: #e0b411; background-color: #fdfda6',
+//     okCss: 'color: green; background-color: #7fef7d',
+//     loadinIconCls: 'fa-sync-alt',
+//     okIconCls: 'fa-check',
+//   };
 
-  let status = 0;
+//   let status = 0;
 
-  msg.icon.classList.remove('fa-exclamation-circle');
-  msg.icon.classList.add(msg.loadinIconCls);
-  msgBlock.style.cssText = msg.loadingCss;
-  msg.text.textContent = msg.loading;
-  msgBlock.classList.add('active');
-  const eventJson = JSON.stringify(event);
-  try {
-    const res = await postData('events', eventJson);
-    status = res.status;
-    const data = await res.json();
-    event.id = data.id;
-    events.push(event);
-    console.log(events);
-    render(event);
-    msg.icon.classList.remove(msg.loadinIconCls);
-    msg.icon.classList.add(msg.okIconCls);
-    msgBlock.style.cssText = msg.okCss;
-    msg.text.textContent = msg.success;
-  } catch (err) {
-    msg.icon.classList.remove(msg.okIconCls);
-    msg.icon.classList.add('fa-exclamation-circle');
-    msgBlock.style.cssText = '';
-    msg.text.textContent = msg.error;
-    console.warn(err);
-  } finally {
-    if (status === 200) {
-      setTimeout(() => {
-        closeHandler();
-        msg.icon.classList.remove(msg.okIconCls);
-        msg.icon.classList.add('fa-exclamation-circle');
-        msgBlock.style.cssText = '';
-        msg.text.textContent = '';
-        msgBlock.classList.remove('active');
-      }, delay);
-    }
-  }
-}
+//   msg.icon.classList.remove('fa-exclamation-circle');
+//   msg.icon.classList.add(msg.loadinIconCls);
+//   msgBlock.style.cssText = msg.loadingCss;
+//   msg.text.textContent = msg.loading;
+//   msgBlock.classList.add('active');
+//   const eventJson = JSON.stringify(event);
+//   try {
+//     const res = await postData('events', eventJson);
+//     status = res.status;
+//     const data = await res.json();
+//     event.id = data.id;
+//     events.push(event);
+//     console.log(events);
+//     render(event);
+//     msg.icon.classList.remove(msg.loadinIconCls);
+//     msg.icon.classList.add(msg.okIconCls);
+//     msgBlock.style.cssText = msg.okCss;
+//     msg.text.textContent = msg.success;
+//   } catch (err) {
+//     msg.icon.classList.remove(msg.okIconCls);
+//     msg.icon.classList.add('fa-exclamation-circle');
+//     msgBlock.style.cssText = '';
+//     msg.text.textContent = msg.error;
+//     console.warn(err);
+//   } finally {
+//     if (status === 200) {
+//       setTimeout(() => {
+//         closeHandler();
+//         msg.icon.classList.remove(msg.okIconCls);
+//         msg.icon.classList.add('fa-exclamation-circle');
+//         msgBlock.style.cssText = '';
+//         msg.text.textContent = '';
+//         msgBlock.classList.remove('active');
+//       }, delay);
+//     }
+//   }
+// }

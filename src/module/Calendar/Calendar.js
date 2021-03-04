@@ -36,7 +36,7 @@ export default class Calendar {
     if (this.dataLayer.events.length > 0) {
       this.dataLayer.events.forEach(render);
     }
-    this.user.rights.forEach(right => this[getMethodName(right)]());
+    this.user.allowedActions.forEach(action => this[getMethodName(action)]());
     this.clickListener();
   }
 

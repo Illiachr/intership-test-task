@@ -1,3 +1,4 @@
+import Emitter from '../Emitter';
 import { getData, postData, updateData } from './dataUtils';
 
 const conf = {
@@ -17,13 +18,16 @@ export default class DataLayer {
     this.resStatus = null;
     this.users = [];
     this.events = [];
+    this.emitter = new Emitter();
 
     this.init();
   }
 
   init() {
     this.getData(this.usersEntity);
-    this.getData(this.eventsEntity);
+    this.emitter.subcribe(`${this.usersEntity}:loaded`, () => {
+      this.getData(this.eventsEntity);
+    });
   }
 
   async getData(entity) {
@@ -33,7 +37,7 @@ export default class DataLayer {
       const data = await res.json();
       getDataFromJSON(data, this[entity]);
       console.log(`${entity}: `, this[entity]);
-      console.log('emit ok');
+      this.emitter.emit(`${entity}:loaded`);
     } catch (err) {
       // exception Decorator
       console.log('emit error');

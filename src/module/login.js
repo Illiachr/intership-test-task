@@ -1,9 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { classes } from './auxiliary';
 import DataLayer from './DataLayer/DataLayer';
+import Emitter from './Emitter';
 import { Select } from './UI/Select/Select';
-import Admin from './User/Admin';
-import User from './User/User';
+import UserFactory from './User/UserFactory';
+// import Admin from './User/Admin';
+// import User from './User/User';
 
 export default modalId => {
   const popup = document.getElementById(modalId);
@@ -12,6 +14,8 @@ export default modalId => {
     name: null,
     role: null,
   };
+  const userFactory = new UserFactory();
+  const emitter = new Emitter();
   popup.classList.add(classes.modalActive);
   // eslint-disable-next-line no-unused-vars
   const userSelect = new Select('#user-select', {
@@ -37,16 +41,18 @@ export default modalId => {
     if (e.target.name === 'login' &&
         currentUser.name &&
         currentUser.role) {
+      const user = userFactory.create(currentUser.name, currentUser.role);
+      emitter.emit('login:passed', user);
       closePopup(clickHandler);
 
-      if (currentUser.role === 'user') {
-        console.log(dataLayer.users);
-        const user = new User(currentUser, '.app');
-        user.init();
-      } else {
-        const admin = new Admin(currentUser, '.app');
-        admin.init();
-      }
+      // if (currentUser.role === 'user') {
+      //   console.log(dataLayer.users);
+      //   const user = new User(currentUser, '.app');
+      //   user.init();
+      // } else {
+      //   const admin = new Admin(currentUser, '.app');
+      //   admin.init();
+      // }
     }
   };
 

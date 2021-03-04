@@ -5,6 +5,8 @@ import userAuth from '../login';
 import lds from './loader';
 import { getData } from '../apiUtils/apiUtils';
 import DataLayer from '../DataLayer/DataLayer';
+import Emitter from '../Emitter';
+import Calendar from '../Calendar/Calendar';
 
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
@@ -27,10 +29,24 @@ export default function appTemplate(selector) {
         </div>`;
   const loader = lds();
   const dataLayer = new DataLayer();
+  const emitter = new Emitter();
+
   document.body.append(loader);
+  loader.classList.add('active');
   app.insertAdjacentHTML('beforeend', template);
   modalTemplates();
-  getList(loader, app);
+
+  emitter.subcribe('events:loaded', () => {
+    loader.classList.remove('active');
+    app.classList.add('active');
+    showGrid();
+    userAuth('login');
+  });
+  emitter.subcribe('login:passed', user => {
+    console.log(user);
+    const calendar = new Calendar(selector, user);
+  });
+  // getList(loader, app);
 }
 
 async function getList(loader = null, app) {
