@@ -46,40 +46,4 @@ export default function appTemplate(selector) {
     console.log(user);
     const calendar = new Calendar(selector, user);
   });
-  // getList(loader, app);
-}
-
-async function getList(loader = null, app) {
-  if (loader) { loader.classList.add('active'); }
-  const userList = [];
-  const events = [];
-  try {
-    const res = await getData('users');
-    const resEvents = await getData('events');
-    if (res.status === 200) {
-      const data = await res.json();
-      data.forEach(obj => {
-        const parsedData = JSON.parse(obj.data);
-        const item = { id: obj.id, ...parsedData };
-        userList.push(item);
-      });
-    } else { throw new Error('Network status not 200'); }
-    if (resEvents.status === 200) {
-      const data = await resEvents.json();
-      if (data) {
-        data.forEach(obj => {
-          const parsedData = JSON.parse(obj.data);
-          const item = { id: obj.id, ...parsedData };
-          events.push(item);
-        });
-      }
-    } else { throw new Error('Network status not 200'); }
-  } catch (err) {
-    console.warn(err);
-  } finally {
-    if (loader) { loader.classList.remove('active'); }
-    app.classList.add('active');
-    showGrid();
-    userAuth('login', userList, events);
-  }
 }

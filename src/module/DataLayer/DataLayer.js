@@ -35,8 +35,10 @@ export default class DataLayer {
       const res = await getData(entity);
       if (res.status !== 200) { throw new Error(`Entity ${entity} not exists`); }
       const data = await res.json();
-      getDataFromJSON(data, this[entity]);
-      console.log(`${entity}: `, this[entity]);
+      if (data) {
+        getDataFromJSON(data, this[entity]);
+        console.log(`${entity}: `, this[entity]);
+      }
       this.emitter.emit(`${entity}:loaded`);
     } catch (err) {
       // exception Decorator
@@ -54,10 +56,10 @@ export default class DataLayer {
       obj.id = data.id;
       this[entity].push(obj);
       console.log(this[entity]);
-      console.log('emit render');
+      this.emitter.emit(`${entity}:stored`, true);
     } catch (err) {
       // exception Decorator
-      console.log('emit error');
+      this.emitter.emit(`${entity}:stored`, false);
       console.warn(err);
     }
   }
@@ -67,10 +69,10 @@ export default class DataLayer {
     try {
       const res = await updateData(entity, obj.id, JSON.stringify(obj));
       if (res.status !== 200) { throw new Error(`${obj.id} unreacheble or not exists`); }
-      console.log('emit render');
+      this.emitter.emit(`${entity}:updated`, true);
     } catch (err) {
       // exception Decorator
-      console.log('emit error');
+      this.emitter.emit(`${entity}:updated`, false);
       console.warn(err);
     }
   }

@@ -4,8 +4,6 @@ import DataLayer from './DataLayer/DataLayer';
 import Emitter from './Emitter';
 import { Select } from './UI/Select/Select';
 import UserFactory from './User/UserFactory';
-// import Admin from './User/Admin';
-// import User from './User/User';
 
 export default modalId => {
   const popup = document.getElementById(modalId);
@@ -44,15 +42,6 @@ export default modalId => {
       const user = userFactory.create(currentUser.name, currentUser.role);
       emitter.emit('login:passed', user);
       closePopup(clickHandler);
-
-      // if (currentUser.role === 'user') {
-      //   console.log(dataLayer.users);
-      //   const user = new User(currentUser, '.app');
-      //   user.init();
-      // } else {
-      //   const admin = new Admin(currentUser, '.app');
-      //   admin.init();
-      // }
     }
   };
 

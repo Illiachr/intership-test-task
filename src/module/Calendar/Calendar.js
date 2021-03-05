@@ -2,6 +2,7 @@ import addEvent from '../addEvent';
 // import { updateData } from '../apiUtils/apiUtils';
 import { classes } from '../auxiliary';
 import DataLayer from '../DataLayer/DataLayer';
+import Emitter from '../Emitter';
 import removeEvent from '../removeEvent';
 import { render, resetGrid } from '../render';
 import { Select } from '../UI/Select/Select';
@@ -12,6 +13,7 @@ export default class Calendar {
     this.root = document.querySelector(selector);
     this.user = user;
     this.dataLayer = new DataLayer();
+    this.emitter = new Emitter();
     // this.userList = userList;
 
     this.msgBlock = this.root.querySelector('[data-type="controls-warning"]');
@@ -38,6 +40,13 @@ export default class Calendar {
     }
     this.user.allowedActions.forEach(action => this[getMethodName(action)]());
     this.clickListener();
+    this.emitter.subcribe('addEvent:success', event => render(event));
+    this.emitter.subcribe('events:updated', isOk => {
+      if (isOk) {
+        resetGrid();
+        this.dataLayer.events.forEach(render);
+      }
+    });
   }
 
   clickListener() {
@@ -165,48 +174,3 @@ export default class Calendar {
     }
   }
 }
-
-// async function updateEvent(events, eventIndex, msgBlock) {
-//   const delay = 10000;
-//   const msg = {
-//     icon: msgBlock.children[0],
-//     text: msgBlock.children[1],
-//     loading: 'Updating event...',
-//     success: 'Event updated',
-//     error: 'Something wrong, try again',
-//     loadingIconCls: 'fa-sync-alt',
-//     okIconCls: 'fa-check',
-//     erorrIconCls: 'fa-exclamation-circle',
-//   };
-
-//   let status = 0;
-
-//   // eslint-disable-next-line no-param-reassign
-//   msg.text.textContent = msg.loading;
-//   msgBlock.classList.add('active');
-
-//   const eventJson = JSON.stringify(events[eventIndex]);
-//   try {
-//     const res = await updateData('events', events[eventIndex].id, eventJson);
-//     status = res.status;
-//     resetGrid();
-//     events.forEach(render);
-//     msg.icon.classList.remove(msg.loadingIconCls);
-//     msg.icon.classList.add(msg.okIconCls);
-//     msg.text.textContent = msg.success;
-//   } catch (err) {
-//     msg.icon.classList.remove(msg.okIconCls);
-//     msg.icon.classList.add(msg.erorrIconCls);
-//     msg.text.textContent = msg.error;
-//     console.warn(err);
-//   } finally {
-//     if (status === 200) {
-//       setTimeout(() => {
-//         msg.icon.classList.remove(msg.okIconCls);
-//         msg.icon.classList.add(msg.loadingIconCls);
-//         msg.text.textContent = '';
-//         msgBlock.classList.remove('active');
-//       }, delay);
-//     }
-//   }
-// }

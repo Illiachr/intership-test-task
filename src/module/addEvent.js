@@ -149,11 +149,10 @@ export default function addEvent(popupId, day = '', time = '') {
     }
   };
 
-  const unsubStore = emitter.subscribe('events:stored', storeStatus => {
-    if (storeStatus) {
+  const unsubStore = emitter.subcribe('events:stored', isOk => {
+    if (isOk) {
       addEvent.close();
-    } else {
-      console.log('error');
+      emitter.emit('addEvent:success', eventSlot.event);
     }
   });
 
