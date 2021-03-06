@@ -28,6 +28,5 @@ export const deleteData = (entityName, id) => fetch(
   `${url}${entityName}/${id}`,
   {
     method: 'DELETE',
-    mode: 'no-cors',
   },
 );

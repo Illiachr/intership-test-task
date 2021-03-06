@@ -1,21 +1,21 @@
-import { deleteData } from './apiUtils/apiUtils';
 import { classes } from './auxiliary';
+import DataLayer from './DataLayer/DataLayer';
 
-const removeEvent = (events, eventSlot) => {
-  const eventSlotChildren = eventSlot.children;
-  const eventIndex = events.findIndex(event => event.id === eventSlot.dataset.eventId);
-  events.splice(eventIndex, 1);
-  eventSlot.removeAttribute('data-event-id');
-  eventSlot.removeAttribute('draggable');
-  eventSlot.classList.remove(classes.slotBooked);
-  eventSlot.classList.add(classes.triggerOpen);
-  eventSlotChildren[0].textContent = '';
-  eventSlotChildren[1].style.display = 'none';
-  localStorage.eventStore = JSON.stringify(events);
-}; // end removeEvent
+// const removeEvent = eventSlot => {
+//   const eventSlotChildren = eventSlot.children;
+//   const eventIndex = dataLayer.events.findIndex(event => event.id === eventSlot.dataset.eventId);
+//   dataLayer.events.splice(eventIndex, 1);
+//   eventSlot.removeAttribute('data-event-id');
+//   eventSlot.removeAttribute('draggable');
+//   eventSlot.classList.remove(classes.slotBooked);
+//   eventSlot.classList.add(classes.triggerOpen);
+//   eventSlotChildren[0].textContent = '';
+//   eventSlotChildren[1].style.display = 'none';
+// }; // end removeEvent
 
-export default (modalId, elem, events, msgBlock) => {
+export default (modalId, elem) => {
   const popup = document.getElementById(modalId);
+  const dataLayer = new DataLayer();
 
   popup.classList.add(classes.modalActive);
 
@@ -28,7 +28,8 @@ export default (modalId, elem, events, msgBlock) => {
     const { target } = e;
 
     if (target.name === 'yes') {
-      removeEventApi('events', events, elem, msgBlock);
+      dataLayer.removeData(dataLayer.eventsEntity, elem.dataset.eventId);
+      // removeEventApi('events', events, elem, msgBlock);
       closePopup(clickHandler);
     }
 
@@ -42,46 +43,46 @@ export default (modalId, elem, events, msgBlock) => {
   popup.addEventListener('click', clickHandler);
 };
 
-async function removeEventApi(entityName, events, elem, msgBlock) {
-  const delay = 10000;
-  const msg = {
-    icon: msgBlock.children[0],
-    text: msgBlock.children[1],
-    loading: 'Removing event...',
-    success: 'Event removed',
-    error: 'Something wrong, try again',
-    loadingIconCls: 'fa-sync-alt',
-    okIconCls: 'fa-check',
-    erorrIconCls: 'fa-exclamation-circle',
-  };
+// async function removeEventApi(entityName, events, elem, msgBlock) {
+//   const delay = 10000;
+//   const msg = {
+//     icon: msgBlock.children[0],
+//     text: msgBlock.children[1],
+//     loading: 'Removing event...',
+//     success: 'Event removed',
+//     error: 'Something wrong, try again',
+//     loadingIconCls: 'fa-sync-alt',
+//     okIconCls: 'fa-check',
+//     erorrIconCls: 'fa-exclamation-circle',
+//   };
 
-  let status = 0;
+//   let status = 0;
 
-  // eslint-disable-next-line no-param-reassign
-  msg.text.textContent = msg.loading;
-  msgBlock.classList.add('active');
+//   // eslint-disable-next-line no-param-reassign
+//   msg.text.textContent = msg.loading;
+//   msgBlock.classList.add('active');
 
-  try {
-    const res = await deleteData(entityName, elem.dataset.eventId);
-    status = res.status;
-    removeEvent(events, elem);
-    msg.icon.classList.remove(msg.loadingIconCls);
-    msg.icon.classList.add(msg.okIconCls);
-    msg.text.textContent = msg.success;
-  } catch (err) {
-    msg.icon.classList.remove(msg.okIconCls);
-    msg.icon.classList.add(msg.erorrIconCls);
-    msg.text.textContent = msg.error;
-    console.warn(err);
-  } finally {
-    if (status === 204) {
-      console.log(status);
-      setTimeout(() => {
-        msg.icon.classList.remove(msg.okIconCls);
-        msg.icon.classList.add(msg.loadingIconCls);
-        msg.text.textContent = '';
-        msgBlock.classList.remove('active');
-      }, delay);
-    }
-  }
-}
+//   try {
+//     const res = await deleteData(entityName, elem.dataset.eventId);
+//     status = res.status;
+//     removeEvent(events, elem);
+//     msg.icon.classList.remove(msg.loadingIconCls);
+//     msg.icon.classList.add(msg.okIconCls);
+//     msg.text.textContent = msg.success;
+//   } catch (err) {
+//     msg.icon.classList.remove(msg.okIconCls);
+//     msg.icon.classList.add(msg.erorrIconCls);
+//     msg.text.textContent = msg.error;
+//     console.warn(err);
+//   } finally {
+//     if (status === 204) {
+//       console.log(status);
+//       setTimeout(() => {
+//         msg.icon.classList.remove(msg.okIconCls);
+//         msg.icon.classList.add(msg.loadingIconCls);
+//         msg.text.textContent = '';
+//         msgBlock.classList.remove('active');
+//       }, delay);
+//     }
+//   }
+// }

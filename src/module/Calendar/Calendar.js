@@ -47,6 +47,13 @@ export default class Calendar {
         this.dataLayer.events.forEach(render);
       }
     });
+
+    this.emitter.subcribe('events:delete', isOk => {
+      if (isOk) {
+        resetGrid();
+        this.dataLayer.events.forEach(render);
+      }
+    });
   }
 
   clickListener() {
@@ -165,11 +172,12 @@ export default class Calendar {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   rmEvent(elem) {
     if (elem.closest(`.${classes.removeEvent}`)) {
       const eventSlot = elem.closest(`.${classes.slotBooked}`);
       if (eventSlot) {
-        removeEvent('event-remove', eventSlot, this.events, this.msgBlock);
+        removeEvent('event-remove', eventSlot);
       } else { console.warn('No event'); }
     }
   }

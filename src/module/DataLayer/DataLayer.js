@@ -1,5 +1,7 @@
 import Emitter from '../Emitter';
-import { getData, postData, updateData } from './dataUtils';
+import {
+  deleteData, getData, postData, updateData,
+} from './dataUtils';
 
 const conf = {
   usersEntity: 'users',
@@ -51,15 +53,14 @@ export default class DataLayer {
     try {
       const res = await postData(entity, JSON.stringify(obj));
       if (res.status !== 200) { throw new Error(`Entity ${entity} not exists`); }
-      const data = await res.json();
+      const resData = await res.json();
       // eslint-disable-next-line no-param-reassign
-      obj.id = data.id;
-      this[entity].push(obj);
+      this[entity].push(fromJSON(resData));
       console.log(this[entity]);
-      this.emitter.emit(`${entity}:stored`, true);
+      this.emitter.emit(`${entity}:stored`, fromJSON(resData));
     } catch (err) {
       // exception Decorator
-      this.emitter.emit(`${entity}:stored`, false);
+      this.emitter.emit(`${entity}:stored`, err);
       console.warn(err);
     }
   }
@@ -76,12 +77,36 @@ export default class DataLayer {
       console.warn(err);
     }
   }
+
+  async removeData(entity, id) {
+    console.log(entity, id);
+    try {
+      const res = await deleteData(entity, id);
+      console.log(`${entity}:delete`);
+      if (res.status !== 204) {
+        const resData = await res.json();
+        throw new Error(resData.error); // проверить
+      }
+      const eventIndex = this.events.findIndex(event => event.id === id);
+      this.events.splice(eventIndex, 1);
+      this.emitter.emit(`${entity}:delete`, true);
+      console.log(this.events);
+    } catch (err) {
+      // exception Decorator
+      this.emitter.emit(`${entity}:delete`, false, err);
+      console.warn(err);
+    }
+  }
 } // end class DataLayer
+
+function fromJSON(obj) {
+  const item = { id: obj.id, ...JSON.parse(obj.data) };
+  return item;
+}
 
 function getDataFromJSON(data, list) {
   data.forEach(obj => {
-    const item = { id: obj.id, ...JSON.parse(obj.data) };
-    list.push(item);
+    list.push(fromJSON(obj));
   });
 }
 
