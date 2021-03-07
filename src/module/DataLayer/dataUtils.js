@@ -1,32 +1,39 @@
 const url = 'http://158.101.166.74:8080/api/data/illia_cherkasov/';
 
-export const getData = entityName => fetch(url + entityName);
+export async function request(entity, options = {}) {
+  const method = options.method || 'GET';
+  const data = options.data || null;
+  const id = options.id || null;
+  const reqUrl = id ? `${url}${entity}/${id}` : `${url}${entity}`;
+  try {
+    const headers = {};
+    let body;
 
-export const postData = (entityName, objInJson) => fetch(
-  `${url}${entityName}`,
-  {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data: objInJson }),
-  },
-);
+    if (data) {
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify({ data: JSON.stringify(data) });
+    }
 
-export const updateData = (entityName, id, objInjson) => fetch(
-  `${url}${entityName}/${id}`,
-  {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data: objInjson }),
-  },
-);
+    const res = await fetch(reqUrl, {
+      method,
+      headers,
+      body,
+    });
+    if (res.status === 204) { return res.status; }
+    return await res.json();
+  } catch (e) {
+    console.warn('Error:', e.message);
+    return `Error: ${e.message}`;
+  }
+}
 
-export const deleteData = (entityName, id) => fetch(
-  `${url}${entityName}/${id}`,
-  {
-    method: 'DELETE',
-  },
-);
+export const fromJSON = obj => {
+  const item = { id: obj.id, ...JSON.parse(obj.data) };
+  return item;
+};
+
+export const getDataFromJSON = (data, list) => {
+  data.forEach(obj => {
+    list.push(fromJSON(obj));
+  });
+};

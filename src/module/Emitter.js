@@ -9,6 +9,7 @@ export default class Emitter {
   }
 
   emit(event, ...args) {
+    console.log('emit', event);
     if (!Array.isArray(this.listeners[event])) {
       return false;
     }

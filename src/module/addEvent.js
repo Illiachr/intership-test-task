@@ -5,7 +5,7 @@ import {
   workWeek,
 } from './auxiliary';
 import DataLayer from './DataLayer/DataLayer';
-import Emitter from './Emitter';
+// import Emitter from './Emitter';
 import { Select } from './UI/Select/Select';
 import UserSelect from './UI/Select/SelectMulti';
 import { getTimeTable } from './utils';
@@ -15,7 +15,7 @@ export default function addEvent(popupId, day = '', time = '') {
   const eventForm = popup.querySelector('#event-form');
   const warnMsg = popup.querySelector(`.${classes.modalWarning}`);
   const dataLayer = new DataLayer();
-  const emitter = new Emitter();
+  // const emitter = new Emitter();
   const eventSlot = {
     event: {
       name: '',
@@ -126,8 +126,8 @@ export default function addEvent(popupId, day = '', time = '') {
     });
 
     if (!eventSlot.isBooked) {
+      addEvent.close();
       dataLayer.storeData(dataLayer.eventsEntity, eventSlot.event);
-      // storeEvent(events, stateEventSlot.event, addEvent.close, warnMsg);
     } else {
       warnMsg.children[1].textContent = msg.timeErr;
       warnMsg.classList.add('active');
@@ -148,18 +148,18 @@ export default function addEvent(popupId, day = '', time = '') {
     }
   };
 
-  const unsubStore = emitter.subcribe('events:stored', event => {
-    if (event) {
-      addEvent.close();
-      emitter.emit('addEvent:success', event);
-    }
-  });
+  // const unsubStore = emitter.subcribe('events:stored', event => {
+  //   if (event) {
+  //     addEvent.close();
+  //     emitter.emit('addEvent:success', event);
+  //   }
+  // });
 
   addEvent.close = () => {
     popup.removeEventListener('click', clickHandler);
     eventForm.removeEventListener('submit', submitHandler);
     eventForm.removeEventListener('input', inputHandler);
-    unsubStore();
+    // unsubStore();
     select.destroy();
     selectDay.destroy();
     selectTime.destroy();

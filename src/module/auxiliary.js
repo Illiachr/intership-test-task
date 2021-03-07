@@ -7,7 +7,7 @@ export const classes = {
   triggerClose: 'js-modal-close',
   eventSlot: 'meeting-cell',
   slotBooked: 'meeting-cell--bisy',
-  removeEvent: 'cancel-event',
+  confirm: 'cancel-event',
   modalWarning: 'modal__dialog-header-warning',
 };
 

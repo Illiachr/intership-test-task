@@ -36,7 +36,7 @@ export default function appTemplate(selector) {
   app.insertAdjacentHTML('beforeend', template);
   modalTemplates();
 
-  emitter.subcribe('events:loaded', () => {
+  emitter.subcribe('events:load', () => {
     loader.classList.remove('active');
     app.classList.add('active');
     showGrid();

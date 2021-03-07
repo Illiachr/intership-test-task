@@ -1,7 +1,7 @@
 import { getData } from './apiUtils/apiUtils';
 import { classes } from './auxiliary';
 
-export const render = event => {
+export const render = (event, canRemove = false) => {
   document.querySelectorAll('.row-meeting').forEach(row => {
     if (event.time === row.dataset.time) {
       row.querySelectorAll('.meeting-cell').forEach(eventSlot => {
@@ -12,7 +12,9 @@ export const render = event => {
           eventSlot.setAttribute('data-event-id', event.id);
           eventSlot.setAttribute('draggable', true);
           eventSlotChildren[0].textContent = event.name;
-          eventSlotChildren[1].style.display = 'inline';
+          if (canRemove) {
+            eventSlotChildren[1].style.display = 'inline';
+          }
         }
       });
     }
