@@ -52,6 +52,5 @@ export function getList(data) {
     const item = { id: obj.id, ...JSON.parse(obj.data) };
     list.push(item);
   });
-  console.log(list);
   // return list;
 }

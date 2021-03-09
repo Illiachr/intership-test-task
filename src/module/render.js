@@ -45,24 +45,19 @@ export const getEventStore = () => {
 
 export async function getEventsFromApi(events, entityName = 'events') {
   const eventList = [];
-  console.log('Loading');
   try {
     const res = await getData(entityName);
-    console.log(res);
     const data = await res.json();
-    console.log(data);
     data.forEach(obj => {
       const parsedData = JSON.parse(obj.data);
       const item = { id: obj.id, ...parsedData };
       eventList.push(item);
     });
-    console.log(eventList);
   } catch (err) {
     console.warn(err);
   } finally {
     // eslint-disable-next-line no-param-reassign
     events = eventList;
-    console.log(events);
     if (events.length > 0) {
       eventList.forEach(render);
     }

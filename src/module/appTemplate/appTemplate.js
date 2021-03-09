@@ -47,7 +47,6 @@ export default function appTemplate(selector) {
     userAuth('login');
   });
   emitter.subcribe('login:passed', user => {
-    console.log(user);
     // eslint-disable-next-line no-unused-vars
     const calendar = new Calendar(selector, user);
   });
