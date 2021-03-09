@@ -89,9 +89,7 @@ export default class Calendar {
     this.rmEvent = this.rmEvent.bind(this);
     this.handlers.click.push('rmEvent');
     this.emitter.subcribe('events:remove', (isOk, err) => {
-      if (isOk) {
-        this.showSuccess();
-      }
+      this.updateTable(isOk);
       if (err) {
         console.warn(err);
       }
