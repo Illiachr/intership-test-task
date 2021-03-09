@@ -1,17 +1,14 @@
 import User from './User';
 
+const actionList = ['add', 'remove', 'updatedd'];
+
 export default class Admin extends User {
-  constructor(user, selector) {
-    super(user, selector);
-    this.extendedRights = ['add', 'remove', 'updatedd'];
+  constructor(name) {
+    super(name);
+    this.setAdminActions();
   }
 
-  init(userList, events) {
-    this.setExtendedUserRights();
-    super.init(userList, events);
-  }
-
-  setExtendedUserRights() {
-    this.extendedRights.forEach(right => this.user.rights.push(right));
+  setAdminActions() {
+    this.setActions(actionList);
   }
 }
