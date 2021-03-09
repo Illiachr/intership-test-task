@@ -1,5 +1,14 @@
 import { workWeek } from './auxiliary';
 
+export const getTimeTable = eventHours => {
+  const timeTable = [];
+  for (let hour = +eventHours.start; hour <= +eventHours.end; hour += +eventHours.step) {
+    const eventTime = { id: `${hour}`, value: `${hour}:00` };
+    timeTable.push(eventTime);
+  }
+  return timeTable;
+};
+
 export const capitalize = string => {
   if (typeof string !== 'string') {
     return '';
@@ -7,11 +16,13 @@ export const capitalize = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const firstFreeSlot = calendar => {
+export const getMethodName = eventName => `on${capitalize(eventName)}`;
+
+export const firstFreeSlot = calendarElem => {
   let nextFreeTime = '';
   let lastBookedDay = '';
   workWeek.forEach(day => {
-    calendar.querySelectorAll(`.cell[data-day="${day.id}"]`)
+    calendarElem.querySelectorAll(`.cell[data-day="${day.id}"]`)
       .forEach(elem => {
         if (!elem.dataset.eventId || elem.dataset.eventId.trim() === '') {
           if (lastBookedDay === '' && nextFreeTime === '') {

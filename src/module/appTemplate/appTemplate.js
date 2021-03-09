@@ -1,13 +1,19 @@
-/* eslint-disable no-unused-vars */
 import showGrid from '../showGrid';
 import modalTemplates from './modalTemplates';
 import userAuth from '../login';
 import lds from './loader';
-import { getData } from '../apiUtils/apiUtils';
+import DataLayer from '../DataLayer/DataLayer';
+import Emitter from '../Emitter';
+import Calendar from '../Calendar/Calendar';
 
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
   const template = `
+        <div class="app__header-warning" data-type="error-warn">
+            <span class="fas fa-exclamation-circle"></span>
+            <span class="app__header-warning-text">Error</span>
+            <span class="app__header-warning-close fas fa-times-circle"></span>
+        </div>
         <div class="controls">
           <div class="controls__title-wrapper">
             <h2 class="title">Calendar</h2>
@@ -25,43 +31,24 @@ export default function appTemplate(selector) {
         <div class="calendar-grid">
         </div>`;
   const loader = lds();
+  // eslint-disable-next-line no-unused-vars
+  const dataLayer = new DataLayer();
+  const emitter = new Emitter();
+
   document.body.append(loader);
+  loader.classList.add('active');
   app.insertAdjacentHTML('beforeend', template);
   modalTemplates();
-  getList(loader, app);
-}
 
-async function getList(loader = null, app) {
-  if (loader) { loader.classList.add('active'); }
-  const userList = [];
-  const events = [];
-  try {
-    const res = await getData('users');
-    const resEvents = await getData('events');
-    if (res.status === 200) {
-      const data = await res.json();
-      data.forEach(obj => {
-        const parsedData = JSON.parse(obj.data);
-        const item = { id: obj.id, ...parsedData };
-        userList.push(item);
-      });
-    } else { throw new Error('Network status not 200'); }
-    if (resEvents.status === 200) {
-      const data = await resEvents.json();
-      if (data) {
-        data.forEach(obj => {
-          const parsedData = JSON.parse(obj.data);
-          const item = { id: obj.id, ...parsedData };
-          events.push(item);
-        });
-      }
-    } else { throw new Error('Network status not 200'); }
-  } catch (err) {
-    console.warn(err);
-  } finally {
-    if (loader) { loader.classList.remove('active'); }
+  emitter.subcribe('events:load', () => {
+    loader.classList.remove('active');
     app.classList.add('active');
     showGrid();
-    userAuth('login', userList, events);
-  }
+    userAuth('login');
+  });
+  emitter.subcribe('login:passed', user => {
+    console.log(user);
+    // eslint-disable-next-line no-unused-vars
+    const calendar = new Calendar(selector, user);
+  });
 }

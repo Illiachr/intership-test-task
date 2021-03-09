@@ -1,21 +1,33 @@
 import addEvent from '../addEvent';
-import { updateData } from '../apiUtils/apiUtils';
 import { classes } from '../auxiliary';
-import removeEvent from '../removeEvent';
+import DataLayer from '../DataLayer/DataLayer';
+import Emitter from '../Emitter';
+import confirm from '../confirm';
 import { render, resetGrid } from '../render';
-import Select from '../UI/select/select';
-import { capitalize, firstFreeSlot } from '../utils';
+import { Select } from '../UI/Select/Select';
+import { firstFreeSlot, getMethodName } from '../utils';
 
 export default class Calendar {
-  constructor(selector, user, userList, events) {
+  constructor(selector, user) {
     this.root = document.querySelector(selector);
     this.user = user;
-    this.userList = userList;
-    this.msgBlock = this.root.querySelector('[data-type="controls-warning"]');
+    this.allowRm = false;
+    this.dataLayer = new DataLayer();
+    this.emitter = new Emitter();
+
+    this.erorrMsg = this.root.querySelector('[data-type="error-warn"]');
+    this.statusMsg = this.root.querySelector('[data-type="controls-warning"]');
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
 
-    this.events = events || [];
-    this.filtred = [];
+    this.msg = {
+      icon: this.statusMsg.children[0],
+      text: this.statusMsg.children[1],
+      loading: 'Updating events...',
+      success: 'Events updated',
+      loadingIconCls: 'fa-sync-alt',
+      okIconCls: 'fa-check',
+      erorrIconCls: 'fa-exclamation-circle',
+    };
 
     this.handlers = {
       click: [],
@@ -28,11 +40,16 @@ export default class Calendar {
   }
 
   init() {
-    if (this.events.length > 0) {
-      this.events.forEach(render);
+    console.log(this.dataLayer);
+    console.log(this.user);
+    this.user.allowedActions.forEach(action => this[getMethodName(action)]());
+    if (this.dataLayer.events.length > 0) {
+      this.dataLayer.events.forEach(event => render(event, this.allowRm));
     }
-    this.user.rights.forEach(right => this[getMethodName(right)]());
     this.clickListener();
+    this.emitter.subcribe('data:load', () => { this.showLoad(); });
+    this.emitter.subcribe('data:success', () => { this.showSuccess(); });
+    this.emitter.subcribe('data:error', () => { this.showError(); });
   }
 
   clickListener() {
@@ -45,7 +62,7 @@ export default class Calendar {
   }
 
   onFilter() {
-    const { userList } = this;
+    const { users } = this.dataLayer;
     const filter = this.filterByUser.bind(this);
     // eslint-disable-next-line no-unused-vars
     const filterByMember = new Select('#filter', {
@@ -54,10 +71,9 @@ export default class Calendar {
       defaultSeleted: '0',
       data: [
         { id: '0', value: 'All members' },
-        ...userList,
+        ...users,
       ],
       onSelect(item) {
-        console.log(item);
         filter(item);
       },
     });
@@ -67,14 +83,63 @@ export default class Calendar {
     this.newEvent = this.newEvent.bind(this);
     this.handlers.click.push('newEvent');
     this.addEventBtn.style.display = 'flex';
+    this.emitter.subcribe('addEvent:success', event => render(event, this.allowRm));
   }
 
   onRemove() {
+    this.allowRm = true;
     this.rmEvent = this.rmEvent.bind(this);
     this.handlers.click.push('rmEvent');
+    this.emitter.subcribe('events:remove', (isOk, err) => {
+      if (isOk) {
+        this.showSuccess();
+      }
+      if (err) {
+        console.warn(err);
+      }
+    });
+  }
+
+  showError(err) {
+    this.statusMsg.classList.remove('active');
+    this.erorrMsg.classList.add('active');
+    this.erorrMsg.children[1].textContent = err;
+  }
+
+  showLoad() {
+    const { msg } = this;
+    msg.text.textContent = msg.loading;
+    this.statusMsg.classList.add('active');
+  }
+
+  showSuccess() {
+    const { msg } = this;
+    const delay = 10000;
+    msg.icon.classList.remove(msg.loadingIconCls);
+    msg.icon.classList.add(msg.okIconCls);
+    msg.text.textContent = msg.success;
+    setTimeout(() => {
+      msg.icon.classList.remove(msg.okIconCls);
+      msg.icon.classList.add(msg.loadingIconCls);
+      msg.text.textContent = '';
+      this.statusMsg.classList.remove('active');
+    }, delay);
+  }
+
+  updateTable(isOk) {
+    console.log(this);
+    if (isOk) {
+      resetGrid();
+      this.dataLayer.events.forEach(event => render(event, this.allowRm));
+      this.showSuccess();
+    }
   }
 
   onUpdatedd() {
+    const { events, eventsEntity } = this.dataLayer;
+
+    this.emitter.subcribe('events:update', this.updateTable.bind(this));
+
     this.root.addEventListener('dragstart', e => {
       const { target, dataTransfer } = e;
       const dragTarget = target.closest(`.${classes.slotBooked}`);
@@ -112,11 +177,10 @@ export default class Calendar {
         target.classList.remove('drag-hover');
         const eventId = dataTransfer.getData('text/plain');
         dataTransfer.setData('text/plain', '');
-        const eventIndex = this.events.findIndex(event => event.id === eventId);
-        this.events[eventIndex].time = target.dataset.time;
-        this.events[eventIndex].day = target.dataset.day;
-
-        updateEvent(this.events, eventIndex, this.msgBlock);
+        const eventIndex = events.findIndex(event => event.id === eventId);
+        events[eventIndex].time = target.dataset.time;
+        events[eventIndex].day = target.dataset.day;
+        this.dataLayer.updateData(eventsEntity, eventIndex);
       }
     });
   }
@@ -124,10 +188,10 @@ export default class Calendar {
   filterByUser(item) {
     if (item.id === '0') {
       resetGrid();
-      this.events.forEach(render);
+      this.dataLayer.events.forEach(event => render(event, this.allowRm));
       return;
     }
-    const filtred = this.events.reduce((arr, event) => {
+    const filtred = this.dataLayer.events.reduce((arr, event) => {
       event.partisipants.forEach(member => {
         if (member.id === item.id) {
           arr.push(event);
@@ -135,9 +199,8 @@ export default class Calendar {
       });
       return arr;
     }, []);
-    this.filtred = filtred;
     resetGrid();
-    filtred.forEach(render);
+    filtred.forEach(event => render(event, this.allowRm));
   }
 
   newEvent(elem) {
@@ -147,65 +210,18 @@ export default class Calendar {
       const day = targetElem.dataset.day ? targetElem.dataset.day : firstFree.day;
       const time = targetElem.dataset.time ? targetElem.dataset.time : firstFree.time;
       const modalId = targetElem.dataset.modal;
-      if (modalId) { addEvent(modalId, this.events, this.userList, day, time); }
+      if (modalId) { addEvent(modalId, day, time); }
     }
   }
 
-  rmEvent(elem) {
-    if (elem.closest(`.${classes.removeEvent}`)) {
+  async rmEvent(elem) {
+    if (elem.closest(`.${classes.confirm}`)) {
       const eventSlot = elem.closest(`.${classes.slotBooked}`);
-      if (eventSlot) {
-        removeEvent('event-remove', eventSlot, this.events, this.msgBlock);
-      } else { console.warn('No event'); }
-    }
-  }
-}
-
-function getMethodName(eventName) {
-  return `on${capitalize(eventName)}`;
-}
-
-async function updateEvent(events, eventIndex, msgBlock) {
-  const delay = 10000;
-  const msg = {
-    icon: msgBlock.children[0],
-    text: msgBlock.children[1],
-    loading: 'Updating event...',
-    success: 'Event updated',
-    error: 'Something wrong, try again',
-    loadingIconCls: 'fa-sync-alt',
-    okIconCls: 'fa-check',
-    erorrIconCls: 'fa-exclamation-circle',
-  };
-
-  let status = 0;
-
-  // eslint-disable-next-line no-param-reassign
-  msg.text.textContent = msg.loading;
-  msgBlock.classList.add('active');
-
-  const eventJson = JSON.stringify(events[eventIndex]);
-  try {
-    const res = await updateData('events', events[eventIndex].id, eventJson);
-    status = res.status;
-    resetGrid();
-    events.forEach(render);
-    msg.icon.classList.remove(msg.loadingIconCls);
-    msg.icon.classList.add(msg.okIconCls);
-    msg.text.textContent = msg.success;
-  } catch (err) {
-    msg.icon.classList.remove(msg.okIconCls);
-    msg.icon.classList.add(msg.erorrIconCls);
-    msg.text.textContent = msg.error;
-    console.warn(err);
-  } finally {
-    if (status === 200) {
-      setTimeout(() => {
-        msg.icon.classList.remove(msg.okIconCls);
-        msg.icon.classList.add(msg.loadingIconCls);
-        msg.text.textContent = '';
-        msgBlock.classList.remove('active');
-      }, delay);
+      if (eventSlot.dataset.eventId) {
+        const id = eventSlot.dataset.eventId;
+        await confirm('event-remove')
+          .then(() => this.dataLayer.removeData(this.dataLayer.eventsEntity, id));
+      } else { console.warn('event ID undefined'); }
     }
   }
 }
