@@ -1,5 +1,4 @@
 import addEvent from '../addEvent';
-// import { updateData } from '../apiUtils/apiUtils';
 import { classes } from '../auxiliary';
 import DataLayer from '../DataLayer/DataLayer';
 import Emitter from '../Emitter';
@@ -16,8 +15,19 @@ export default class Calendar {
     this.dataLayer = new DataLayer();
     this.emitter = new Emitter();
 
-    this.msgBlock = this.root.querySelector('[data-type="controls-warning"]');
+    this.erorrMsg = this.root.querySelector('[data-type="error-warn"]');
+    this.statusMsg = this.root.querySelector('[data-type="controls-warning"]');
     this.addEventBtn = this.root.querySelector('[data-type="add-event"]');
+
+    this.msg = {
+      icon: this.statusMsg.children[0],
+      text: this.statusMsg.children[1],
+      loading: 'Updating events...',
+      success: 'Events updated',
+      loadingIconCls: 'fa-sync-alt',
+      okIconCls: 'fa-check',
+      erorrIconCls: 'fa-exclamation-circle',
+    };
 
     this.handlers = {
       click: [],
@@ -37,6 +47,9 @@ export default class Calendar {
       this.dataLayer.events.forEach(event => render(event, this.allowRm));
     }
     this.clickListener();
+    this.emitter.subcribe('data:load', () => { this.showLoad(); });
+    this.emitter.subcribe('data:success', () => { this.showSuccess(); });
+    this.emitter.subcribe('data:error', () => { this.showError(); });
   }
 
   clickListener() {
@@ -79,24 +92,53 @@ export default class Calendar {
     this.handlers.click.push('rmEvent');
     this.emitter.subcribe('events:remove', (isOk, err) => {
       if (isOk) {
-        resetGrid();
-        this.dataLayer.events.forEach(event => render(event, this.allowRm));
+        this.showSuccess();
       }
       if (err) {
-        console.log(err);
+        console.warn(err);
       }
     });
+  }
+
+  showError(err) {
+    this.statusMsg.classList.remove('active');
+    this.erorrMsg.classList.add('active');
+    this.erorrMsg.children[1].textContent = err;
+  }
+
+  showLoad() {
+    const { msg } = this;
+    msg.text.textContent = msg.loading;
+    this.statusMsg.classList.add('active');
+  }
+
+  showSuccess() {
+    const { msg } = this;
+    const delay = 10000;
+    msg.icon.classList.remove(msg.loadingIconCls);
+    msg.icon.classList.add(msg.okIconCls);
+    msg.text.textContent = msg.success;
+    setTimeout(() => {
+      msg.icon.classList.remove(msg.okIconCls);
+      msg.icon.classList.add(msg.loadingIconCls);
+      msg.text.textContent = '';
+      this.statusMsg.classList.remove('active');
+    }, delay);
+  }
+
+  updateTable(isOk) {
+    console.log(this);
+    if (isOk) {
+      resetGrid();
+      this.dataLayer.events.forEach(event => render(event, this.allowRm));
+      this.showSuccess();
+    }
   }
 
   onUpdatedd() {
     const { events, eventsEntity } = this.dataLayer;
 
-    this.emitter.subcribe('events:update', isOk => {
-      if (isOk) {
-        resetGrid();
-        this.dataLayer.events.forEach(event => render(event, this.allowRm));
-      }
-    });
+    this.emitter.subcribe('events:update', this.updateTable.bind(this));
 
     this.root.addEventListener('dragstart', e => {
       const { target, dataTransfer } = e;
@@ -138,7 +180,6 @@ export default class Calendar {
         const eventIndex = events.findIndex(event => event.id === eventId);
         events[eventIndex].time = target.dataset.time;
         events[eventIndex].day = target.dataset.day;
-        console.log(eventIndex);
         this.dataLayer.updateData(eventsEntity, eventIndex);
       }
     });

@@ -33,7 +33,7 @@ export default class DataLayer {
   }
 
   async getData(entity, emit = false) {
-    const data = await request(entity);
+    const data = await request(entity, { emitter: this.emitter });
     if (!Array.isArray(data)) {
       console.log(data);
     } else if (data.length) {
@@ -50,10 +50,10 @@ export default class DataLayer {
     const resData = await request(entity, {
       method: 'POST',
       data,
+      emitter: this.emitter,
     });
     this[entity].push(fromJSON(resData));
     this.emitter.emit(`${entity}:update`, true);
-    // this.emitter.emit(`${entity}:stored`, fromJSON(data));
   }
 
   async updateData(entity, index) {
@@ -62,6 +62,7 @@ export default class DataLayer {
       method: 'PUT',
       id: data.id,
       data,
+      emitter: this.emitter,
     });
 
     this.emitter.emit(`${entity}:update`, true);
@@ -72,6 +73,7 @@ export default class DataLayer {
     const err = await request(entity, {
       method: 'DELETE',
       id,
+      emitter: this.emitter,
     });
     if (err !== 204) {
       console.log(err);

@@ -5,6 +5,9 @@ export async function request(entity, options = {}) {
   const data = options.data || null;
   const id = options.id || null;
   const reqUrl = id ? `${url}${entity}/${id}` : `${url}${entity}`;
+  const { emitter } = options;
+
+  emitter.emit('data:load');
   try {
     const headers = {};
     let body;
@@ -22,6 +25,7 @@ export async function request(entity, options = {}) {
     if (res.status === 204) { return res.status; }
     return await res.json();
   } catch (e) {
+    emitter.emit('data:error', e);
     console.warn('Error:', e.message);
     return `Error: ${e.message}`;
   }

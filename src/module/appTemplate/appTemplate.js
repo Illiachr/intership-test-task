@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
 import showGrid from '../showGrid';
 import modalTemplates from './modalTemplates';
 import userAuth from '../login';
 import lds from './loader';
-import { getData } from '../apiUtils/apiUtils';
 import DataLayer from '../DataLayer/DataLayer';
 import Emitter from '../Emitter';
 import Calendar from '../Calendar/Calendar';
@@ -11,6 +9,11 @@ import Calendar from '../Calendar/Calendar';
 export default function appTemplate(selector) {
   const app = document.querySelector(selector);
   const template = `
+        <div class="app__header-warning" data-type="error-warn">
+            <span class="fas fa-exclamation-circle"></span>
+            <span class="app__header-warning-text">Error</span>
+            <span class="app__header-warning-close fas fa-times-circle"></span>
+        </div>
         <div class="controls">
           <div class="controls__title-wrapper">
             <h2 class="title">Calendar</h2>
@@ -28,6 +31,7 @@ export default function appTemplate(selector) {
         <div class="calendar-grid">
         </div>`;
   const loader = lds();
+  // eslint-disable-next-line no-unused-vars
   const dataLayer = new DataLayer();
   const emitter = new Emitter();
 
@@ -44,6 +48,7 @@ export default function appTemplate(selector) {
   });
   emitter.subcribe('login:passed', user => {
     console.log(user);
+    // eslint-disable-next-line no-unused-vars
     const calendar = new Calendar(selector, user);
   });
 }
