@@ -34,11 +34,8 @@ export default class DataLayer {
 
   async getData(entity, emit = false) {
     const data = await request(entity, { emitter: this.emitter });
-    if (!Array.isArray(data)) {
-      console.log(data);
-    } else if (data.length) {
+    if (Array.isArray(data) && data.length) {
       getDataFromJSON(data, this[entity]);
-      console.log(`${entity}: `, this[entity]);
     }
     if (emit) {
       this.emitter.emit(`${entity}:load`);
@@ -76,7 +73,7 @@ export default class DataLayer {
       emitter: this.emitter,
     });
     if (err !== 204) {
-      console.log(err);
+      console.warn(err);
       this.emitter.emit(`${entity}:remove`, false, err);
       return err;
     }

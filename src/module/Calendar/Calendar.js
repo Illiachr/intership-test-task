@@ -40,8 +40,6 @@ export default class Calendar {
   }
 
   init() {
-    console.log(this.dataLayer);
-    console.log(this.user);
     this.user.allowedActions.forEach(action => this[getMethodName(action)]());
     if (this.dataLayer.events.length > 0) {
       this.dataLayer.events.forEach(event => render(event, this.allowRm));
@@ -91,9 +89,7 @@ export default class Calendar {
     this.rmEvent = this.rmEvent.bind(this);
     this.handlers.click.push('rmEvent');
     this.emitter.subcribe('events:remove', (isOk, err) => {
-      if (isOk) {
-        this.showSuccess();
-      }
+      this.updateTable(isOk);
       if (err) {
         console.warn(err);
       }
@@ -127,7 +123,6 @@ export default class Calendar {
   }
 
   updateTable(isOk) {
-    console.log(this);
     if (isOk) {
       resetGrid();
       this.dataLayer.events.forEach(event => render(event, this.allowRm));
